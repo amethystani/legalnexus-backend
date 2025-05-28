@@ -1,0 +1,16 @@
+streamlit
+streamlit-chat
+langchain
+langchain-neo4j
+langchain-community
+langchain-openai
+python-dotenv
+pypdf
+neo4j
+sentence-transformers 
+langchain-experimental 
+plotly>=6.0.0
+networkx>=3.0.0
+torch>=2.0.0
+torch-geometric>=2.3.0
+scikit-learn>=1.3.0 
