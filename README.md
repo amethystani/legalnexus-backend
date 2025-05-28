@@ -22,8 +22,7 @@ The application will start on `http://localhost:8501`
 
 - Python 3.8+
 - Neo4j Database (local or cloud instance)
-- OpenAI API key (for embeddings and LLM functionality)
-- Google Gemini API key (for embeddings - used in case_embeddings_gemini.pkl)
+- Google Gemini API key (for embeddings - used in case_embeddings_gemini.pkl and LLM functionality)
 
 ##  Setup Instructions
 
