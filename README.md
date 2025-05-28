@@ -11,7 +11,7 @@ This directory contains the backend code for the Legal Nexus project, a knowledg
 pip install -r requirements.txt
 
 # Set up environment variables (see setup section below)
-
+**GEMINI API KEY**: Get the api key at https://aistudio.google.com/apikey
 # Run the main application
 streamlit run kg.py
 ```
