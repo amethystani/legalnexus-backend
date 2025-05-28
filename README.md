@@ -2,7 +2,7 @@
 
 This directory contains the backend code for the Legal Nexus project, a knowledge graph-based legal case similarity engine powered by AI and graph databases.
 
-## 🚀 Quick Start
+##  Quick Start
 
 **Main Application**: The primary working application is `kg.py` which provides a Streamlit-based interface for legal case analysis.
 
@@ -18,14 +18,14 @@ streamlit run kg.py
 
 The application will start on `http://localhost:8501`
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Python 3.8+
 - Neo4j Database (local or cloud instance)
 - OpenAI API key (for embeddings and LLM functionality)
 - Google Gemini API key (for embeddings - used in case_embeddings_gemini.pkl)
 
-## ⚙️ Setup Instructions
+##  Setup Instructions
 
 ### 1. Install Dependencies
 
@@ -39,28 +39,22 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 # Neo4j Database Configuration
-NEO4J_URI=bolt://localhost:7687
+NEO4J_URI=neo4j+s://.......
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=your_neo4j_password
-
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key
-
 # Google Gemini Configuration (for embeddings)
 GOOGLE_API_KEY=your_google_gemini_api_key
 
-# Optional: Other configurations
-STREAMLIT_SERVER_PORT=8501
 ```
 
 ### 3. Database Setup
 
 Ensure your Neo4j database is running and accessible with the credentials provided in your `.env` file.
 
-## 📁 Project Structure
+##  Project Structure
 
 ### Core Application
-- **`kg.py`** - ✅ **MAIN WORKING APPLICATION** - Streamlit interface for legal case similarity analysis
+- **`kg.py`** -  **MAIN WORKING APPLICATION** - Streamlit interface for legal case similarity analysis
 
 ### Data Files
 - **`case_embeddings_gemini.pkl`** - Pre-computed case embeddings using Google Gemini API
@@ -74,12 +68,12 @@ utils/
 ├── web_scraping/
 │   └── web_scraper.py          # 🔧 Tools for legal dataset creation and web scraping
 └── main_files/
-    ├── case_similarity_cli.py   # ⚠️ Command-line interface (partially working)
+    ├── case_similarity_cli.py  # ⚠️ Command-line interface (partially working)
     ├── citation_network.py     # ⚠️ Citation analysis (redundant/half-working)
     ├── gnn_link_prediction.py  # ⚠️ Graph Neural Network features (not fully implemented)
     ├── integrated_system.py    # ⚠️ System integration (redundant)
-    ├── kg_utils.py            # ⚠️ Knowledge graph utilities (partially working)
-    └── kg_visualizer.py       # ⚠️ Graph visualization (half-working)
+    ├── kg_utils.py             # ⚠️ Knowledge graph utilities (partially working)
+    └── kg_visualizer.py        # ⚠️ Graph visualization (half-working)
 ```
 
 ### Test Cases
@@ -90,20 +84,20 @@ testcases/
 └── load_test_cases_to_neo4j.py  # Data loading utilities
 ```
 
-## 🎯 Component Status
+##  Component Status
 
-### ✅ Working Components
+###  Working Components
 - **`kg.py`** - Fully functional Streamlit application
 - **`case_embeddings_gemini.pkl`** - Pre-computed embeddings ready for use
 - **`utils/web_scraping/web_scraper.py`** - Functional web scraping for dataset creation
 
-### ⚠️ Partially Working / Redundant Components
+###  Partially Working / Redundant Components
 - **`utils/main_files/*`** - These files contain experimental or incomplete implementations:
   - Some functions may work but are not integrated into the main application
   - Consider these as development/research code
   - **Not recommended for production use**
 
-## 🔍 Key Features
+##  Key Features
 
 - **Legal Case Similarity Analysis** - Find similar cases based on content and context
 - **Knowledge Graph Integration** - Neo4j-powered graph database for legal relationships
@@ -111,7 +105,7 @@ testcases/
 - **Interactive Web Interface** - Streamlit-based UI for easy interaction
 - **Citation Network Analysis** - Understand case relationships and precedents
 
-## 🏃‍♂️ Running the Application
+##  Running the Application
 
 ### Main Application (Recommended)
 ```bash
@@ -130,7 +124,7 @@ cd testcases
 python run_tests.py
 ```
 
-## 📊 About Case Embeddings
+##  About Case Embeddings
 
 The `case_embeddings_gemini.pkl` file contains:
 - Pre-computed vector embeddings of legal cases
@@ -139,31 +133,5 @@ The `case_embeddings_gemini.pkl` file contains:
 - Enables fast similarity searches without real-time API calls
 - Essential for the performance of kg.py application
 
-## ⚠️ Important Notes
 
-1. **Focus on kg.py**: This is the main working application. Other files in `utils/main_files/` are experimental.
 
-2. **Environment Security**: Never commit your `.env` file. It's already added to `.gitignore`.
-
-3. **Database Connection**: Ensure Neo4j is running before starting the application.
-
-4. **API Keys**: Make sure your OpenAI and Google API keys are valid and have sufficient quota.
-
-## 🐛 Troubleshooting
-
-- **Neo4j Connection Issues**: Verify database is running and credentials in `.env` are correct
-- **API Errors**: Check API keys and rate limits
-- **Missing Dependencies**: Run `pip install -r requirements.txt`
-- **Streamlit Issues**: Try `streamlit run kg.py --server.port 8501`
-
-## 🤝 Contributing
-
-When contributing:
-1. Focus on improving `kg.py` and core functionality
-2. Test changes thoroughly with the test suite
-3. Update documentation for any new features
-4. Avoid modifying files in `utils/main_files/` unless specifically refactoring them
-
-## 📄 License
-
-[Add your license information here] 
