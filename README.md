@@ -1,91 +1,169 @@
 # Legal Nexus Backend
 
-This directory contains the backend code for the Legal Nexus project, a knowledge graph-based legal case similarity engine.
+This directory contains the backend code for the Legal Nexus project, a knowledge graph-based legal case similarity engine powered by AI and graph databases.
 
-## Overview
+## 🚀 Quick Start
 
-The backend is built using:
-- Python with langchain for knowledge graph interactions
-- Neo4j for graph database storage
-- OpenAI API for embeddings and LLM capabilities
-
-## Setup
-
-1. Install dependencies:
-```
-pip install -r ../requirements.txt
-```
-
-2. Set up environment variables (create a .env file in the Backend directory):
-```
-NEO4J_URI=your_neo4j_uri
-NEO4J_USERNAME=your_username
-NEO4J_PASSWORD=your_password
-OPENAI_API_KEY=your_openai_api_key
-```
-
-## Running the Tests
-
-We have extensive tests to ensure that the knowledge graph functionality works correctly:
+**Main Application**: The primary working application is `kg.py` which provides a Streamlit-based interface for legal case analysis.
 
 ```bash
-# Run all tests
-python run_tests.py
+# Install dependencies
+pip install -r requirements.txt
 
-# Run specific tests
-python test_kg.py          # Neo4j tests (requires Neo4j connection)
-python test_mock_kg.py     # Mock graph tests (no Neo4j needed)
-python validate_test_cases.py  # Validate test case files
+# Set up environment variables (see setup section below)
+
+# Run the main application
+streamlit run kg.py
 ```
 
-### Test Coverage
+The application will start on `http://localhost:8501`
 
-The tests cover:
+## 📋 Prerequisites
 
-1. **Data Loading**
-   - Loading test cases from data/test_cases directory
-   - Loading legal data from the data directory and subdirectories
+- Python 3.8+
+- Neo4j Database (local or cloud instance)
+- OpenAI API key (for embeddings and LLM functionality)
+- Google Gemini API key (for embeddings - used in case_embeddings_gemini.pkl)
 
-2. **Knowledge Graph Operations**
-   - Creating and clearing the graph database
-   - Adding nodes (Cases, Judges, Statutes) and relationships
-   - Querying the graph for various legal entities
+## ⚙️ Setup Instructions
 
-3. **Search Functionality**
-   - Simple text search based on legal terminology
-   - Similarity search using vector embeddings
-   - Fallback mechanisms when exact matches aren't found
+### 1. Install Dependencies
 
-4. **Mock Testing**
-   - Tests that simulate graph operations without requiring a Neo4j connection
-   - Validates the basic logic of the application
+```bash
+pip install -r requirements.txt
+```
 
-## Test Files
+### 2. Environment Configuration
 
-- **test_kg.py**: Main test file that requires a Neo4j connection to test real graph operations
-- **test_mock_kg.py**: Uses a mock graph implementation to test functionality without Neo4j
-- **validate_test_cases.py**: Ensures all test cases have the required fields and structure
-- **run_tests.py**: Runs all tests in sequence
+Create a `.env` file in the root directory with the following variables:
 
-## Test Cases
+```env
+# Neo4j Database Configuration
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your_neo4j_password
 
-Test cases are located in `data/test_cases/` and include:
-- Electronic evidence admissibility cases
-- Pension rights cases
-- Other legal domains
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key
 
-## Running the Backend App
+# Google Gemini Configuration (for embeddings)
+GOOGLE_API_KEY=your_google_gemini_api_key
 
-To start the backend Streamlit app:
+# Optional: Other configurations
+STREAMLIT_SERVER_PORT=8501
+```
 
+### 3. Database Setup
+
+Ensure your Neo4j database is running and accessible with the credentials provided in your `.env` file.
+
+## 📁 Project Structure
+
+### Core Application
+- **`kg.py`** - ✅ **MAIN WORKING APPLICATION** - Streamlit interface for legal case similarity analysis
+
+### Data Files
+- **`case_embeddings_gemini.pkl`** - Pre-computed case embeddings using Google Gemini API
+  - Contains vectorized representations of legal cases for similarity matching
+  - Generated using Gemini embeddings model for enhanced legal text understanding
+  - Used by kg.py for fast similarity searches without API calls
+
+### Utils Directory
+```
+utils/
+├── web_scraping/
+│   └── web_scraper.py          # 🔧 Tools for legal dataset creation and web scraping
+└── main_files/
+    ├── case_similarity_cli.py   # ⚠️ Command-line interface (partially working)
+    ├── citation_network.py     # ⚠️ Citation analysis (redundant/half-working)
+    ├── gnn_link_prediction.py  # ⚠️ Graph Neural Network features (not fully implemented)
+    ├── integrated_system.py    # ⚠️ System integration (redundant)
+    ├── kg_utils.py            # ⚠️ Knowledge graph utilities (partially working)
+    └── kg_visualizer.py       # ⚠️ Graph visualization (half-working)
+```
+
+### Test Cases
+```
+testcases/
+├── run_tests.py               # Test runner
+├── test_*.py                  # Various test files for different components
+└── load_test_cases_to_neo4j.py  # Data loading utilities
+```
+
+## 🎯 Component Status
+
+### ✅ Working Components
+- **`kg.py`** - Fully functional Streamlit application
+- **`case_embeddings_gemini.pkl`** - Pre-computed embeddings ready for use
+- **`utils/web_scraping/web_scraper.py`** - Functional web scraping for dataset creation
+
+### ⚠️ Partially Working / Redundant Components
+- **`utils/main_files/*`** - These files contain experimental or incomplete implementations:
+  - Some functions may work but are not integrated into the main application
+  - Consider these as development/research code
+  - **Not recommended for production use**
+
+## 🔍 Key Features
+
+- **Legal Case Similarity Analysis** - Find similar cases based on content and context
+- **Knowledge Graph Integration** - Neo4j-powered graph database for legal relationships
+- **AI-Powered Embeddings** - Uses Google Gemini for semantic understanding
+- **Interactive Web Interface** - Streamlit-based UI for easy interaction
+- **Citation Network Analysis** - Understand case relationships and precedents
+
+## 🏃‍♂️ Running the Application
+
+### Main Application (Recommended)
 ```bash
 streamlit run kg.py
 ```
 
-This will start the application on http://localhost:8501 by default.
+### Web Scraping (Dataset Creation)
+```bash
+cd utils/web_scraping
+python web_scraper.py
+```
 
-## Troubleshooting
+### Running Tests
+```bash
+cd testcases
+python run_tests.py
+```
 
-- If you encounter errors connecting to Neo4j, check your connection strings in .env
-- If OpenAI API calls fail, verify your API key and quota
-- If test cases aren't loading, ensure the data/test_cases directory exists and has valid JSON files 
+## 📊 About Case Embeddings
+
+The `case_embeddings_gemini.pkl` file contains:
+- Pre-computed vector embeddings of legal cases
+- Generated using Google's Gemini embedding model
+- Optimized for legal text understanding and similarity matching
+- Enables fast similarity searches without real-time API calls
+- Essential for the performance of kg.py application
+
+## ⚠️ Important Notes
+
+1. **Focus on kg.py**: This is the main working application. Other files in `utils/main_files/` are experimental.
+
+2. **Environment Security**: Never commit your `.env` file. It's already added to `.gitignore`.
+
+3. **Database Connection**: Ensure Neo4j is running before starting the application.
+
+4. **API Keys**: Make sure your OpenAI and Google API keys are valid and have sufficient quota.
+
+## 🐛 Troubleshooting
+
+- **Neo4j Connection Issues**: Verify database is running and credentials in `.env` are correct
+- **API Errors**: Check API keys and rate limits
+- **Missing Dependencies**: Run `pip install -r requirements.txt`
+- **Streamlit Issues**: Try `streamlit run kg.py --server.port 8501`
+
+## 🤝 Contributing
+
+When contributing:
+1. Focus on improving `kg.py` and core functionality
+2. Test changes thoroughly with the test suite
+3. Update documentation for any new features
+4. Avoid modifying files in `utils/main_files/` unless specifically refactoring them
+
+## 📄 License
+
+[Add your license information here] 
