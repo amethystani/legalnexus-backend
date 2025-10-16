@@ -1,0 +1,35 @@
+flowchart TD
+    Query[User Query:<br/>Section 65B electronic evidence]
+    
+    Query --> Router{Query Router}
+    
+    Router --> Method1[Method 1:<br/>Vector Search]
+    Router --> Method2[Method 2:<br/>Graph Query]
+    Router --> Method3[Method 3:<br/>GNN Enhancement]
+    
+    Method1 --> V1[Use Gemini embeddings<br/>768-dim]
+    V1 --> V2[Search vector_index<br/>Cosine similarity]
+    V2 --> V3[Returns: Anvar P.V. case<br/>89% match]
+    
+    Method2 --> G1[Generate Cypher query<br/>Graph traversal]
+    G1 --> G2[Search relationships<br/>CITES, REFERENCES]
+    G2 --> G3[Returns: Connected cases]
+    
+    Method3 --> GNN1[Use GNN predictions<br/>Predicted links]
+    GNN1 --> GNN2[Find cases via predicted<br/>CITES relationships]
+    GNN2 --> GNN3[Returns: Related cases<br/>from same court/time]
+    
+    V3 --> Ranking[Ranking & Scoring]
+    G3 --> Ranking
+    GNN3 --> Ranking
+    
+    Ranking --> Final[Final Results:<br/>Top 3-5 most relevant cases]
+    
+    Final --> Display[Display with:<br/>- Similarity scores<br/>- Case metadata<br/>- LLM analysis]
+    
+    style Query fill:#6C5CE7,color:#fff,stroke:#fff,stroke-width:2px
+    style Ranking fill:#A29BFE,stroke:#6C5CE7,stroke-width:2px
+    style Final fill:#00B894,color:#fff,stroke:#fff,stroke-width:3px
+    style Display fill:#00CEC9,color:#fff,stroke:#fff,stroke-width:2px
+
+

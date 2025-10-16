@@ -1,0 +1,49 @@
+graph TB
+    subgraph Input["INPUT LAYER"]
+        Graph[Legal Case Graph<br/>Cases, Judges, Courts, Statutes]
+    end
+    
+    subgraph Features["FEATURE ENGINEERING"]
+        F1[Node Type: Case/Judge/Court/Statute<br/>4 features: one-hot encoded]
+        F2[Title Length: normalized<br/>1 feature]
+        F3[Court Hierarchy: SC/HC/District<br/>3 features: one-hot encoded]
+        F4[Year: 1950-2020 normalized<br/>1 feature]
+        F5[Total: 9-dimensional vector]
+    end
+    
+    subgraph GNN["GNN ARCHITECTURE"]
+        GCN1[GCN Layer 1<br/>Input: 9-dim → Output: 64-dim<br/>Aggregates neighbor info]
+        Activation1[ReLU Activation<br/>max0, x<br/>+ Dropout 0.5]
+        GCN2[GCN Layer 2<br/>Input: 64-dim → Output: 64-dim<br/>Higher-level patterns]
+    end
+    
+    subgraph Prediction["LINK PREDICTION"]
+        Concat[Concatenate Embeddings<br/>Source 64 + Target 64 = 128]
+        Dense1[Dense Layer: 128 → 64<br/>+ ReLU + Dropout]
+        Dense2[Dense Layer: 64 → 1<br/>+ Sigmoid]
+        Output[Probability: 0.0 to 1.0<br/>Relationship likelihood]
+    end
+    
+    Graph --> F1
+    Graph --> F2
+    Graph --> F3
+    Graph --> F4
+    F1 --> F5
+    F2 --> F5
+    F3 --> F5
+    F4 --> F5
+    
+    F5 --> GCN1
+    GCN1 --> Activation1
+    Activation1 --> GCN2
+    GCN2 --> Concat
+    Concat --> Dense1
+    Dense1 --> Dense2
+    Dense2 --> Output
+    
+    style Graph fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style F5 fill:#FFF9C4,stroke:#F57C00,stroke-width:2px
+    style GCN2 fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
+    style Output fill:#FFCDD2,stroke:#D32F2F,stroke-width:2px
+
+

@@ -17,5 +17,14 @@
     "primary_case_number": "Civil Appeal No. 4226 of 2012",
     "primary_citation": "(2014) 10 SCC 473"
   },
+  "cited_cases": [
+    {
+      "title": "State (NCT of Delhi) v. Navjot Sandhu",
+      "citation": "(2005) 11 SCC 600",
+      "relevance": "High"
+    }
+  ],
+  "final_decision": "The Supreme Court held that electronic records can be proved only in accordance with the procedure prescribed under Section 65B of the Indian Evidence Act. Without a certificate under Section 65B(4), electronic evidence cannot be admitted as evidence.",
+  "case_type": "Civil Appeal - Election Dispute",
   "created_at": "2023-06-15T14:45:20"
 } 

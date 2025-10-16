@@ -1,0 +1,48 @@
+sequenceDiagram
+    participant KG as Knowledge Graph (kg.py)
+    participant Neo4j as Neo4j Database
+    participant GNN as GNN System
+    participant Model as GNN Model
+    participant Results as Search Results
+    
+    Note over KG: Phase 1: Graph Creation
+    KG->>Neo4j: Create Case nodes (text, court, date)
+    KG->>Neo4j: Create Judge/Court/Statute nodes
+    KG->>Neo4j: Create relationships (JUDGED, HEARD_BY)
+    KG->>Neo4j: Generate Gemini embeddings (768-dim)
+    KG->>Neo4j: Create vector_index + entity_index
+    
+    Note over Neo4j: Data Storage Complete
+    
+    Note over GNN: Phase 2: GNN Extraction
+    GNN->>Neo4j: MATCH (n) RETURN nodes
+    Neo4j-->>GNN: All nodes (Case, Judge, Court, Statute)
+    GNN->>Neo4j: MATCH ()-[r]->() RETURN relationships
+    Neo4j-->>GNN: All edges (JUDGED, HEARD_BY, REFERENCES)
+    
+    Note over GNN: Phase 3: Feature Engineering
+    GNN->>GNN: Create 9-dim features<br/>(type, court, year)
+    GNN->>GNN: Create edge_index tensor
+    
+    Note over Model: Phase 4: GNN Training
+    GNN->>Model: Train on graph structure
+    Model->>Model: GCN Layer 1 (9→64)
+    Model->>Model: ReLU + Dropout
+    Model->>Model: GCN Layer 2 (64→64)
+    Model->>Model: Link Prediction Head
+    Model-->>GNN: Trained model (ROC-AUC: 0.78-0.85)
+    
+    Note over GNN: Phase 5: Make Predictions
+    GNN->>Model: Predict missing links
+    Model-->>GNN: Predicted relationships<br/>(with probabilities)
+    GNN->>Neo4j: (Optional) Add predictions to graph
+    
+    Note over Results: Phase 6: Integrated Search
+    Results->>Neo4j: Vector search (Gemini 768-dim)
+    Results->>Neo4j: Graph query (relationships)
+    Results->>Model: GNN enhancement (predictions)
+    Neo4j-->>Results: Similar cases
+    Model-->>Results: Related cases
+    Results-->>Results: Combine all results
+
+

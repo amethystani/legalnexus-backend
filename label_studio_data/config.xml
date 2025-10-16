@@ -1,0 +1,100 @@
+<View>
+  <Header value="Legal Case Annotation"/>
+  
+  <!-- Basic Case Information -->
+  <View style="display: flex; justify-content: space-between; margin-bottom: 15px">
+    <View style="width: 48%">
+      <Header value="Basic Case Information" size="4"/>
+      <Text name="title_label" value="Case Title:"/>
+      <TextArea name="title" toName="text" maxSubmissions="1" editable="true" required="true"/>
+      
+      <Text name="court_label" value="Court:"/>
+      <TextArea name="court" toName="text" maxSubmissions="1" editable="true"/>
+      
+      <Text name="date_label" value="Judgment Date:"/>
+      <DateTime name="judgment_date" toName="text" required="true"/>
+      
+      <Text name="case_type_label" value="Case Type:"/>
+      <TextArea name="case_type" toName="text" maxSubmissions="1" editable="true"/>
+    </View>
+    
+    <View style="width: 48%">
+      <Text name="final_decision_label" value="Final Decision:"/>
+      <TextArea name="final_decision" toName="text" rows="5" editable="true" maxSubmissions="1"/>
+      
+      <Text name="source_label" value="Source:"/>
+      <TextArea name="source" toName="text" maxSubmissions="1" editable="true"/>
+    </View>
+  </View>
+  
+  <!-- Case Content -->
+  <Header value="Case Content" size="4"/>
+  <Text name="text" value="$content"/>
+  
+  <!-- Entity Recognition -->
+  <Header value="Entity Recognition" size="4"/>
+  <Labels name="entities" toName="text">
+    <Label value="Case" background="#FFA39E"/>
+    <Label value="Statute" background="#D4380D"/>
+    <Label value="Judge" background="#FFC069"/>
+    <Label value="Jurisdiction" background="#BAE637"/>
+  </Labels>
+  
+  <!-- Cited Cases -->
+  <Header value="Cited Cases" size="4"/>
+  <View style="margin-bottom: 15px">
+    <DynamicLabels name="cited_cases" toName="text">
+      <Label value="Cited Case" background="#91D5FF"/>
+    </DynamicLabels>
+    
+    <Text name="cited_cases_info" value="Add cited cases with their details below:"/>
+    
+    <Repeater on="cited_cases" indexFlag="{{idx}}">
+      <View style="border: 1px solid #e8e8e8; border-radius: 3px; padding: 10px; margin: 10px 0; background: #fafafa;">
+        <Header value="Cited Case #{{idx}}" size="5"/>
+        <Text name="cited_case_title_label_{{idx}}" value="Case Title:"/>
+        <TextArea name="cited_case_title_{{idx}}" toName="text" maxSubmissions="1" editable="true"/>
+        
+        <Text name="cited_case_citation_label_{{idx}}" value="Citation:"/>
+        <TextArea name="cited_case_citation_{{idx}}" toName="text" maxSubmissions="1" editable="true"/>
+        
+        <Text name="cited_case_relevance_label_{{idx}}" value="Relevance:"/>
+        <Choices name="cited_case_relevance_{{idx}}" toName="text" choice="single">
+          <Choice value="High"/>
+          <Choice value="Medium"/>
+          <Choice value="Low"/>
+        </Choices>
+      </View>
+    </Repeater>
+    
+    <View style="display: flex; justify-content: flex-end;">
+      <Header value="+ Add Another Cited Case" size="5" style="cursor: pointer; color: blue;"/>
+    </View>
+  </View>
+  
+  <!-- Statutes Referenced -->
+  <Header value="Statutes Referenced" size="4"/>
+  <Text name="statutes_info" value="Add statutes referenced in the case:"/>
+  <TextArea name="statutes" toName="text" editable="true" rows="2" maxSubmissions="1"/>
+  
+  <!-- Judges -->
+  <Header value="Judges" size="4"/>
+  <Text name="judges_info" value="Add judges involved in the case:"/>
+  <TextArea name="judges" toName="text" editable="true" rows="2" maxSubmissions="1"/>
+  
+  <!-- Jurisdictions -->
+  <Header value="Jurisdictions" size="4"/>
+  <Text name="jurisdictions_info" value="Add jurisdictions relevant to the case:"/>
+  <TextArea name="jurisdictions" toName="text" editable="true" rows="2" maxSubmissions="1"/>
+  
+  <!-- Additional Metadata -->
+  <Header value="Additional Metadata" size="4"/>
+  <Text name="primary_case_title_label" value="Primary Case Title:"/>
+  <TextArea name="primary_case_title" toName="text" maxSubmissions="1" editable="true"/>
+  
+  <Text name="primary_case_number_label" value="Primary Case Number:"/>
+  <TextArea name="primary_case_number" toName="text" maxSubmissions="1" editable="true"/>
+  
+  <Text name="primary_citation_label" value="Primary Citation:"/>
+  <TextArea name="primary_citation" toName="text" maxSubmissions="1" editable="true"/>
+</View> 

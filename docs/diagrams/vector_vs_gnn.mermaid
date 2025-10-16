@@ -1,0 +1,33 @@
+graph LR
+    subgraph VectorIndex["Vector Index System"]
+        V1[Gemini API<br/>768-dim embeddings]
+        V2[Neo4j Vector Index<br/>HNSW algorithm]
+        V3[Semantic Search<br/>Similar meaning]
+        V1 --> V2 --> V3
+    end
+    
+    subgraph GNNSystem["GNN System"]
+        G1[Legal Features<br/>9-dim vectors]
+        G2[GCN Architecture<br/>Graph learning]
+        G3[Link Prediction<br/>Missing relationships]
+        G1 --> G2 --> G3
+    end
+    
+    subgraph Neo4jDB["Neo4j Database"]
+        N1[Case Nodes]
+        N2[Relationships]
+        N3[Embeddings]
+    end
+    
+    Neo4jDB --> VectorIndex
+    Neo4jDB --> GNNSystem
+    
+    VectorIndex --> Combined[Combined Search Results]
+    GNNSystem --> Combined
+    
+    style VectorIndex fill:#E3F2FD,stroke:#1976D2,stroke-width:3px
+    style GNNSystem fill:#FFF3E0,stroke:#F57C00,stroke-width:3px
+    style Neo4jDB fill:#E8F5E9,stroke:#388E3C,stroke-width:3px
+    style Combined fill:#F3E5F5,stroke:#7B1FA2,stroke-width:3px
+
+

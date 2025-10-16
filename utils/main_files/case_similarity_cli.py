@@ -59,7 +59,7 @@ def compute_text_similarity(query_text, document_text):
     # Final score combines direct word matches and sequence similarity
     return min(base_score + similarity_bonus, 1.0)  # Cap at 1.0
 
-def load_all_legal_data(data_path="data"):
+def load_all_legal_data(data_path="data", include_csv=True, max_csv_cases=100):
     """Load all the legal data from both test cases and scraped data"""
     print(f"Loading all legal data from: {data_path}")
     
@@ -68,6 +68,8 @@ def load_all_legal_data(data_path="data"):
         data_path = os.path.join("..", data_path)
         
     all_docs = []
+    
+    # Load JSON files
     json_files = glob.glob(os.path.join(data_path, "**/*.json"), recursive=True)
     
     print(f"Found {len(json_files)} JSON files")
@@ -109,6 +111,24 @@ def load_all_legal_data(data_path="data"):
                 
         except Exception as e:
             print(f"Error loading {json_file}: {e}")
+    
+    # Load CSV data if requested
+    if include_csv:
+        try:
+            # Import the CSV loader
+            import sys
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+            from utils.main_files.csv_data_loader import load_all_csv_data
+            
+            print(f"\n=== Loading CSV Classification Datasets ===")
+            csv_docs = load_all_csv_data(data_path, max_cases_per_file=max_csv_cases)
+            all_docs.extend(csv_docs)
+            print(f"Added {len(csv_docs)} cases from CSV datasets")
+        except ImportError as e:
+            print(f"CSV loader not available: {e}")
+            print("Skipping CSV data")
+        except Exception as e:
+            print(f"Error loading CSV data: {e}")
     
     print(f"Successfully loaded {len(all_docs)} legal documents")
     return all_docs

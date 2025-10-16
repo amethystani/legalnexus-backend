@@ -22,28 +22,31 @@ import time
 try:
     import plotly.graph_objects as go
     import networkx as nx
-    from kg_visualizer import (
+    from utils.main_files.kg_visualizer import (
         get_graph_data, 
         create_network_graph, 
         get_case_connections, 
         show_case_details
     )
     VISUALIZATION_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     VISUALIZATION_AVAILABLE = False
+    print(f"Visualization import error: {e}")
 
 # Set Google Gemini API key
-GOOGLE_API_KEY = "AIzaSyA0dLTfkzxcZYP6KidlFClAyMLl6mea1y8"
+GOOGLE_API_KEY = "AIzaSyCE64GFYnFZnZktAATpIx0zTp3HpUAUSbA"
 # Configure Google Gemini API
 genai.configure(api_key=GOOGLE_API_KEY)
 
-def load_legal_data(data_path="data"):
-    """Load all the legal data JSON files from the data directory structure"""
+def load_legal_data(data_path="data", include_csv=True, max_csv_cases=100):
+    """Load all the legal data from JSON files and CSV datasets"""
     # Adjust the path if running from Backend directory
     if os.path.basename(os.getcwd()) == "Backend":
         data_path = os.path.join("..", data_path)
         
     all_docs = []
+    
+    # Load JSON files
     json_files = glob.glob(os.path.join(data_path, "**/*.json"), recursive=True)
     
     # Log the number of files found to help with debugging
@@ -88,6 +91,20 @@ def load_legal_data(data_path="data"):
         except Exception as e:
             print(f"Error loading {json_file}: {e}")
     
+    # Load CSV data if requested
+    if include_csv:
+        try:
+            from utils.main_files.csv_data_loader import load_all_csv_data
+            print(f"\n=== Loading CSV Classification Datasets ===")
+            csv_docs = load_all_csv_data(data_path, max_cases_per_file=max_csv_cases)
+            all_docs.extend(csv_docs)
+            print(f"Added {len(csv_docs)} cases from CSV datasets")
+        except ImportError:
+            print("CSV loader not available, skipping CSV data")
+        except Exception as e:
+            print(f"Error loading CSV data: {e}")
+    
+    print(f"\n=== Total: {len(all_docs)} legal documents loaded ===")
     return all_docs
 
 def create_legal_knowledge_graph(graph, docs, llm, embeddings, neo4j_url, neo4j_username, neo4j_password):
@@ -687,7 +704,7 @@ def main():
                 # Use lightweight Gemini 2.5 Flash Preview model to avoid quota issues
                 llm = ChatGoogleGenerativeAI(
                     google_api_key=google_api_key,
-                    model="gemini-2.5-flash-preview-04-17",
+                    model="models/gemini-flash-latest",
                     temperature=0.1,
                     convert_system_message_to_human=True,
                     max_output_tokens=2048,
@@ -717,7 +734,7 @@ def main():
                     # Use lightweight Gemini 2.5 Flash Preview model to avoid quota issues
                     llm = ChatGoogleGenerativeAI(
                         google_api_key=google_api_key,
-                        model="gemini-2.5-flash-preview-04-17",
+                        model="models/gemini-flash-latest",
                         temperature=0.1,
                         convert_system_message_to_human=True,
                         max_output_tokens=2048,

@@ -1,0 +1,58 @@
+CLEAN KNOWLEDGE GRAPH - COMPLETE DATASET STATISTICS
+============================================================
+
+Generated on: 2025-10-15 22:45:00
+
+Total Cases: 1,000
+Unique Courts: 25
+Unique Judges: 23
+Unique Statutes: 364
+Unique Acts: 200
+
+TOP COURTS:
+ 1. Unknown: 234 cases
+ 2. Madras HC: 74 cases
+ 3. Bombay HC: 69 cases
+ 4. Punjab Harayana HC: 68 cases
+ 5. Delhi HC: 63 cases
+ 6. Allahabad HC: 60 cases
+ 7. Rajasthan HC: 60 cases
+ 8. Kerala HC: 56 cases
+ 9. Gujarati HC: 53 cases
+10. Patna HC: 44 cases
+
+TOP JUDGES:
+ 1. Fast Track Court: 3 cases
+ 2. Hasnain Massodi: 2 cases
+ 3. Barkat Ali Zaidi: 2 cases
+ 4. Honble Mr: 2 cases
+ 5. Honble Manoj Misra: 1 cases
+ 6. First Class: 1 cases
+ 7. Senior Thane: 1 cases
+ 8. Small Cause Court: 1 cases
+ 9. Irshad Hussain: 1 cases
+10. Class No: 1 cases
+
+TOP STATUTES:
+ 1. Article 226: 38 occurrences
+ 2. Section 302: 30 occurrences
+ 3. Section 482: 22 occurrences
+ 4. Section 4: 14 occurrences
+ 5. Section 18: 13 occurrences
+ 6. Section 5: 13 occurrences
+ 7. Section 12: 13 occurrences
+ 8. Article 227: 12 occurrences
+ 9. Section 7: 11 occurrences
+10. Section 34: 11 occurrences
+
+TOP ACTS:
+ 1. Income Tax Act: 38 occurrences
+ 2. IPC.: 32 occurrences
+ 3. Land Act: 20 occurrences
+ 4. Consumer Protection Act: 20 occurrences
+ 5. Motor Vehicles Act: 18 occurrences
+ 6. Arbitration Act: 12 occurrences
+ 7. Corruption Act: 11 occurrences
+ 8. Negotiable Instruments Act: 11 occurrences
+ 9. Companies Act: 11 occurrences
+10. Arms Act: 9 occurrences

@@ -1,0 +1,43 @@
+stateDiagram-v2
+    [*] --> ExtractGraph: Start GNN Process
+    
+    state "Extract from Neo4j" as ExtractGraph {
+        [*] --> GetNodes: MATCH (n) RETURN nodes
+        GetNodes --> GetEdges: MATCH ()-[r]->() RETURN edges
+        GetEdges --> [*]: Return graph data
+    }
+    
+    ExtractGraph --> CreateFeatures: Convert to tensors
+    
+    state "Feature Engineering" as CreateFeatures {
+        [*] --> NodeType: Encode node type (4 dims)
+        NodeType --> TitleLen: Add title length (1 dim)
+        TitleLen --> CourtHier: Add court hierarchy (3 dims)
+        CourtHier --> YearInfo: Add year (1 dim)
+        YearInfo --> [*]: 9-dim vector ready
+    }
+    
+    CreateFeatures --> TrainGNN: Feed to GNN
+    
+    state "GNN Training" as TrainGNN {
+        [*] --> GCN1: GCN Layer 1 (9→64)
+        GCN1 --> ReLU: ReLU + Dropout 0.5
+        ReLU --> GCN2: GCN Layer 2 (64→64)
+        GCN2 --> LinkPred: Link Prediction Head
+        LinkPred --> Sigmoid: Sigmoid (0-1 prob)
+        Sigmoid --> [*]: Trained model
+    }
+    
+    TrainGNN --> MakePredictions: Predict links
+    
+    state "Generate Predictions" as MakePredictions {
+        [*] --> Sample: Sample candidate node pairs
+        Sample --> Predict: Run through trained model
+        Predict --> Rank: Rank by probability
+        Rank --> TopK: Select top-k predictions
+        TopK --> [*]: Return predictions
+    }
+    
+    MakePredictions --> [*]: Output: Predicted relationships
+
+

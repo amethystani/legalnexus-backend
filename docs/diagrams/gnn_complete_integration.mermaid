@@ -1,0 +1,71 @@
+flowchart TD
+    Start([Start: Legal Documents]) --> Load[Load Legal Documents<br/>JSON files + CSV data]
+    
+    Load --> CreateNodes[Create Nodes in Neo4j]
+    CreateNodes --> CaseNode[Case nodes<br/>id, title, court, date, text]
+    CreateNodes --> JudgeNode[Judge nodes<br/>name]
+    CreateNodes --> CourtNode[Court nodes<br/>name]
+    CreateNodes --> StatuteNode[Statute nodes<br/>name]
+    
+    CaseNode --> CreateRel[Create Relationships]
+    JudgeNode --> CreateRel
+    CourtNode --> CreateRel
+    StatuteNode --> CreateRel
+    
+    CreateRel --> JudgedRel[Judge -JUDGED→ Case]
+    CreateRel --> HeardRel[Case -HEARD_BY→ Court]
+    CreateRel --> RefRel[Case -REFERENCES→ Statute]
+    
+    JudgedRel --> GenEmbed[Generate Embeddings<br/>Gemini API]
+    HeardRel --> GenEmbed
+    RefRel --> GenEmbed
+    
+    GenEmbed --> VectorEmbed[Convert text → 768-dim vectors<br/>Store in Case.embedding]
+    VectorEmbed --> CreateIndex[Create Vector Index<br/>vector_index + entity_index]
+    
+    CreateIndex --> Neo4jGraph[(Neo4j Knowledge Graph<br/>Nodes + Relationships + Indexes)]
+    
+    Neo4jGraph --> GNNExtract[GNN: Extract Graph Data]
+    Neo4jGraph --> VectorSearch[Vector Index Search]
+    
+    GNNExtract --> Query1[Query 1: Get all nodes<br/>MATCH n RETURN id, labels, properties]
+    GNNExtract --> Query2[Query 2: Get all relationships<br/>MATCH source-r→target]
+    
+    Query1 --> CreateFeatures2[Create Features<br/>9-dim vectors per node]
+    Query2 --> EdgeIndex[Create edge_index<br/>source→target pairs]
+    
+    CreateFeatures2 --> GNNTrain[GNN Training]
+    EdgeIndex --> GNNTrain
+    
+    GNNTrain --> FeatureEng[Feature Engineering 9-dim]
+    FeatureEng --> GCN1[GCN Layer 1: 9→64]
+    GCN1 --> ReLU1[ReLU + Dropout 0.5]
+    ReLU1 --> GCN2[GCN Layer 2: 64→64]
+    GCN2 --> LinkHead[Link Prediction Head<br/>Concatenate + Dense layers]
+    LinkHead --> TrainResult[Training Result<br/>ROC-AUC: 0.78-0.85]
+    
+    TrainResult --> Predictions[GNN Predictions]
+    Predictions --> Pred1[Case_123 -CITES→ Case_456<br/>89% probability]
+    Predictions --> Pred2[Case_789 -REFERENCES→ Statute_X<br/>92% probability]
+    Predictions --> Pred3[Judge_Y -JUDGED→ Case_321<br/>85% probability]
+    
+    Pred1 --> Integration[Integration with Search]
+    Pred2 --> Integration
+    Pred3 --> Integration
+    VectorSearch --> Integration
+    
+    Integration --> UserQuery[User Query:<br/>Section 65B electronic evidence]
+    UserQuery --> VectorStep[Step 1: Vector Index Search<br/>Gemini 768-dim embeddings]
+    UserQuery --> GNNStep[Step 2: GNN Enhancement<br/>Predicted relationships]
+    
+    VectorStep --> CombineResults[Combined Results]
+    GNNStep --> CombineResults
+    
+    CombineResults --> FinalResult[Direct matches Vector<br/>+ Related cases GNN<br/>+ Graph relationships]
+    
+    style Neo4jGraph fill:#E6F3FF,stroke:#2E86AB,stroke-width:3px
+    style GNNTrain fill:#FFF4E6,stroke:#F77F00,stroke-width:3px
+    style Predictions fill:#E6FFE6,stroke:#06A77D,stroke-width:3px
+    style Integration fill:#F0E6FF,stroke:#6C5CE7,stroke-width:3px
+    style FinalResult fill:#D4EDDA,stroke:#28A745,stroke-width:3px
+

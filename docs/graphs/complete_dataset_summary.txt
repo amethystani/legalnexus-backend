@@ -1,0 +1,98 @@
+LEGAL KNOWLEDGE GRAPH - COMPLETE DATASET SUMMARY
+============================================================
+
+Generated on: 2025-10-15 22:17:17
+
+DATASET OVERVIEW:
+--------------------
+Binary Classification Dataset: 43,008 cases
+Ternary Classification Dataset: 52,899 cases
+Total Cases: 95,907
+
+ENTITY STATISTICS:
+--------------------
+Unique Courts: 26
+Unique Judges: 1107
+Unique Statutes: 9349
+Unique Acts: 7754
+Classification Labels: 3
+
+TOP COURTS BY CASE COUNT:
+------------------------------
+ 1. Unknown Court: 24,003 cases
+ 2. Bombay High Court: 7,893 cases
+ 3. Madras High Court: 7,553 cases
+ 4. Delhi High Court: 6,006 cases
+ 5. Rajasthan High Court: 5,940 cases
+ 6. Punjab Harayana High Court: 5,528 cases
+ 7. Kerala High Court: 5,351 cases
+ 8. Allahabad High Court: 4,911 cases
+ 9. Supreme Court of India: 4,855 cases
+10. Gujarati High Court: 3,987 cases
+11. Patna High Court: 3,848 cases
+12. MP High Court: 2,941 cases
+13. karnataka High Court: 2,755 cases
+14. Chattisgarh High Court: 2,603 cases
+15. Andhra High Court: 1,440 cases
+
+TOP JUDGES BY CASE COUNT:
+------------------------------
+ 1. Honble Mr: 287 cases
+ 2. The Honble Mr: 97 cases
+ 3. Arun Kumar Goel: 85 cases
+ 4. Honble Justice: 72 cases
+ 5. Barkat Ali Zaidi: 66 cases
+ 6. Inderjit Singh Present Mr: 57 cases
+ 7. Ali Mohammad Magrey: 53 cases
+ 8. Irshad Hussain: 52 cases
+ 9. Ram Sharma: 52 cases
+10. Special Judge: 51 cases
+11. Krishna Iyer: 45 cases
+12. Barkat Ali Zaidi President: 42 cases
+13. Mohammad Yaqoob Mir: 37 cases
+14. Honble Ramesh: 34 cases
+15. Arvind Singh Chandel: 33 cases
+
+TOP STATUTES BY FREQUENCY:
+------------------------------
+ 1. Article 226: 6,522 occurrences
+ 2. Section 3: 4,107 occurrences
+ 3. Section 4: 3,634 occurrences
+ 4. Section 313: 3,568 occurrences
+ 5. Section 302: 3,465 occurrences
+ 6. Section 5: 2,914 occurrences
+ 7. Section 482: 2,885 occurrences
+ 8. Section 34: 2,669 occurrences
+ 9. Article 14: 2,476 occurrences
+10. Section 11: 2,327 occurrences
+11. Section 2: 2,315 occurrences
+12. Section 7: 2,111 occurrences
+13. Section 9: 2,078 occurrences
+14. Section 6: 2,048 occurrences
+15. Section 10: 1,937 occurrences
+
+TOP ACTS BY FREQUENCY:
+------------------------------
+ 1. IPC.: 5,766 occurrences
+ 2. Income Tax Act: 4,015 occurrences
+ 3. Evidence Act: 3,436 occurrences
+ 4. Motor Vehicles Act: 2,429 occurrences
+ 5. Companies Act: 2,322 occurrences
+ 6. Consumer Protection Act: 2,316 occurrences
+ 7. Property Act: 2,193 occurrences
+ 8. Indian Evidence Act: 2,013 occurrences
+ 9. Land Act: 2,009 occurrences
+10. Industrial Disputes Act: 1,986 occurrences
+
+LABEL DISTRIBUTION:
+--------------------
+Label 0: 44,153 cases (46.0%)
+Label 1: 51,239 cases (53.4%)
+Label 2: 515 cases (0.5%)
+
+TEXT LENGTH STATISTICS:
+-------------------------
+Average length: 11727 characters
+Median length: 7637 characters
+Min length: 253 characters
+Max length: 184647 characters

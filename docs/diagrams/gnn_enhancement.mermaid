@@ -1,0 +1,25 @@
+graph TB
+    Start[User searches:<br/>Section 65B evidence] --> VectorSearch[Vector Index finds:<br/>Anvar P.V. case 89%]
+    
+    VectorSearch --> GNNCheck{GNN trained?}
+    
+    GNNCheck -->|Yes| GNNQuery[Query GNN for predictions:<br/>What cases cite Anvar P.V.?]
+    GNNCheck -->|No| DirectResult[Return vector results only]
+    
+    GNNQuery --> GNNPredict[GNN predictions:<br/>Case_45 -CITES→ Anvar 92%<br/>Case_78 -CITES→ Anvar 87%<br/>Case_123 -CITES→ Anvar 85%]
+    
+    GNNPredict --> Enrich[Enrich results with:<br/>+ Predicted citing cases<br/>+ Related precedents<br/>+ Court network analysis]
+    
+    Enrich --> EnrichedResult[Enhanced Results:<br/>Direct match + Related cases]
+    
+    DirectResult --> FinalMerge[Merge Results]
+    EnrichedResult --> FinalMerge
+    
+    FinalMerge --> UserDisplay[Display to User]
+    
+    style Start fill:#6C5CE7,color:#fff,stroke:#fff,stroke-width:2px
+    style GNNPredict fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style EnrichedResult fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
+    style UserDisplay fill:#00B894,color:#fff,stroke:#fff,stroke-width:3px
+
+

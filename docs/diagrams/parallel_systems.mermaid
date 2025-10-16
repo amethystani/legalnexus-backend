@@ -1,0 +1,40 @@
+flowchart LR
+    subgraph Input["Data Source"]
+        KG[Knowledge Graph<br/>in Neo4j]
+    end
+    
+    subgraph VectorSystem["Vector Index Path"]
+        V1[Extract Case Text]
+        V2[Gemini Embeddings<br/>768 dimensions]
+        V3[Vector Index<br/>HNSW algorithm]
+        V4[Semantic Search<br/>Similar meaning]
+    end
+    
+    subgraph GNNSystem["GNN Path"]
+        G1[Extract Graph Structure<br/>Nodes + Edges]
+        G2[Legal Features<br/>9 dimensions]
+        G3[GCN Training<br/>Link prediction]
+        G4[Relationship Prediction<br/>Missing links]
+    end
+    
+    subgraph Output["Combined Output"]
+        R1[Vector Search Results]
+        R2[GNN Predicted Links]
+        R3[Merged Results]
+    end
+    
+    KG --> V1
+    KG --> G1
+    
+    V1 --> V2 --> V3 --> V4 --> R1
+    G1 --> G2 --> G3 --> G4 --> R2
+    
+    R1 --> R3
+    R2 --> R3
+    
+    style Input fill:#E8F5E9,stroke:#2E7D32,stroke-width:3px
+    style VectorSystem fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style GNNSystem fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style Output fill:#F3E5F5,stroke:#7B1FA2,stroke-width:3px
+
+
