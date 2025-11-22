@@ -125,6 +125,105 @@ class DynamicWeightingEngine:
         return weights, " + ".join(reasoning) if reasoning else "Standard balanced profile"
 
 
+class AdversarialAgent:
+    """Base class for legal adversarial agents"""
+    def __init__(self, llm, role: str):
+        self.llm = llm
+        self.role = role
+
+    def analyze_case(self, query: str, case: Document) -> Dict[str, Any]:
+        """Analyze a single case from the agent's perspective"""
+        raise NotImplementedError
+
+
+class ProsecutorAgent(AdversarialAgent):
+    """
+    The Prosecutor: Looks for strict liability, guilt, and aggravating factors.
+    Argues WHY this case supports a conviction/liability.
+    """
+    def __init__(self, llm):
+        super().__init__(llm, "Prosecutor")
+
+    def analyze_case(self, query: str, case: Document) -> Dict[str, Any]:
+        try:
+            prompt = f"""
+            ROLE: Aggressive Prosecutor
+            TASK: Analyze this legal case precedent to see if it supports a STRICT/GUILTY outcome for the query.
+            
+            QUERY: "{query}"
+            CASE PRECEDENT: "{case.page_content[:1000]}"...
+            
+            OUTPUT JSON ONLY:
+            {{
+                "relevance_score": <float 0-1, high if it supports prosecution/strictness>,
+                "argument": "<1 sentence argument why this case supports strict liability/guilt>"
+            }}
+            """
+            response = self.llm.invoke(prompt)
+            content = response.content.replace('```json', '').replace('```', '').strip()
+            return json.loads(content)
+        except:
+            return {"relevance_score": 0.0, "argument": "Analysis failed"}
+
+
+class DefenseAgent(AdversarialAgent):
+    """
+    The Defense: Looks for exceptions, loopholes, and mitigating factors.
+    Argues WHY this case supports acquittal/leniency.
+    """
+    def __init__(self, llm):
+        super().__init__(llm, "Defense")
+
+    def analyze_case(self, query: str, case: Document) -> Dict[str, Any]:
+        try:
+            prompt = f"""
+            ROLE: Strategic Defense Attorney
+            TASK: Analyze this legal case precedent to see if it supports a LENIENT/NOT GUILTY outcome for the query.
+            
+            QUERY: "{query}"
+            CASE PRECEDENT: "{case.page_content[:1000]}"...
+            
+            OUTPUT JSON ONLY:
+            {{
+                "relevance_score": <float 0-1, high if it supports defense/leniency>,
+                "argument": "<1 sentence argument why this case supports leniency/exceptions>"
+            }}
+            """
+            response = self.llm.invoke(prompt)
+            content = response.content.replace('```json', '').replace('```', '').strip()
+            return json.loads(content)
+        except:
+            return {"relevance_score": 0.0, "argument": "Analysis failed"}
+
+
+class JudgeAgent(AdversarialAgent):
+    """
+    The Judge: Weighs arguments and re-ranks.
+    """
+    def __init__(self, llm):
+        super().__init__(llm, "Judge")
+
+    def synthesize_and_rank(self, query: str, candidates: List[Dict]) -> List[Dict]:
+        """
+        Candidates list contains: {'doc': doc, 'prosecutor_score': ..., 'defense_score': ..., 'p_arg': ..., 'd_arg': ...}
+        """
+        ranked_results = []
+        for cand in candidates:
+            # Simple synthesis for speed (can be LLM based for full novelty)
+            # Judge values high conflict (relevant to both) or high specificity
+            
+            # If both sides find it relevant, it's a CRITICAL precedent
+            conflict_score = (cand['prosecutor_score'] + cand['defense_score']) / 2
+            
+            # Judge's final relevance score
+            final_score = cand['base_score'] * 0.6 + conflict_score * 0.4
+            
+            cand['final_score'] = final_score
+            ranked_results.append(cand)
+            
+        ranked_results.sort(key=lambda x: x['final_score'], reverse=True)
+        return ranked_results
+
 
 class NovelHybridSearchSystem:
     """
@@ -134,11 +233,13 @@ class NovelHybridSearchSystem:
     3. GNN-based Link Prediction (ML-based Similarity)
     4. Text Pattern Matching (Keyword Search)
     5. Citation Network Analysis (Legal Precedent Search)
+    
+    + ADVERSARIAL AGENTS (Prosecutor, Defense, Judge)
     """
     
     def __init__(self):
         print("=" * 80)
-        print("INITIALIZING NOVEL HYBRID LEGAL CASE SEARCH SYSTEM")
+        print("INITIALIZING ADVERSARIAL MULTI-AGENT LEGAL SYSTEM")
         print("=" * 80)
         
         # Initialize components
@@ -164,6 +265,11 @@ class NovelHybridSearchSystem:
         # Initialize cognitive modules
         self.query_expander = LegalQueryExpander(self.llm)
         self.weighting_engine = DynamicWeightingEngine(self.weights)
+        
+        # Initialize Adversarial Agents
+        self.prosecutor = ProsecutorAgent(self.llm)
+        self.defense = DefenseAgent(self.llm)
+        self.judge = JudgeAgent(self.llm)
         
         self._load_data()
         self._load_embeddings_cache()
@@ -460,48 +566,77 @@ class NovelHybridSearchSystem:
             print(f"  ⚠️  Citation network search failed: {e}")
             return []
     
-    def hybrid_search(self, query: str, top_k: int = 5) -> List[Tuple[Document, float, Dict]]:
+    def hybrid_search(self, query: str, top_k: int = 5) -> List[Dict]:
         """
-        Novel Hybrid Search combining all algorithms with COGNITIVE ENHANCEMENTS
-        Returns: List of (document, final_score, score_breakdown)
+        Adversarial Hybrid Search
+        Returns: List of result dictionaries with agent arguments
         """
         print("\n" + "═" * 80)
-        print("🧠 COGNITIVE SEARCH PROCESS INITIATED")
+        print("⚖️  ADVERSARIAL COURTROOM SESSION INITIATED")
         print("═" * 80)
         
         # Step 1: Cognitive Query Expansion
-        print(f"\n1️⃣  Thinking about query: '{query}'...")
+        print(f"\n1️⃣  Clerk of Court (Query Analysis): '{query}'...")
         analysis = self.query_expander.expand_query(query)
         expanded_query = analysis.get("expanded_query", query)
         
-        print(f"    → Detected Intent: {analysis.get('intent', 'general').upper()}")
-        print(f"    → Detected Domain: {analysis.get('domain', 'unknown').upper()}")
-        if analysis.get('legal_terms'):
-            print(f"    → Injected Legal Terms: {', '.join(analysis['legal_terms'])}")
-        
         # Step 2: Dynamic Weight Adaptation
-        print(f"\n2️⃣  Adapting Search Strategy...")
+        print(f"\n2️⃣  Setting Rules of Evidence (Dynamic Weights)...")
         current_weights, adaptation_reason = self.weighting_engine.adapt_weights(analysis)
-        print(f"    → Strategy: {adaptation_reason}")
-        print(f"    → New Weights: Semantic={current_weights['semantic']:.2f}, Text={current_weights['text']:.2f}, Graph={current_weights['graph']:.2f}")
         
-        # Step 3: Parallel Execution
-        print(f"\n3️⃣  Executing 5-Way Parallel Search...")
+        # Step 3: Candidate Retrieval (The "Discovery" Phase)
+        print(f"\n3️⃣  Discovery Phase (Retrieving Candidates)...")
+        candidates = self._retrieve_candidates(query, expanded_query, current_weights, top_k=8) # Get more for reranking
         
-        # Use expanded query for semantic search to catch legal concepts
-        semantic_results = self.semantic_search(expanded_query, top_k=15)
+        # Step 4: Adversarial Debate (The "Trial")
+        print(f"\n4️⃣  The Trial (Adversarial Analysis)...")
+        processed_candidates = []
         
-        # Use original query for text match to catch exact user phrasing
-        text_results = self.text_pattern_search(query, top_k=15)
+        print(f"    {Colors.FAIL}Prosecutor{Colors.ENDC} and {Colors.GREEN}Defense{Colors.ENDC} are analyzing {len(candidates)} cases...")
         
-        # Use both for graph/citation
-        graph_results = self.graph_traversal_search(expanded_query, top_k=15)
-        citation_results = self.citation_network_search(expanded_query, top_k=15)
+        # Parallel analysis (simulated loop here)
+        for i, (doc, base_score, breakdown) in enumerate(candidates):
+            print(f"    → Analyzing Case {i+1}...", end="\r")
+            
+            # Prosecutor Analysis
+            p_analysis = self.prosecutor.analyze_case(query, doc)
+            
+            # Defense Analysis
+            d_analysis = self.defense.analyze_case(query, doc)
+            
+            processed_candidates.append({
+                'doc': doc,
+                'base_score': base_score,
+                'breakdown': breakdown,
+                'prosecutor_score': p_analysis.get('relevance_score', 0),
+                'prosecutor_arg': p_analysis.get('argument', ''),
+                'defense_score': d_analysis.get('relevance_score', 0),
+                'defense_arg': d_analysis.get('argument', '')
+            })
+            
+        print(f"    ✓ Analysis Complete.                               ")
+
+        # Step 5: Judicial Ruling
+        print(f"\n5️⃣  Judicial Ruling (Final Ranking)...")
+        final_results = self.judge.synthesize_and_rank(query, processed_candidates)
         
-        # Aggregate scores
+        print("\n" + "═" * 80)
+        print("✅ JUDGMENT DELIVERED")
+        print("═" * 80)
+        
+        return final_results[:top_k]
+
+    def _retrieve_candidates(self, query, expanded_query, weights, top_k=10):
+        """Internal method to get raw candidates before adversarial re-ranking"""
+        
+        # Use expanded query for semantic search
+        semantic_results = self.semantic_search(expanded_query, top_k=top_k*2)
+        text_results = self.text_pattern_search(query, top_k=top_k*2)
+        graph_results = self.graph_traversal_search(expanded_query, top_k=top_k*2)
+        citation_results = self.citation_network_search(expanded_query, top_k=top_k*2)
+        
         aggregated_scores = {}
         
-        # Helper to process results
         def process_results(results, weight_key):
             for doc, score in results:
                 doc_id = doc.metadata.get('id', id(doc))
@@ -517,15 +652,14 @@ class NovelHybridSearchSystem:
         process_results(text_results, 'text')
         process_results(citation_results, 'citation')
         
-        # Calculate final hybrid scores using DYNAMIC weights
-        final_results = []
+        final_candidates = []
         for doc_id, scores in aggregated_scores.items():
             final_score = (
-                current_weights['semantic'] * scores['semantic'] +
-                current_weights['graph'] * scores['graph'] +
-                current_weights['text'] * scores['text'] +
-                current_weights['citation'] * scores['citation'] +
-                current_weights['gnn'] * scores['gnn']
+                weights['semantic'] * scores['semantic'] +
+                weights['graph'] * scores['graph'] +
+                weights['text'] * scores['text'] +
+                weights['citation'] * scores['citation'] +
+                weights['gnn'] * scores['gnn']
             )
             
             score_breakdown = {
@@ -537,44 +671,38 @@ class NovelHybridSearchSystem:
                 'final': final_score
             }
             
-            final_results.append((scores['doc'], final_score, score_breakdown))
+            final_candidates.append((scores['doc'], final_score, score_breakdown))
         
-        # Sort by final score
-        final_results.sort(key=lambda x: x[1], reverse=True)
-        
-        print("\n" + "═" * 80)
-        print("✅ SEARCH COMPLETE")
-        print("═" * 80)
-        
-        return final_results[:top_k]
+        final_candidates.sort(key=lambda x: x[1], reverse=True)
+        return final_candidates[:top_k]
     
-    def generate_ai_explanation(self, query: str, similar_cases: List[Tuple[Document, float, Dict]]) -> str:
-        """Generate AI explanation for the search results"""
-        if not self.llm or not similar_cases:
+    def generate_ai_explanation(self, query: str, results: List[Dict]) -> str:
+        """Generate AI explanation based on the adversarial debate"""
+        if not self.llm or not results:
             return "AI explanation not available"
         
         try:
-            # Prepare context
+            # Prepare context from the debate
             cases_summary = "\n\n".join([
-                f"Case {i+1}: {case[0].metadata.get('title', 'Untitled')}\n"
-                f"Court: {case[0].metadata.get('court', 'Unknown')}\n"
-                f"Relevance Score: {case[1]:.3f}\n"
-                f"Summary: {case[0].page_content[:300]}..."
-                for i, case in enumerate(similar_cases[:3])
+                f"Case {i+1}: {case['doc'].metadata.get('title', 'Untitled')}\n"
+                f"Prosecutor Argues: {case['prosecutor_arg']}\n"
+                f"Defense Argues: {case['defense_arg']}\n"
+                f"Summary: {case['doc'].page_content[:200]}..."
+                for i, case in enumerate(results[:3])
             ])
             
-            prompt = f"""You are a legal AI assistant. A user asked: "{query}"
+            prompt = f"""You are a Chief Justice. A user asked: "{query}"
 
-Based on our legal database, here are the most relevant cases:
+Review the arguments from your Prosecutor and Defense agents on these top cases:
 
 {cases_summary}
 
-Please provide:
-1. A brief explanation of why these cases are relevant to the query
-2. Key legal principles or statutes involved
-3. How these cases might help someone with a situation like: "{query}"
+Provide a "Judicial Summary":
+1. What is the balanced legal view?
+2. Which side (Prosecution/Strictness or Defense/Leniency) has stronger precedents here?
+3. Practical takeaway for the user.
 
-Keep your response clear, concise, and helpful for a regular person (not just lawyers).
+Keep it authoritative but clear.
 """
             
             response = self.llm.invoke(prompt)
@@ -604,47 +732,41 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     if iteration == total: 
         print()
 
-def print_results(results: List[Tuple[Document, float, Dict]], show_details: bool = False):
-    """Print search results in a high-tech dashboard format"""
+def print_results(results: List[Dict], show_details: bool = False):
+    """Print search results in a high-tech dashboard format with Adversarial Arguments"""
     if not results:
         print(f"\n{Colors.FAIL}No results found.{Colors.ENDC}")
         return
     
-    print(f"\n{Colors.HEADER}RESULTS DASHBOARD{Colors.ENDC}")
-    print(f"{Colors.BLUE}Found {len(results)} relevant cases{Colors.ENDC}")
+    print(f"\n{Colors.HEADER}JUDICIAL RESULTS DASHBOARD{Colors.ENDC}")
+    print(f"{Colors.BLUE}Found {len(results)} relevant cases after adversarial review{Colors.ENDC}")
     print("═" * 80)
     
-    for i, (doc, final_score, breakdown) in enumerate(results):
+    for i, res in enumerate(results):
+        doc = res['doc']
         title = doc.metadata.get('title', 'Untitled Case')
         court = doc.metadata.get('court', 'Unknown Court')
-        date = doc.metadata.get('date', 'Unknown Date')
+        final_score = res['final_score']
         
         # Color code score
         score_color = Colors.GREEN if final_score > 0.7 else (Colors.WARNING if final_score > 0.4 else Colors.FAIL)
         
         print(f"\n{Colors.BOLD}{i+1}. {title}{Colors.ENDC}")
-        print(f"   {Colors.CYAN}Court:{Colors.ENDC} {court}  |  {Colors.CYAN}Date:{Colors.ENDC} {date}")
-        print(f"   {Colors.BOLD}Relevance Score:{Colors.ENDC} {score_color}{final_score:.4f}{Colors.ENDC}")
+        print(f"   {Colors.CYAN}Court:{Colors.ENDC} {court}")
+        print(f"   {Colors.BOLD}Judicial Relevance:{Colors.ENDC} {score_color}{final_score:.4f}{Colors.ENDC}")
+        
+        # ADVERSARIAL ARGUMENTS DISPLAY
+        print(f"\n   {Colors.FAIL}Prosecutor's Take:{Colors.ENDC} {res['prosecutor_arg']}")
+        print(f"   {Colors.GREEN}Defense's Take:   {Colors.ENDC} {res['defense_arg']}")
         
         if show_details:
-            print(f"\n   {Colors.UNDERLINE}Algorithm Contribution Analysis:{Colors.ENDC}")
-            
-            # ASCII Chart for weights
-            max_bar_len = 40
-            
-            def draw_bar(label, value, color):
-                bar_len = int(value * max_bar_len)
-                bar = "█" * bar_len
-                print(f"     {label:<15} |{color}{bar:<40}{Colors.ENDC}| {value:.4f}")
-
-            draw_bar("Semantic", breakdown['semantic'], Colors.BLUE)
-            draw_bar("Graph", breakdown['graph'], Colors.MAGENTA if hasattr(Colors, 'MAGENTA') else Colors.HEADER)
-            draw_bar("Text Pattern", breakdown['text'], Colors.GREEN)
-            draw_bar("Citation", breakdown['citation'], Colors.WARNING)
-            draw_bar("GNN Model", breakdown['gnn'], Colors.CYAN)
+            print(f"\n   {Colors.UNDERLINE}Technical Analysis:{Colors.ENDC}")
+            print(f"     • Base Similarity:    {res['base_score']:.4f}")
+            print(f"     • Prosecutor Score:   {res['prosecutor_score']:.4f}")
+            print(f"     • Defense Score:      {res['defense_score']:.4f}")
             
             # Show excerpt
-            excerpt = doc.page_content[:300].replace('\n', ' ') + "..." 
+            excerpt = doc.page_content[:200].replace('\n', ' ') + "..." 
             print(f"\n   {Colors.CYAN}Excerpt:{Colors.ENDC}\n   {excerpt}\n")
         
         print(f"{Colors.BLUE}" + "-" * 80 + f"{Colors.ENDC}")
@@ -658,9 +780,9 @@ def main():
     print(f"{Colors.HEADER}")
     print("╔" + "═" * 78 + "╗")
     print("║" + " " * 78 + "║")
-    print("║" + "     NOVEL HYBRID LEGAL CASE SEARCH SYSTEM v2.0".center(78) + "║")
+    print("║" + "     ADVERSARIAL MULTI-AGENT LEGAL SYSTEM v3.0".center(78) + "║")
     print("║" + " " * 78 + "║")
-    print("║" + "  [Cognitive Query Expansion] • [Dynamic Adaptive Scoring] • [Hybrid Search]".center(78) + "║")
+    print("║" + "  [Prosecutor Agent] • [Defense Agent] • [Judge Agent]".center(78) + "║")
     print("║" + " " * 78 + "║")
     print("╚" + "═" * 78 + "╝")
     print(f"{Colors.ENDC}")
