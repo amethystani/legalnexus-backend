@@ -29,6 +29,15 @@ except ImportError as e:
     print(f"Warning: Could not import some utilities: {e}")
     print("Some features may not be available")
 
+# Import Toulmin Argumentation System
+try:
+    from toulmin_extractor import ToulminExtractor, ToulminStructure
+    from argument_chain_traversal import ArgumentGraph
+    TOULMIN_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Toulmin system not available: {e}")
+    TOULMIN_AVAILABLE = False
+
 # Load environment variables
 load_dotenv()
 
