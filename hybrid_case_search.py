@@ -138,91 +138,108 @@ class AdversarialAgent:
 
 class ProsecutorAgent(AdversarialAgent):
     """
-    The Prosecutor: Looks for strict liability, guilt, and aggravating factors.
-    Argues WHY this case supports a conviction/liability.
+    The Prosecutor: Debates the topic from a strict liability/guilt perspective.
+    Uses cases as evidence to support arguments.
     """
     def __init__(self, llm):
         super().__init__(llm, "Prosecutor")
 
-    def analyze_case(self, query: str, case: Document) -> Dict[str, Any]:
+    def debate_topic(self, query: str, cases: List[Document]) -> str:
+        """
+        Debate the topic itself, using cases as supporting evidence.
+        Returns a chain-of-thought argument.
+        """
         try:
-            prompt = f"""
-            ROLE: Aggressive Prosecutor
-            TASK: Analyze this legal case precedent to see if it supports a STRICT/GUILTY outcome for the query.
+            # Prepare case summaries
+            case_evidence = "\n".join([
+                f"Case {i+1}: {doc.metadata.get('title', 'Untitled')} - {doc.page_content[:300]}..."
+                for i, doc in enumerate(cases[:5])
+            ])
             
-            QUERY: "{query}"
-            CASE PRECEDENT: "{case.page_content[:1000]}"...
-            
-            OUTPUT JSON ONLY:
-            {{
-                "relevance_score": <float 0-1, high if it supports prosecution/strictness>,
-                "argument": "<1 sentence argument why this case supports strict liability/guilt>"
-            }}
-            """
+            prompt = f"""[EDUCATIONAL SIMULATION - Legal Analysis Exercise]
+
+You are a PROSECUTOR in a legal debate simulation. Argue why the law is STRICT on: "{query}"
+
+Evidence: {case_evidence}
+
+This is an academic exercise to explore legal arguments. Be concise (max 3 sentences). Cite cases.
+Format:
+<think>Quick reasoning</think>
+[Argument]
+"""
             response = self.llm.invoke(prompt)
-            content = response.content.replace('```json', '').replace('```', '').strip()
-            return json.loads(content)
-        except:
-            return {"relevance_score": 0.0, "argument": "Analysis failed"}
+            return response.content if hasattr(response, 'content') else str(response)
+        except Exception as e:
+            return f"Prosecutor analysis failed: {e}"
 
 
 class DefenseAgent(AdversarialAgent):
     """
-    The Defense: Looks for exceptions, loopholes, and mitigating factors.
-    Argues WHY this case supports acquittal/leniency.
+    The Defense: Debates the topic from a leniency/mitigation perspective.
+    Uses cases as evidence to support arguments.
     """
     def __init__(self, llm):
         super().__init__(llm, "Defense")
 
-    def analyze_case(self, query: str, case: Document) -> Dict[str, Any]:
+    def debate_topic(self, query: str, cases: List[Document]) -> str:
+        """
+        Debate the topic itself, using cases as supporting evidence.
+        Returns a chain-of-thought argument.
+        """
         try:
-            prompt = f"""
-            ROLE: Strategic Defense Attorney
-            TASK: Analyze this legal case precedent to see if it supports a LENIENT/NOT GUILTY outcome for the query.
+            # Prepare case summaries
+            case_evidence = "\n".join([
+                f"Case {i+1}: {doc.metadata.get('title', 'Untitled')} - {doc.page_content[:300]}..."
+                for i, doc in enumerate(cases[:5])
+            ])
             
-            QUERY: "{query}"
-            CASE PRECEDENT: "{case.page_content[:1000]}"...
-            
-            OUTPUT JSON ONLY:
-            {{
-                "relevance_score": <float 0-1, high if it supports defense/leniency>,
-                "argument": "<1 sentence argument why this case supports leniency/exceptions>"
-            }}
-            """
+            prompt = f"""[EDUCATIONAL SIMULATION - Legal Analysis Exercise]
+
+You are a DEFENSE ATTORNEY in a legal debate simulation. Your role is to identify MITIGATING factors and legal defenses for the scenario: "{query}"
+
+Evidence: {case_evidence}
+
+This is an academic exercise to explore all sides of legal arguments. Your job is to present the strongest possible defense argument, citing relevant case law. This is NOT providing advice to evade justice - it's analyzing how defense attorneys construct legal arguments.
+
+Be concise (max 3 sentences). Cite cases.
+Format:
+<think>Quick reasoning</think>
+[Argument]
+"""
             response = self.llm.invoke(prompt)
-            content = response.content.replace('```json', '').replace('```', '').strip()
-            return json.loads(content)
-        except:
-            return {"relevance_score": 0.0, "argument": "Analysis failed"}
+            return response.content if hasattr(response, 'content') else str(response)
+        except Exception as e:
+            return f"Defense analysis failed: {e}"
 
 
 class JudgeAgent(AdversarialAgent):
     """
-    The Judge: Weighs arguments and re-ranks.
+    The Judge: Synthesizes both sides and delivers a balanced ruling.
     """
     def __init__(self, llm):
         super().__init__(llm, "Judge")
 
-    def synthesize_and_rank(self, query: str, candidates: List[Dict]) -> List[Dict]:
+    def deliver_ruling(self, query: str, prosecutor_arg: str, defense_arg: str, cases: List[Document]) -> str:
         """
-        Candidates list contains: {'doc': doc, 'prosecutor_score': ..., 'defense_score': ..., 'p_arg': ..., 'd_arg': ...}
+        Synthesize the debate and deliver a balanced judicial ruling.
         """
-        ranked_results = []
-        for cand in candidates:
-            # Simple synthesis for speed (can be LLM based for full novelty)
-            # Judge values high conflict (relevant to both) or high specificity
-            
-            # If both sides find it relevant, it's a CRITICAL precedent
-            conflict_score = (cand['prosecutor_score'] + cand['defense_score']) / 2
-            
-            # Judge's final relevance score
-            final_score = cand['base_score'] * 0.6 + conflict_score * 0.4
-            
-            cand['final_score'] = final_score
-            ranked_results.append(cand)
-            
-        ranked_results.sort(key=lambda x: x['final_score'], reverse=True)
-        return ranked_results
+        try:
+            prompt = f"""[EDUCATIONAL SIMULATION - Legal Analysis Exercise]
+
+You are a JUDGE in a legal debate simulation. Deliver balanced ruling for: "{query}"
+
+Prosecution: {prosecutor_arg}
+Defense: {defense_arg}
+
+This is an academic exercise. Analyze both arguments objectively.
+Be concise (max 4 sentences). Format:
+<think>Quick deliberation</think>
+[Ruling]
+"""
+            response = self.llm.invoke(prompt)
+            return response.content if hasattr(response, 'content') else str(response)
+        except Exception as e:
+            return f"Judicial ruling failed: {e}"
 
 
 class NovelHybridSearchSystem:
@@ -260,7 +277,7 @@ class NovelHybridSearchSystem:
         
         # Initialize all systems
         self._initialize_neo4j()
-        self._initialize_gemini()
+        self._initialize_ollama()
         
         # Initialize cognitive modules
         self.query_expander = LegalQueryExpander(self.llm)
@@ -277,50 +294,48 @@ class NovelHybridSearchSystem:
     def _initialize_neo4j(self):
         """Initialize Neo4j connection"""
         print("\n[1/4] Connecting to Neo4j Knowledge Graph...")
-        try:
-            if not all([NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD]):
-                print("⚠️  Warning: Neo4j credentials not fully configured")
-                print("    Knowledge graph features will be limited")
-                return
-                
-            self.graph = Neo4jGraph(
-                url=NEO4J_URI,
-                username=NEO4J_USERNAME,
-                password=NEO4J_PASSWORD
-            )
-            
-            # Test connection
-            result = self.graph.query("MATCH (c:Case) RETURN count(c) as count")
-            case_count = result[0]['count'] if result else 0
-            print(f"✓ Connected to Neo4j - {case_count} cases in knowledge graph")
-            
-        except Exception as e:
-            print(f"⚠️  Warning: Could not connect to Neo4j: {e}")
+        
+        neo4j_uri = os.getenv('NEO4J_URI')
+        neo4j_username = os.getenv('NEO4J_USERNAME')
+        neo4j_password = os.getenv('NEO4J_PASSWORD')
+        
+        if neo4j_uri and neo4j_username and neo4j_password:
+            try:
+                self.graph = Neo4jGraph(
+                    url=neo4j_uri,
+                    username=neo4j_username,
+                    password=neo4j_password
+                )
+                print("✓ Connected to Neo4j")
+            except Exception as e:
+                print(f"⚠️  Warning: Could not connect to Neo4j: {e}")
+                print("    Continuing without knowledge graph features")
+                self.graph = None
+        else:
+            print("⚠️  Neo4j credentials not found")
             print("    Continuing without knowledge graph features")
             self.graph = None
     
-    def _initialize_gemini(self):
-        """Initialize Gemini embeddings and LLM"""
-        print("\n[2/4] Initializing Gemini AI Models...")
+    def _initialize_ollama(self):
+        """Initialize Ollama models for embeddings and LLM"""
+        print("\n[2/4] Initializing Ollama (Llama3.2) AI Models...")
+        
         try:
-            self.embeddings_model = GoogleGenerativeAIEmbeddings(
-                google_api_key=GOOGLE_API_KEY,
-                model="models/embedding-001",
-                task_type="retrieval_document"
-            )
+            from langchain_community.llms import Ollama
+            from langchain_community.embeddings import OllamaEmbeddings
+            import sys
             
-            self.llm = ChatGoogleGenerativeAI(
-                google_api_key=GOOGLE_API_KEY,
-                model="models/gemini-flash-latest",
-                temperature=0.1,
-                max_output_tokens=2048
-            )
-            print("✓ Gemini models initialized successfully")
+            # Use Llama3.2 for speed (much faster than DeepSeek-R1)
+            self.llm = Ollama(model="llama3.2", temperature=0.3, num_predict=300)
             
+            # Use nomic-embed-text for embeddings
+            self.embeddings_model = OllamaEmbeddings(model="nomic-embed-text")
+            
+            print("✓ Ollama models initialized successfully")
         except Exception as e:
-            print(f"⚠️  Warning: Could not initialize Gemini: {e}")
-            self.embeddings_model = None
-            self.llm = None
+            print(f"✗ Failed to initialize Ollama: {e}")
+            print("   Make sure Ollama is running with: ollama serve")
+            sys.exit(1)
     
     def _load_data(self):
         """Load legal case data from all sources"""
@@ -380,7 +395,7 @@ class NovelHybridSearchSystem:
             print(f"⚠️  Could not load embeddings cache: {e}")
     
     def semantic_search(self, query: str, top_k: int = 5) -> List[Tuple[Document, float]]:
-        """Search using Gemini embeddings (Algorithm 1: Semantic Similarity)"""
+        """Search using semantic similarity (Algorithm 1: Gemini Embeddings)"""
         print("\n[Algorithm 1] Running Semantic Search (Gemini Embeddings)...")
         
         if not self.embeddings_model:
@@ -388,31 +403,56 @@ class NovelHybridSearchSystem:
             return []
         
         try:
-            # Generate query embedding
-            query_embedding = self.embeddings_model.embed_query(query)
+            # Generate query embedding with retry
+            query_embedding = None
+            for attempt in range(3):
+                try:
+                    query_embedding = self.embeddings_model.embed_query(query)
+                    break
+                except Exception as e:
+                    if attempt == 2:
+                        raise
+                    print(f"  ⚠️  Query embedding attempt {attempt+1} failed, retrying...")
+                    time.sleep(1)
             
             results = []
-            for doc in self.cases_data:
+            failed_embeddings = 0
+            
+            for i, doc in enumerate(self.cases_data):
                 # Get or compute document embedding
                 doc_id = doc.metadata.get('id', '')
+                doc_embedding = None
                 
+                # Try to find cached embedding first
                 if 'embeddings' in self.case_embeddings_cache:
-                    # Try to find cached embedding
-                    doc_embedding = None
                     for cached_doc in self.case_embeddings_cache.get('docs', []):
                         if cached_doc.metadata.get('id') == doc_id:
                             idx = self.case_embeddings_cache['docs'].index(cached_doc)
                             doc_embedding = self.case_embeddings_cache['embeddings'][idx]
                             break
-                    
-                    if doc_embedding is None:
+                
+                # Generate embedding if not cached
+                if doc_embedding is None:
+                    try:
                         doc_embedding = self.embeddings_model.embed_query(doc.page_content[:8000])
-                else:
-                    doc_embedding = self.embeddings_model.embed_query(doc.page_content[:8000])
+                        # Small delay to avoid overwhelming Ollama
+                        time.sleep(0.05)
+                    except Exception as e:
+                        print(f"  ⚠️  Failed to embed doc {i+1}/{len(self.cases_data)}: {str(e)[:50]}...")
+                        failed_embeddings += 1
+                        # Skip this document if embedding fails
+                        continue
                 
                 # Compute cosine similarity
-                similarity = compute_cosine_similarity(query_embedding, doc_embedding)
-                results.append((doc, similarity))
+                try:
+                    similarity = compute_cosine_similarity(query_embedding, doc_embedding)
+                    results.append((doc, similarity))
+                except Exception as e:
+                    print(f"  ⚠️  Failed to compute similarity for doc {i+1}")
+                    continue
+            
+            if failed_embeddings > 0:
+                print(f"  ⚠️  {failed_embeddings} documents failed to embed")
             
             # Sort by similarity
             results.sort(key=lambda x: x[1], reverse=True)
@@ -421,6 +461,8 @@ class NovelHybridSearchSystem:
             
         except Exception as e:
             print(f"  ⚠️  Semantic search failed: {e}")
+            import traceback
+            traceback.print_exc()
             return []
     
     def graph_traversal_search(self, query: str, top_k: int = 5) -> List[Tuple[Document, float]]:
@@ -566,10 +608,10 @@ class NovelHybridSearchSystem:
             print(f"  ⚠️  Citation network search failed: {e}")
             return []
     
-    def hybrid_search(self, query: str, top_k: int = 5) -> List[Dict]:
+    def hybrid_search(self, query: str, top_k: int = 5) -> Dict:
         """
-        Adversarial Hybrid Search
-        Returns: List of result dictionaries with agent arguments
+        Adversarial Hybrid Search with Topic-Based Debate
+        Returns: Dictionary with prosecutor_arg, defense_arg, ruling, and cases
         """
         print("\n" + "═" * 80)
         print("⚖️  ADVERSARIAL COURTROOM SESSION INITIATED")
@@ -586,45 +628,35 @@ class NovelHybridSearchSystem:
         
         # Step 3: Candidate Retrieval (The "Discovery" Phase)
         print(f"\n3️⃣  Discovery Phase (Retrieving Candidates)...")
-        candidates = self._retrieve_candidates(query, expanded_query, current_weights, top_k=8) # Get more for reranking
+        candidates = self._retrieve_candidates(query, expanded_query, current_weights, top_k=top_k) 
         
-        # Step 4: Adversarial Debate (The "Trial")
-        print(f"\n4️⃣  The Trial (Adversarial Analysis)...")
-        processed_candidates = []
+        # Extract documents from candidates
+        case_docs = [doc for doc, score, breakdown in candidates]
         
-        print(f"    {Colors.FAIL}Prosecutor{Colors.ENDC} and {Colors.GREEN}Defense{Colors.ENDC} are analyzing {len(candidates)} cases...")
+        # Step 4: Adversarial Debate (The "Trial" - TOPIC-BASED)
+        print(f"\n4️⃣  The Trial (Topic-Based Debate)...")
         
-        # Parallel analysis (simulated loop here)
-        for i, (doc, base_score, breakdown) in enumerate(candidates):
-            print(f"    → Analyzing Case {i+1}...", end="\r")
-            
-            # Prosecutor Analysis
-            p_analysis = self.prosecutor.analyze_case(query, doc)
-            
-            # Defense Analysis
-            d_analysis = self.defense.analyze_case(query, doc)
-            
-            processed_candidates.append({
-                'doc': doc,
-                'base_score': base_score,
-                'breakdown': breakdown,
-                'prosecutor_score': p_analysis.get('relevance_score', 0),
-                'prosecutor_arg': p_analysis.get('argument', ''),
-                'defense_score': d_analysis.get('relevance_score', 0),
-                'defense_arg': d_analysis.get('argument', '')
-            })
-            
-        print(f"    ✓ Analysis Complete.                               ")
-
+        print(f"    {Colors.FAIL}Prosecutor{Colors.ENDC} is preparing argument...")
+        prosecutor_arg = self.prosecutor.debate_topic(query, case_docs)
+        
+        print(f"    {Colors.GREEN}Defense{Colors.ENDC} is preparing argument...")
+        defense_arg = self.defense.debate_topic(query, case_docs)
+        
         # Step 5: Judicial Ruling
-        print(f"\n5️⃣  Judicial Ruling (Final Ranking)...")
-        final_results = self.judge.synthesize_and_rank(query, processed_candidates)
+        print(f"\n5️⃣  Judicial Ruling (Weighing Arguments)...")
+        ruling = self.judge.deliver_ruling(query, prosecutor_arg, defense_arg, case_docs)
         
         print("\n" + "═" * 80)
         print("✅ JUDGMENT DELIVERED")
         print("═" * 80)
         
-        return final_results[:top_k]
+        return {
+            'query': query,
+            'prosecutor_argument': prosecutor_arg,
+            'defense_argument': defense_arg,
+            'judicial_ruling': ruling,
+            'cases': candidates[:top_k]
+        }
 
     def _retrieve_candidates(self, query, expanded_query, weights, top_k=10):
         """Internal method to get raw candidates before adversarial re-ranking"""
@@ -676,41 +708,6 @@ class NovelHybridSearchSystem:
         final_candidates.sort(key=lambda x: x[1], reverse=True)
         return final_candidates[:top_k]
     
-    def generate_ai_explanation(self, query: str, results: List[Dict]) -> str:
-        """Generate AI explanation based on the adversarial debate"""
-        if not self.llm or not results:
-            return "AI explanation not available"
-        
-        try:
-            # Prepare context from the debate
-            cases_summary = "\n\n".join([
-                f"Case {i+1}: {case['doc'].metadata.get('title', 'Untitled')}\n"
-                f"Prosecutor Argues: {case['prosecutor_arg']}\n"
-                f"Defense Argues: {case['defense_arg']}\n"
-                f"Summary: {case['doc'].page_content[:200]}..."
-                for i, case in enumerate(results[:3])
-            ])
-            
-            prompt = f"""You are a Chief Justice. A user asked: "{query}"
-
-Review the arguments from your Prosecutor and Defense agents on these top cases:
-
-{cases_summary}
-
-Provide a "Judicial Summary":
-1. What is the balanced legal view?
-2. Which side (Prosecution/Strictness or Defense/Leniency) has stronger precedents here?
-3. Practical takeaway for the user.
-
-Keep it authoritative but clear.
-"""
-            
-            response = self.llm.invoke(prompt)
-            return response.content
-            
-        except Exception as e:
-            return f"Error generating AI explanation: {e}"
-
 
 class Colors:
     HEADER = '\033[95m'
@@ -723,6 +720,7 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█', print_end="\r"):
     """Call in a loop to create terminal progress bar"""
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -732,74 +730,67 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     if iteration == total: 
         print()
 
-def print_results(results: List[Dict], show_details: bool = False):
-    """Print search results in a high-tech dashboard format with Adversarial Arguments"""
-    if not results:
+def print_results(result: Dict, show_details: bool = False):
+    """Print topic-based debate results with chain-of-thought reasoning"""
+    if not result:
         print(f"\n{Colors.FAIL}No results found.{Colors.ENDC}")
         return
     
-    print(f"\n{Colors.HEADER}JUDICIAL RESULTS DASHBOARD{Colors.ENDC}")
-    print(f"{Colors.BLUE}Found {len(results)} relevant cases after adversarial review{Colors.ENDC}")
-    print("═" * 80)
+    print(f"\n{Colors.HEADER}═" * 40 + "COURTROOM DEBATE" + "═" * 40 + f"{Colors.ENDC}")
     
-    for i, res in enumerate(results):
-        doc = res['doc']
-        title = doc.metadata.get('title', 'Untitled Case')
-        court = doc.metadata.get('court', 'Unknown Court')
-        final_score = res['final_score']
-        
-        # Color code score
-        score_color = Colors.GREEN if final_score > 0.7 else (Colors.WARNING if final_score > 0.4 else Colors.FAIL)
-        
-        print(f"\n{Colors.BOLD}{i+1}. {title}{Colors.ENDC}")
-        print(f"   {Colors.CYAN}Court:{Colors.ENDC} {court}")
-        print(f"   {Colors.BOLD}Judicial Relevance:{Colors.ENDC} {score_color}{final_score:.4f}{Colors.ENDC}")
-        
-        # ADVERSARIAL ARGUMENTS DISPLAY
-        print(f"\n   {Colors.FAIL}Prosecutor's Take:{Colors.ENDC} {res['prosecutor_arg']}")
-        print(f"   {Colors.GREEN}Defense's Take:   {Colors.ENDC} {res['defense_arg']}")
-        
-        if show_details:
-            print(f"\n   {Colors.UNDERLINE}Technical Analysis:{Colors.ENDC}")
-            print(f"     • Base Similarity:    {res['base_score']:.4f}")
-            print(f"     • Prosecutor Score:   {res['prosecutor_score']:.4f}")
-            print(f"     • Defense Score:      {res['defense_score']:.4f}")
-            
-            # Show excerpt
-            excerpt = doc.page_content[:200].replace('\n', ' ') + "..." 
-            print(f"\n   {Colors.CYAN}Excerpt:{Colors.ENDC}\n   {excerpt}\n")
-        
-        print(f"{Colors.BLUE}" + "-" * 80 + f"{Colors.ENDC}")
+    # Display Prosecutor Argument
+    print(f"\n{Colors.FAIL}👨‍⚖️ PROSECUTOR'S ARGUMENT:{Colors.ENDC}")
+    print(f"{Colors.FAIL}{'─' * 80}{Colors.ENDC}")
+    print(result['prosecutor_argument'])
+    
+    # Display Defense Argument
+    print(f"\n{Colors.GREEN}🛡️ DEFENSE'S ARGUMENT:{Colors.ENDC}")
+    print(f"{Colors.GREEN}{'─' * 80}{Colors.ENDC}")
+    print(result['defense_argument'])
+    
+    # Display Judicial Ruling
+    print(f"\n{Colors.WARNING}⚖️ JUDICIAL RULING:{Colors.ENDC}")
+    print(f"{Colors.WARNING}{'═' * 80}{Colors.ENDC}")
+    print(result['judicial_ruling'])
+    
+    # Display Referenced Cases
+    if show_details:
+        print(f"\n{Colors.CYAN}📚 REFERENCED CASES:{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'─' * 80}{Colors.ENDC}")
+        for i, (doc, score, breakdown) in enumerate(result['cases']):
+            title = doc.metadata.get('title', 'Untitled Case')
+            court = doc.metadata.get('court', 'Unknown Court')
+            print(f"{i+1}. {title} ({court}) - Similarity: {score:.3f}")
 
 
 def main():
-    """Main CLI interface with Cyberpunk/Dashboard UI"""
+    """Main CLI interface with Ol lama + DeepSeek"""
     # Clear screen
     print("\033[H\033[J", end="")
     
     print(f"{Colors.HEADER}")
     print("╔" + "═" * 78 + "╗")
     print("║" + " " * 78 + "║")
-    print("║" + "     ADVERSARIAL MULTI-AGENT LEGAL SYSTEM v3.0".center(78) + "║")
+    print("║" + "     ADVERSARIAL MULTI-AGENT LEGAL SYSTEM v4.0 (Ollama)".center(78) + "║")
     print("║" + " " * 78 + "║")
-    print("║" + "  [Prosecutor Agent] • [Defense Agent] • [Judge Agent]".center(78) + "║")
+    print("║" + "  [DeepSeek R1] • [Topic Debate] • [Chain-of-Thought]".center(78) + "║")
     print("║" + " " * 78 + "║")
     print("╚" + "═" * 78 + "╝")
     print(f"{Colors.ENDC}")
     print("\n")
     
     # Initialize system
-    print(f"{Colors.BLUE}Initializing System Modules...{Colors.ENDC}")
+    print(f"{Colors.BLUE}Initializing Ollama-Powered System...{Colors.ENDC}")
     search_system = NovelHybridSearchSystem()
     
     print("\n" + "=" * 80)
     print(f"{Colors.GREEN}SYSTEM READY{Colors.ENDC}")
     print("=" * 80)
-    print(f"\n{Colors.BOLD}Enter your query in natural language.{Colors.ENDC}")
+    print(f"\n{Colors.BOLD}Enter your legal query in natural language.{Colors.ENDC}")
     print("Examples:")
-    print(f"  - {Colors.CYAN}'I was drunk and drove my car'{Colors.ENDC}")
-    print(f"  - {Colors.CYAN}'Electronic evidence admissibility in WhatsApp messages'{Colors.ENDC}")
-    print(f"  - {Colors.CYAN}'Property dispute between neighbors'{Colors.ENDC}")
+    print(f"  - {Colors.CYAN}'I hit a pedestrian but it was dark'{Colors.ENDC}")
+    print(f"  - {Colors.CYAN}'Can I fire someone for being pregnant?'{Colors.ENDC}")
+    print(f"  - {Colors.CYAN}'My neighbor's tree fell on my car'{Colors.ENDC}")
     print("\n")
     
     # Interactive mode
@@ -808,32 +799,24 @@ def main():
             query = input(f"\n{Colors.BOLD}🔍 Enter your legal query (or 'quit' to exit): {Colors.ENDC}").strip()
             
             if query.lower() in ['quit', 'exit', 'q']:
-                print(f"\n{Colors.GREEN}Thank you for using the Legal Case Search System!{Colors.ENDC}")
+                print(f"\n{Colors.GREEN}Thank you for using the Adversarial Legal AI!{Colors.ENDC}")
                 break
             
             if not query:
                 continue
             
-            # Run hybrid search
+            # Run topic-based debate
             start_time = time.time()
-            results = search_system.hybrid_search(query, top_k=5)
+            result = search_system.hybrid_search(query, top_k=5)
             search_time = time.time() - start_time
             
             # Print results
-            print_results(results, show_details=True)
+            print_results(result, show_details=True)
             
-            print(f"\n{Colors.BLUE}⏱️  Search completed in {search_time:.2f} seconds{Colors.ENDC}")
-            
-            # Generate AI explanation
-            print("\n" + "=" * 80)
-            print(f"{Colors.HEADER}🤖 AI EXPLANATION{Colors.ENDC}")
-            print("=" * 80)
-            
-            explanation = search_system.generate_ai_explanation(query, results)
-            print(f"\n{explanation}\n")
+            print(f"\n{Colors.BLUE}⏱️  Debate completed in {search_time:.2f} seconds{Colors.ENDC}")
             
         except KeyboardInterrupt:
-            print(f"\n\n{Colors.WARNING}Search interrupted. Exiting...{Colors.ENDC}")
+            print(f"\n\n{Colors.WARNING}Session interrupted. Exiting...{Colors.ENDC}")
             break
         except Exception as e:
             print(f"\n{Colors.FAIL}❌ Error: {e}{Colors.ENDC}")
