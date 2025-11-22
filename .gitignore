@@ -75,3 +75,5 @@ logs/
 # *.pkl
 # *.model
 # *.h5 
+data/binary_dev/*.csv
+data/ternary_dev/*.csv
