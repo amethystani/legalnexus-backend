@@ -77,3 +77,7 @@ logs/
 # *.h5 
 data/binary_dev/*.csv
 data/ternary_dev/*.csv
+
+# Large data files
+data/binary_dev/*.csv
+data/ternary_dev/*.csv

@@ -12,8 +12,8 @@ import pickle
 import time
 import numpy as np
 import pandas as pd
+from typing import List, Dict, Tuple, Optional, Any
 from dotenv import load_dotenv
-from typing import List, Dict, Tuple, Optional
 import google.generativeai as genai
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_neo4j import Neo4jGraph
@@ -40,6 +40,90 @@ genai.configure(api_key=GOOGLE_API_KEY)
 NEO4J_URI = os.getenv("NEO4J_URI")
 NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+
+
+class LegalQueryExpander:
+    """
+    Cognitive Module: Expands layman queries into legal terminology
+    Uses LLM to 'think' before searching
+    """
+    def __init__(self, llm):
+        self.llm = llm
+        
+    def expand_query(self, query: str) -> Dict[str, Any]:
+        """
+        Analyzes query to extract:
+        1. Legal keywords (e.g., 'drunk driving' -> 'Section 185 MV Act')
+        2. Intent (Fact-finding vs Procedure vs Precedent)
+        3. Domain (Criminal, Civil, Constitutional)
+        """
+        if not self.llm:
+            return {"expanded_query": query, "intent": "general", "domain": "unknown"}
+            
+        try:
+            prompt = f"""
+            Act as a senior legal researcher. Analyze this user query: "{query}"
+            
+            Return a JSON object with:
+            1. "legal_terms": List of specific Indian legal sections/acts relevant to this (e.g., "Section 302 IPC")
+            2. "expanded_query": A search-optimized string combining user terms + legal terms
+            3. "intent": One of ["procedure", "precedent", "fact_finding"]
+            4. "domain": One of ["criminal", "civil", "constitutional", "corporate", "family"]
+            
+            Keep it concise. JSON only.
+            """
+            
+            response = self.llm.invoke(prompt)
+            # Clean response to ensure valid JSON
+            content = response.content.replace('```json', '').replace('```', '').strip()
+            return json.loads(content)
+            
+        except Exception as e:
+            print(f"⚠️  Query expansion failed: {e}")
+            return {"expanded_query": query, "intent": "general", "domain": "unknown"}
+
+
+class DynamicWeightingEngine:
+    """
+    Adaptive Module: Adjusts algorithm weights based on query intent
+    """
+    def __init__(self, base_weights: Dict[str, float]):
+        self.base_weights = base_weights.copy()
+        
+    def adapt_weights(self, analysis: Dict[str, Any]) -> Tuple[Dict[str, float], str]:
+        """
+        Returns (new_weights, explanation_of_adaptation)
+        """
+        weights = self.base_weights.copy()
+        reasoning = []
+        
+        # Adaptation 1: Intent-based
+        intent = analysis.get("intent", "general")
+        if intent == "precedent":
+            weights['citation'] += 0.15
+            weights['semantic'] -= 0.05
+            weights['text'] -= 0.10
+            reasoning.append("User seeks precedents -> Boosted Citation Network")
+        elif intent == "fact_finding":
+            weights['text'] += 0.15
+            weights['semantic'] -= 0.05
+            weights['citation'] -= 0.10
+            reasoning.append("User seeks specific facts -> Boosted Text Pattern")
+            
+        # Adaptation 2: Domain-based
+        domain = analysis.get("domain", "unknown")
+        if domain == "constitutional":
+            weights['semantic'] += 0.10
+            weights['graph'] += 0.05
+            reasoning.append("Constitutional matter -> Boosted Semantic & Graph (concepts over keywords)")
+            
+        # Normalize weights to sum to 1.0
+        total = sum(weights.values())
+        for k in weights:
+            weights[k] /= total
+            
+        return weights, " + ".join(reasoning) if reasoning else "Standard balanced profile"
+
 
 
 class NovelHybridSearchSystem:
@@ -76,6 +160,11 @@ class NovelHybridSearchSystem:
         # Initialize all systems
         self._initialize_neo4j()
         self._initialize_gemini()
+        
+        # Initialize cognitive modules
+        self.query_expander = LegalQueryExpander(self.llm)
+        self.weighting_engine = DynamicWeightingEngine(self.weights)
+        
         self._load_data()
         self._load_embeddings_cache()
         
@@ -373,88 +462,70 @@ class NovelHybridSearchSystem:
     
     def hybrid_search(self, query: str, top_k: int = 5) -> List[Tuple[Document, float, Dict]]:
         """
-        Novel Hybrid Search combining all algorithms
+        Novel Hybrid Search combining all algorithms with COGNITIVE ENHANCEMENTS
         Returns: List of (document, final_score, score_breakdown)
         """
-        print("\n" + "=" * 80)
-        print("RUNNING NOVEL HYBRID SEARCH")
-        print("=" * 80)
-        print(f"\nQuery: '{query}'\n")
+        print("\n" + "═" * 80)
+        print("🧠 COGNITIVE SEARCH PROCESS INITIATED")
+        print("═" * 80)
         
-        # Run all search algorithms in parallel
-        semantic_results = self.semantic_search(query, top_k=10)
-        graph_results = self.graph_traversal_search(query, top_k=10)
-        text_results = self.text_pattern_search(query, top_k=10)
-        citation_results = self.citation_network_search(query, top_k=10)
+        # Step 1: Cognitive Query Expansion
+        print(f"\n1️⃣  Thinking about query: '{query}'...")
+        analysis = self.query_expander.expand_query(query)
+        expanded_query = analysis.get("expanded_query", query)
+        
+        print(f"    → Detected Intent: {analysis.get('intent', 'general').upper()}")
+        print(f"    → Detected Domain: {analysis.get('domain', 'unknown').upper()}")
+        if analysis.get('legal_terms'):
+            print(f"    → Injected Legal Terms: {', '.join(analysis['legal_terms'])}")
+        
+        # Step 2: Dynamic Weight Adaptation
+        print(f"\n2️⃣  Adapting Search Strategy...")
+        current_weights, adaptation_reason = self.weighting_engine.adapt_weights(analysis)
+        print(f"    → Strategy: {adaptation_reason}")
+        print(f"    → New Weights: Semantic={current_weights['semantic']:.2f}, Text={current_weights['text']:.2f}, Graph={current_weights['graph']:.2f}")
+        
+        # Step 3: Parallel Execution
+        print(f"\n3️⃣  Executing 5-Way Parallel Search...")
+        
+        # Use expanded query for semantic search to catch legal concepts
+        semantic_results = self.semantic_search(expanded_query, top_k=15)
+        
+        # Use original query for text match to catch exact user phrasing
+        text_results = self.text_pattern_search(query, top_k=15)
+        
+        # Use both for graph/citation
+        graph_results = self.graph_traversal_search(expanded_query, top_k=15)
+        citation_results = self.citation_network_search(expanded_query, top_k=15)
         
         # Aggregate scores
         aggregated_scores = {}
         
-        # Process semantic results
-        for doc, score in semantic_results:
-            doc_id = doc.metadata.get('id', id(doc))
-            if doc_id not in aggregated_scores:
-                aggregated_scores[doc_id] = {
-                    'doc': doc,
-                    'semantic': 0,
-                    'graph': 0,
-                    'text': 0,
-                    'citation': 0,
-                    'gnn': 0
-                }
-            aggregated_scores[doc_id]['semantic'] = score
+        # Helper to process results
+        def process_results(results, weight_key):
+            for doc, score in results:
+                doc_id = doc.metadata.get('id', id(doc))
+                if doc_id not in aggregated_scores:
+                    aggregated_scores[doc_id] = {
+                        'doc': doc,
+                        'semantic': 0, 'graph': 0, 'text': 0, 'citation': 0, 'gnn': 0
+                    }
+                aggregated_scores[doc_id][weight_key] = score
         
-        # Process graph results
-        for doc, score in graph_results:
-            doc_id = doc.metadata.get('id', id(doc))
-            if doc_id not in aggregated_scores:
-                aggregated_scores[doc_id] = {
-                    'doc': doc,
-                    'semantic': 0,
-                    'graph': 0,
-                    'text': 0,
-                    'citation': 0,
-                    'gnn': 0
-                }
-            aggregated_scores[doc_id]['graph'] = score
+        process_results(semantic_results, 'semantic')
+        process_results(graph_results, 'graph')
+        process_results(text_results, 'text')
+        process_results(citation_results, 'citation')
         
-        # Process text results
-        for doc, score in text_results:
-            doc_id = doc.metadata.get('id', id(doc))
-            if doc_id not in aggregated_scores:
-                aggregated_scores[doc_id] = {
-                    'doc': doc,
-                    'semantic': 0,
-                    'graph': 0,
-                    'text': 0,
-                    'citation': 0,
-                    'gnn': 0
-                }
-            aggregated_scores[doc_id]['text'] = score
-        
-        # Process citation results
-        for doc, score in citation_results:
-            doc_id = doc.metadata.get('id', id(doc))
-            if doc_id not in aggregated_scores:
-                aggregated_scores[doc_id] = {
-                    'doc': doc,
-                    'semantic': 0,
-                    'graph': 0,
-                    'text': 0,
-                    'citation': 0,
-                    'gnn': 0
-                }
-            aggregated_scores[doc_id]['citation'] = score
-        
-        # Calculate final hybrid scores
+        # Calculate final hybrid scores using DYNAMIC weights
         final_results = []
         for doc_id, scores in aggregated_scores.items():
             final_score = (
-                self.weights['semantic'] * scores['semantic'] +
-                self.weights['graph'] * scores['graph'] +
-                self.weights['text'] * scores['text'] +
-                self.weights['citation'] * scores['citation'] +
-                self.weights['gnn'] * scores['gnn']
+                current_weights['semantic'] * scores['semantic'] +
+                current_weights['graph'] * scores['graph'] +
+                current_weights['text'] * scores['text'] +
+                current_weights['citation'] * scores['citation'] +
+                current_weights['gnn'] * scores['gnn']
             )
             
             score_breakdown = {
@@ -471,9 +542,9 @@ class NovelHybridSearchSystem:
         # Sort by final score
         final_results.sort(key=lambda x: x[1], reverse=True)
         
-        print("\n" + "=" * 80)
-        print("HYBRID SEARCH COMPLETE")
-        print("=" * 80)
+        print("\n" + "═" * 80)
+        print("✅ SEARCH COMPLETE")
+        print("═" * 80)
         
         return final_results[:top_k]
     
@@ -513,72 +584,109 @@ Keep your response clear, concise, and helpful for a regular person (not just la
             return f"Error generating AI explanation: {e}"
 
 
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█', print_end="\r"):
+    """Call in a loop to create terminal progress bar"""
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
+    if iteration == total: 
+        print()
+
 def print_results(results: List[Tuple[Document, float, Dict]], show_details: bool = False):
-    """Print search results in a nice format"""
+    """Print search results in a high-tech dashboard format"""
     if not results:
-        print("\nNo results found.")
+        print(f"\n{Colors.FAIL}No results found.{Colors.ENDC}")
         return
     
-    print(f"\nFound {len(results)} relevant cases:\n")
-    print("=" * 80)
+    print(f"\n{Colors.HEADER}RESULTS DASHBOARD{Colors.ENDC}")
+    print(f"{Colors.BLUE}Found {len(results)} relevant cases{Colors.ENDC}")
+    print("═" * 80)
     
     for i, (doc, final_score, breakdown) in enumerate(results):
         title = doc.metadata.get('title', 'Untitled Case')
         court = doc.metadata.get('court', 'Unknown Court')
         date = doc.metadata.get('date', 'Unknown Date')
         
-        print(f"\n{i+1}. {title}")
-        print(f"   Court: {court}")
-        print(f"   Date: {date}")
-        print(f"   Final Score: {final_score:.4f}")
+        # Color code score
+        score_color = Colors.GREEN if final_score > 0.7 else (Colors.WARNING if final_score > 0.4 else Colors.FAIL)
+        
+        print(f"\n{Colors.BOLD}{i+1}. {title}{Colors.ENDC}")
+        print(f"   {Colors.CYAN}Court:{Colors.ENDC} {court}  |  {Colors.CYAN}Date:{Colors.ENDC} {date}")
+        print(f"   {Colors.BOLD}Relevance Score:{Colors.ENDC} {score_color}{final_score:.4f}{Colors.ENDC}")
         
         if show_details:
-            print(f"\n   Score Breakdown:")
-            print(f"     • Semantic (Embeddings):  {breakdown['semantic']:.4f}")
-            print(f"     • Graph Traversal:        {breakdown['graph']:.4f}")
-            print(f"     • Text Pattern:           {breakdown['text']:.4f}")
-            print(f"     • Citation Network:       {breakdown['citation']:.4f}")
-            print(f"     • GNN Prediction:         {breakdown['gnn']:.4f}")
+            print(f"\n   {Colors.UNDERLINE}Algorithm Contribution Analysis:{Colors.ENDC}")
+            
+            # ASCII Chart for weights
+            max_bar_len = 40
+            
+            def draw_bar(label, value, color):
+                bar_len = int(value * max_bar_len)
+                bar = "█" * bar_len
+                print(f"     {label:<15} |{color}{bar:<40}{Colors.ENDC}| {value:.4f}")
+
+            draw_bar("Semantic", breakdown['semantic'], Colors.BLUE)
+            draw_bar("Graph", breakdown['graph'], Colors.MAGENTA if hasattr(Colors, 'MAGENTA') else Colors.HEADER)
+            draw_bar("Text Pattern", breakdown['text'], Colors.GREEN)
+            draw_bar("Citation", breakdown['citation'], Colors.WARNING)
+            draw_bar("GNN Model", breakdown['gnn'], Colors.CYAN)
             
             # Show excerpt
-            excerpt = doc.page_content[:400] + "..." if len(doc.page_content) > 400 else doc.page_content
-            print(f"\n   Excerpt:\n   {excerpt}\n")
+            excerpt = doc.page_content[:300].replace('\n', ' ') + "..." 
+            print(f"\n   {Colors.CYAN}Excerpt:{Colors.ENDC}\n   {excerpt}\n")
         
-        print("-" * 80)
+        print(f"{Colors.BLUE}" + "-" * 80 + f"{Colors.ENDC}")
 
 
 def main():
-    """Main CLI interface"""
-    print("\n")
+    """Main CLI interface with Cyberpunk/Dashboard UI"""
+    # Clear screen
+    print("\033[H\033[J", end="")
+    
+    print(f"{Colors.HEADER}")
     print("╔" + "═" * 78 + "╗")
     print("║" + " " * 78 + "║")
-    print("║" + "     NOVEL HYBRID LEGAL CASE SEARCH SYSTEM".center(78) + "║")
+    print("║" + "     NOVEL HYBRID LEGAL CASE SEARCH SYSTEM v2.0".center(78) + "║")
     print("║" + " " * 78 + "║")
-    print("║" + "  Combining: KG + GNN + Embeddings + Citations + Text Analysis".center(78) + "║")
+    print("║" + "  [Cognitive Query Expansion] • [Dynamic Adaptive Scoring] • [Hybrid Search]".center(78) + "║")
     print("║" + " " * 78 + "║")
     print("╚" + "═" * 78 + "╝")
+    print(f"{Colors.ENDC}")
     print("\n")
     
     # Initialize system
+    print(f"{Colors.BLUE}Initializing System Modules...{Colors.ENDC}")
     search_system = NovelHybridSearchSystem()
     
     print("\n" + "=" * 80)
-    print("SYSTEM READY")
+    print(f"{Colors.GREEN}SYSTEM READY{Colors.ENDC}")
     print("=" * 80)
-    print("\nYou can now search for legal cases using natural language.")
+    print(f"\n{Colors.BOLD}Enter your query in natural language.{Colors.ENDC}")
     print("Examples:")
-    print("  - 'I was drunk and drove my car'")
-    print("  - 'Electronic evidence admissibility in WhatsApp messages'")
-    print("  - 'Property dispute between neighbors'")
+    print(f"  - {Colors.CYAN}'I was drunk and drove my car'{Colors.ENDC}")
+    print(f"  - {Colors.CYAN}'Electronic evidence admissibility in WhatsApp messages'{Colors.ENDC}")
+    print(f"  - {Colors.CYAN}'Property dispute between neighbors'{Colors.ENDC}")
     print("\n")
     
     # Interactive mode
     while True:
         try:
-            query = input("\n🔍 Enter your legal query (or 'quit' to exit): ").strip()
+            query = input(f"\n{Colors.BOLD}🔍 Enter your legal query (or 'quit' to exit): {Colors.ENDC}").strip()
             
             if query.lower() in ['quit', 'exit', 'q']:
-                print("\nThank you for using the Legal Case Search System!")
+                print(f"\n{Colors.GREEN}Thank you for using the Legal Case Search System!{Colors.ENDC}")
                 break
             
             if not query:
@@ -592,21 +700,21 @@ def main():
             # Print results
             print_results(results, show_details=True)
             
-            print(f"\n⏱️  Search completed in {search_time:.2f} seconds")
+            print(f"\n{Colors.BLUE}⏱️  Search completed in {search_time:.2f} seconds{Colors.ENDC}")
             
             # Generate AI explanation
             print("\n" + "=" * 80)
-            print("🤖 AI EXPLANATION")
+            print(f"{Colors.HEADER}🤖 AI EXPLANATION{Colors.ENDC}")
             print("=" * 80)
             
             explanation = search_system.generate_ai_explanation(query, results)
             print(f"\n{explanation}\n")
             
         except KeyboardInterrupt:
-            print("\n\nSearch interrupted. Exiting...")
+            print(f"\n\n{Colors.WARNING}Search interrupted. Exiting...{Colors.ENDC}")
             break
         except Exception as e:
-            print(f"\n❌ Error: {e}")
+            print(f"\n{Colors.FAIL}❌ Error: {e}{Colors.ENDC}")
             import traceback
             traceback.print_exc()
 
