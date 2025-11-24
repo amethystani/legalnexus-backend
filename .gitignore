@@ -75,9 +75,12 @@ logs/
 # *.pkl
 # *.model
 # *.h5 
-data/binary_dev/*.csv
-data/ternary_dev/*.csv
 
-# Large data files
+# Models directory (large model files)
+models/
+
+# Data files
 data/binary_dev/*.csv
 data/ternary_dev/*.csv
+data/*.pkl
+data/*.csv

@@ -34,7 +34,7 @@ def train_epoch(model, optimizer, features, adj, positive_edges, negative_edges,
     
     # Calculate loss
     loss, pos_loss, neg_loss = hyperbolic_contrastive_loss(
-        embeddings, positive_edges, negative_edges, manifold
+        embeddings, positive_edges, negative_edges, manifold, margin=2.0
     )
     
     # Backward pass
@@ -55,7 +55,7 @@ def evaluate(model, features, adj, positive_edges, negative_edges, manifold):
     with torch.no_grad():
         embeddings = model(features, adj)
         loss, pos_loss, neg_loss = hyperbolic_contrastive_loss(
-            embeddings, positive_edges, negative_edges, manifold
+            embeddings, positive_edges, negative_edges, manifold, margin=2.0
         )
     
     return loss.item(), pos_loss, neg_loss
@@ -64,12 +64,12 @@ def evaluate(model, features, adj, positive_edges, negative_edges, manifold):
 def train_hyperbolic_model(
     data_path='data/citation_network.pkl',
     output_dir='models',
-    epochs=200,
-    hidden_dim=128,
-    output_dim=64,
-    learning_rate=0.01,
+    epochs=5,
+    hidden_dim=128,  # Reduced from 128 for speed
+    output_dim=64,  # Reduced from 64 for speed
+    learning_rate=0.001,
     weight_decay=0.0005,
-    dropout=0.5,
+    dropout=0.5,  # Reduced from 0.5
     train_split=0.8,
     patience=20
 ):
@@ -97,22 +97,47 @@ def train_hyperbolic_model(
     with open(data_path, 'rb') as f:
         data = pickle.load(f)
     
-    edges = data['edges']
+    # Extract data (new format)
     case_ids = data['case_ids']
     adj = data['adj']
-    features = data['features']
-    id_to_idx = data['id_to_idx']
     metadata = data['metadata']
+    features = data['embeddings']  # Use embeddings as features
+    
+    # Build id_to_idx mapping
+    id_to_idx = {cid: idx for idx, cid in enumerate(case_ids)}
+    
+    # Extract edges from adjacency matrix
+    edges = []
+    adj_coo = adj.tocoo()
+    for i, j in zip(adj_coo.row, adj_coo.col):
+        if i < j:  # Only add once (undirected)
+            edges.append((case_ids[i], case_ids[j]))
     
     print(f"   ✓ Loaded {len(case_ids)} cases, {len(edges)} edges")
     print(f"   ✓ Feature dim: {features.shape[1]}")
+    
+    # Optimize for maximum performance (16 threads)
+    device = torch.device("cpu")
+    torch.set_num_threads(16)
+    torch.set_num_interop_threads(16)
+    print("🚀 Using CPU with 16 threads (maximum performance)")
     
     # Normalize adjacency matrix
     print("\n2. Preparing graph...")
     adj_normalized = normalize_adjacency(adj)
     
     # Convert to tensors
-    features_tensor = torch.FloatTensor(features)
+    features_tensor = torch.FloatTensor(features).to(device)
+    
+    # Convert adjacency to sparse tensor
+    if not torch.is_tensor(adj_normalized):
+        adj_coo = adj_normalized.tocoo()
+        indices = torch.LongTensor([adj_coo.row, adj_coo.col])
+        values = torch.FloatTensor(adj_coo.data)
+        shape = torch.Size(adj_coo.shape)
+        adj_tensor = torch.sparse.FloatTensor(indices, values, shape).to(device)
+    else:
+        adj_tensor = adj_normalized.to(device)
     
     # Split edges into train/val
     np.random.shuffle(edges)
@@ -128,19 +153,14 @@ def train_hyperbolic_model(
                         for src, tgt in val_edges 
                         if src in id_to_idx and tgt in id_to_idx]
     
-    train_pos_edges = torch.LongTensor(train_edge_indices)
-    val_pos_edges = torch.LongTensor(val_edge_indices)
+    train_pos_edges = torch.LongTensor(train_edge_indices).to(device)
+    val_pos_edges = torch.LongTensor(val_edge_indices).to(device)
     
-    # Sample negative edges
-    train_neg_edges = torch.LongTensor(
-        sample_negative_edges(train_edge_indices, len(case_ids), num_negatives_per_positive=5)
-    )
-    val_neg_edges = torch.LongTensor(
-        sample_negative_edges(val_edge_indices, len(case_ids), num_negatives_per_positive=5)
-    )
+    # Sample negative edges (will be moved to device in loop)
+    # ...
     
-    print(f"   ✓ Train edges: {len(train_pos_edges)} pos, {len(train_neg_edges)} neg")
-    print(f"   ✓ Val edges: {len(val_pos_edges)} pos, {len(val_neg_edges)} neg")
+    print(f"   ✓ Train edges: {len(train_pos_edges)} pos")
+    print(f"   ✓ Val edges: {len(val_pos_edges)} pos")
     
     # Initialize model
     print("\n3. Initializing model...")
@@ -149,7 +169,7 @@ def train_hyperbolic_model(
         hidden_dim=hidden_dim,
         output_dim=output_dim,
         dropout=dropout
-    )
+    ).to(device)
     
     manifold = PoincareBall(c=1.0)
     
@@ -164,26 +184,42 @@ def train_hyperbolic_model(
     best_val_loss = float('inf')
     patience_counter = 0
     
-    for epoch in range(epochs):
+    from tqdm import tqdm
+    import time
+    
+    start_time = time.time()
+    pbar = tqdm(range(epochs), desc="Training Epochs")
+    
+    for epoch in pbar:
+        epoch_start = time.time()
+        
+        # Sample negative edges for this epoch (dynamic sampling)
+        train_neg_indices = sample_negative_edges(train_edge_indices, len(case_ids), num_negatives_per_positive=5)
+        train_neg_edges = torch.LongTensor(train_neg_indices).to(device)
+        
+        val_neg_indices = sample_negative_edges(val_edge_indices, len(case_ids), num_negatives_per_positive=5)
+        val_neg_edges = torch.LongTensor(val_neg_indices).to(device)
+        
         # Train
         train_loss, train_pos, train_neg = train_epoch(
-            model, optimizer, features_tensor, adj_normalized,
+            model, optimizer, features_tensor, adj_tensor,
             train_pos_edges, train_neg_edges, manifold
         )
         
         # Validate
         val_loss, val_pos, val_neg = evaluate(
-            model, features_tensor, adj_normalized,
+            model, features_tensor, adj_tensor,
             val_pos_edges, val_neg_edges, manifold
         )
         
         scheduler.step(val_loss)
         
-        # Print progress
-        if (epoch + 1) % 10 == 0:
-            print(f"   Epoch {epoch+1:3d}/{epochs} | "
-                  f"Train Loss: {train_loss:.4f} (pos: {train_pos:.4f}, neg: {train_neg:.4f}) | "
-                  f"Val Loss: {val_loss:.4f}")
+        # Update progress bar
+        pbar.set_postfix({
+            'train_loss': f"{train_loss:.4f}",
+            'val_loss': f"{val_loss:.4f}",
+            'lr': f"{optimizer.param_groups[0]['lr']:.6f}"
+        })
         
         # Early stopping
         if val_loss < best_val_loss:
@@ -204,13 +240,16 @@ def train_hyperbolic_model(
                 print(f"\n   Early stopping at epoch {epoch+1}")
                 break
     
+    total_time = time.time() - start_time
+    print(f"\n   ✓ Training took {total_time:.1f}s ({total_time/epochs:.2f}s/epoch)")    
     print(f"\n   ✓ Best validation loss: {best_val_loss:.4f}")
     
     # Generate final embeddings
     print("\n5. Generating embeddings...")
     model.eval()
     with torch.no_grad():
-        embeddings = model(features_tensor, adj_normalized)
+        embeddings = model(features_tensor, adj_tensor)
+        embeddings = embeddings.cpu()  # Move back to CPU for saving
     
     # Save embeddings
     embeddings_dict = {
@@ -227,17 +266,22 @@ def train_hyperbolic_model(
     print("\n6. Analyzing learned hierarchy...")
     radii = torch.norm(embeddings, dim=1).numpy()
     
-    court_radii = {'Supreme Court': [], 'High Court': [], 'Lower Court': []}
+    from collections import defaultdict
+    court_radii = defaultdict(list)
     for case_id, radius in zip(case_ids, radii):
         court = metadata[case_id]['court']
         court_radii[court].append(radius)
     
     print("\n   Radius by court level:")
-    for court in ['Supreme Court', 'High Court', 'Lower Court']:
+    # Sort by mean radius to show hierarchy
+    sorted_courts = sorted(court_radii.keys(), key=lambda c: np.mean(court_radii[c]))
+    
+    for court in sorted_courts:
         if court_radii[court]:
             mean_radius = np.mean(court_radii[court])
             std_radius = np.std(court_radii[court])
-            print(f"     {court:15s}: {mean_radius:.4f} ± {std_radius:.4f}")
+            count = len(court_radii[court])
+            print(f"     {court:15s}: {mean_radius:.4f} ± {std_radius:.4f} (n={count})")
     
     print("\n✅ Training complete!")
     
@@ -246,7 +290,7 @@ def train_hyperbolic_model(
 
 if __name__ == "__main__":
     model, embeddings = train_hyperbolic_model(
-        epochs=200,
+        epochs=5,
         hidden_dim=128,
         output_dim=64,
         learning_rate=0.01,

@@ -337,10 +337,19 @@ class NovelHybridSearchSystem:
             # Use Llama3.2 for speed (much faster than DeepSeek-R1)
             self.llm = Ollama(model="llama3.2", temperature=0.3, num_predict=300)
             
-            # Use nomic-embed-text for embeddings
-            self.embeddings_model = OllamaEmbeddings(model="nomic-embed-text")
+            print("✓ Ollama LLM initialized successfully")
             
-            print("✓ Ollama models initialized successfully")
+            # Initialize Embeddings (Jina v3 Local)
+            try:
+                from jina_embeddings import JinaEmbeddings
+                self.embeddings_model = JinaEmbeddings(
+                    model_name="models/jina-embeddings-v3", 
+                    task="retrieval.query"  # Use query task for search queries
+                )
+                print("✓ Jina v3 Embeddings initialized")
+            except Exception as e:
+                print(f"⚠️ Failed to initialize Jina Embeddings: {e}")
+                raise e
         except Exception as e:
             print(f"✗ Failed to initialize Ollama: {e}")
             print("   Make sure Ollama is running with: ollama serve")

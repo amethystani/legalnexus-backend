@@ -228,6 +228,16 @@ if __name__ == "__main__":
     case_ids, embeddings, metadata = load_model_and_embeddings()
     print(f"   ✓ Loaded {len(case_ids)} cases")
     
+    # Sample if too large
+    MAX_POINTS = 5000
+    if len(case_ids) > MAX_POINTS:
+        print(f"   ⚠️ Dataset too large ({len(case_ids)}), sampling {MAX_POINTS} for visualization...")
+        indices = np.random.choice(len(case_ids), MAX_POINTS, replace=False)
+        case_ids = [case_ids[i] for i in indices]
+        embeddings = embeddings[indices]
+        # metadata is a dict, no need to slice
+
+    
     # Analyze hierarchy
     analyze_hierarchy(case_ids, embeddings, metadata)
     

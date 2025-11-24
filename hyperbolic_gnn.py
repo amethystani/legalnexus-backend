@@ -111,7 +111,7 @@ class LegalHyperbolicModel(nn.Module):
     - Lower court cases near edge (high radius)
     """
     
-    def __init__(self, input_dim=768, hidden_dim=128, output_dim=64, c=1.0, dropout=0.5):
+    def __init__(self, input_dim=1024, hidden_dim=128, output_dim=64, c=1.0, dropout=0.5):
         super(LegalHyperbolicModel, self).__init__()
         
         self.c = c
