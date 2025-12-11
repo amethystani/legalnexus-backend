@@ -1,6 +1,11 @@
 # LegalNexus Backend
 
-A Comprehensive Legal AI Platform with Hyperbolic Graph Neural Networks
+[![CI](https://github.com/amethystani/legalnexus-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/amethystani/legalnexus-backend/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+**A Comprehensive Legal AI Platform with Hyperbolic Graph Neural Networks**
 
 LegalNexus is a research-grade legal information retrieval system that combines hyperbolic embeddings, multi-agent systems, and graph neural networks to provide state-of-the-art case retrieval and legal reasoning capabilities. This system was developed as part of academic research to address the unique challenges of legal information retrieval.
 
