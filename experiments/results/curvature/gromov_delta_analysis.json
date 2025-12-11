@@ -1,0 +1,21 @@
+{
+  "legal_network": {
+    "delta": 0.374,
+    "nodes": 100,
+    "edges": 192,
+    "interpretation": "Highly hyperbolic (tree-like structure)"
+  },
+  "erdos_renyi": {
+    "delta": 0.6765,
+    "interpretation": "Moderately hyperbolic (hierarchical)"
+  },
+  "barabasi_albert": {
+    "delta": 0.3,
+    "interpretation": "Highly hyperbolic (tree-like structure)"
+  },
+  "perfect_tree": {
+    "delta": 0.76,
+    "interpretation": "Moderately hyperbolic (hierarchical)"
+  },
+  "conclusion": "\u26a0\ufe0f Legal networks (\u03b4=0.374) are NOT more hyperbolic than random graphs. Hyperbolic embeddings may not provide advantage."
+}

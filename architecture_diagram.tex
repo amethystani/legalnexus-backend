@@ -1,0 +1,344 @@
+% Professional 3D-style Architecture Diagram for LegalNexus System
+% Uses TikZ for professional-grade visualization
+
+\documentclass[border=10pt, multi, tikz]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, calc, shadows, 3d}
+
+% Define professional color palette
+\definecolor{InputColor}{RGB}{52, 152, 219}      % Blue
+\definecolor{EmbedColor}{RGB}{142, 68, 173}      % Purple
+\definecolor{HyperbolicColor}{RGB}{231, 76, 60}  % Red
+\definecolor{AgentColor}{RGB}{46, 204, 113}      % Green
+\definecolor{RetrievalColor}{RGB}{241, 196, 15}  % Yellow
+\definecolor{OutputColor}{RGB}{230, 126, 34}     % Orange
+\definecolor{PoolColor}{RGB}{189, 195, 199}      % Gray
+
+% 3D Box style with shadow
+\tikzset{
+    box3d/.style={
+        draw=#1!80!black,
+        fill=#1!30,
+        thick,
+        minimum width=2.5cm,
+        minimum height=1.2cm,
+        rounded corners=2pt,
+        drop shadow={opacity=0.3, shadow xshift=2pt, shadow yshift=-2pt},
+        align=center,
+        font=\small\bfseries
+    },
+    smallbox/.style={
+        draw=#1!80!black,
+        fill=#1!20,
+        thick,
+        minimum width=1.8cm,
+        minimum height=0.8cm,
+        rounded corners=1.5pt,
+        drop shadow={opacity=0.2, shadow xshift=1pt, shadow yshift=-1pt},
+        align=center,
+        font=\scriptsize
+    },
+    arrow3d/.style={
+        -Stealth,
+        line width=1.5pt,
+        draw=#1!80!black,
+        opacity=0.8
+    },
+    label3d/.style={
+        font=\scriptsize,
+        align=center
+    }
+}
+
+\begin{document}
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.5cm,
+    >=Stealth
+]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LAYER 1: INPUT & PREPROCESSING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=InputColor] (input) at (0,0) {
+    \textbf{Legal Cases}\\
+    \scriptsize 49,633 SC Cases\\
+    \scriptsize 1950-2024
+};
+
+% Jina Embeddings
+\node[box3d=EmbedColor, below=of input] (jina) {
+    \textbf{Jina v3}\\
+    \scriptsize 768-dim Embeddings
+};
+\draw[arrow3d=EmbedColor] (input) -- (jina);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LAYER 2: HYPERBOLIC COMPONENT (Left Branch)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=HyperbolicColor, below left=1.5cm and 3cm of jina] (expmap) {
+    \textbf{Exp Map}\\
+    \scriptsize $\mathbb{R}^{768} \to \mathbb{H}^{768}$
+};
+\draw[arrow3d=HyperbolicColor] (jina) -| (expmap);
+
+\node[box3d=HyperbolicColor, below=of expmap] (hconv1) {
+    \textbf{H-Conv Layer 1}\\
+    \scriptsize 768 → 128 dims
+};
+\draw[arrow3d=HyperbolicColor] (expmap) -- (hconv1);
+
+\node[smallbox=PoolColor, below=0.6cm of hconv1] (logmap1) {
+    \scriptsize Log Map
+};
+\draw[arrow3d=PoolColor] (hconv1) -- (logmap1);
+
+\node[smallbox=PoolColor, below=0.6cm of logmap1] (relu) {
+    \scriptsize ReLU
+};
+\draw[arrow3d=PoolColor] (logmap1) -- (relu);
+
+\node[smallbox=PoolColor, below=0.6cm of relu] (expmap2) {
+    \scriptsize Exp Map
+};
+\draw[arrow3d=PoolColor] (relu) -- (expmap2);
+
+\node[box3d=HyperbolicColor, below=0.6cm of expmap2] (hconv2) {
+    \textbf{H-Conv Layer 2}\\
+    \scriptsize 128 → 64 dims
+};
+\draw[arrow3d=HyperbolicColor] (expmap2) -- (hconv2);
+
+\node[box3d=HyperbolicColor, below=of hconv2] (decoder) {
+    \textbf{Fermi-Dirac}\\
+    \scriptsize Decoder
+};
+\draw[arrow3d=HyperbolicColor] (hconv2) -- (decoder);
+
+\node[box3d=HyperbolicColor, below=of decoder] (hgcn_out) {
+    \textbf{HGCN Output}\\
+    \scriptsize Hierarchical\\
+    \scriptsize Embeddings
+};
+\draw[arrow3d=HyperbolicColor] (decoder) -- (hgcn_out);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LAYER 3: MULTI-AGENT COMPONENT (Right Branch)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=AgentColor, below right=1.5cm and 3cm of jina] (citation_extract) {
+    \textbf{Citation Extract}\\
+    \scriptsize Regex + LLM
+};
+\draw[arrow3d=AgentColor] (jina) -| (citation_extract);
+
+% Three agents in parallel
+\node[box3d=AgentColor, below left=1.2cm and 1.5cm of citation_extract] (linker) {
+    \textbf{Linker}\\
+    \scriptsize Proposer
+};
+\node[box3d=AgentColor, below=1.2cm of citation_extract] (interpreter) {
+    \textbf{Interpreter}\\
+    \scriptsize Analyst
+};
+\node[box3d=AgentColor, below right=1.2cm and 1.5cm of citation_extract] (conflict) {
+    \textbf{Conflict}\\
+    \scriptsize Critic
+};
+
+\draw[arrow3d=AgentColor] (citation_extract) -- (linker);
+\draw[arrow3d=AgentColor] (citation_extract) -- (interpreter);
+\draw[arrow3d=AgentColor] (citation_extract) -- (conflict);
+
+% Nash Equilibrium box
+\node[box3d=AgentColor, below=2.5cm of interpreter] (nash) {
+    \textbf{Nash Equilibrium}\\
+    \scriptsize Debate Loop\\
+    \scriptsize 4.8 iterations
+};
+
+\draw[arrow3d=AgentColor] (linker) -- (nash);
+\draw[arrow3d=AgentColor] (interpreter) -- (nash);
+\draw[arrow3d=AgentColor] (conflict) -- (nash);
+
+% Citation graph output
+\node[box3d=AgentColor, below=of nash] (citation_graph) {
+    \textbf{Citation Graph}\\
+    \scriptsize Conflict-Free\\
+    \scriptsize 94\% Reduction
+};
+\draw[arrow3d=AgentColor] (nash) -- (citation_graph);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LAYER 4: HYBRID RETRIEVAL FUSION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=RetrievalColor, below=3cm of jina] (query) {
+    \textbf{Query Input}\\
+    \scriptsize LLM Expansion
+};
+\draw[arrow3d=RetrievalColor] (jina) -- (query);
+
+% Multiple retrieval algorithms
+\node[smallbox=RetrievalColor, below left=1.2cm and 2.5cm of query] (semantic) {
+    \scriptsize Semantic\\
+    \scriptsize α=0.35
+};
+\node[smallbox=RetrievalColor, below left=1.2cm and 0.8cm of query] (graph) {
+    \scriptsize Graph\\
+    \scriptsize β=0.25
+};
+\node[smallbox=RetrievalColor, below=1.2cm of query] (tfidf) {
+    \scriptsize TF-IDF\\
+    \scriptsize γ=0.20
+};
+\node[smallbox=RetrievalColor, below right=1.2cm and 0.8cm of query] (pagerank) {
+    \scriptsize PageRank\\
+    \scriptsize δ=0.15
+};
+\node[smallbox=RetrievalColor, below right=1.2cm and 2.5cm of query] (gnn) {
+    \scriptsize GNN\\
+    \scriptsize ε=0.05
+};
+
+\draw[arrow3d=RetrievalColor] (query) -- (semantic);
+\draw[arrow3d=RetrievalColor] (query) -- (graph);
+\draw[arrow3d=RetrievalColor] (query) -- (tfidf);
+\draw[arrow3d=RetrievalColor] (query) -- (pagerank);
+\draw[arrow3d=RetrievalColor] (query) -- (gnn);
+
+% Fusion node
+\node[box3d=RetrievalColor, below=2.2cm of query] (fusion) {
+    \textbf{Hybrid Fusion}\\
+    \scriptsize Dynamic Weights
+};
+
+\draw[arrow3d=RetrievalColor] (semantic) -- (fusion);
+\draw[arrow3d=RetrievalColor] (graph) -- (fusion);
+\draw[arrow3d=RetrievalColor] (tfidf) -- (fusion);
+\draw[arrow3d=RetrievalColor] (pagerank) -- (fusion);
+\draw[arrow3d=RetrievalColor] (gnn) -- (fusion);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LAYER 5: ADVERSARIAL DEBATE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=OutputColor, below=1.5cm of fusion] (candidates) {
+    \textbf{Top Candidates}\\
+    \scriptsize Hybrid Results
+};
+\draw[arrow3d=OutputColor] (fusion) -- (candidates);
+
+% Three debate agents
+\node[smallbox=OutputColor, below left=1.2cm and 1.2cm of candidates] (prosecutor) {
+    \scriptsize Prosecutor\\
+    \scriptsize Strict View
+};
+\node[smallbox=OutputColor, below=1.2cm of candidates] (defense) {
+    \scriptsize Defense\\
+    \scriptsize Mitigating
+};
+\node[smallbox=OutputColor, below right=1.2cm and 1.2cm of candidates] (judge) {
+    \scriptsize Judge\\
+    \scriptsize Balanced
+};
+
+\draw[arrow3d=OutputColor] (candidates) -- (prosecutor);
+\draw[arrow3d=OutputColor] (candidates) -- (defense);
+\draw[arrow3d=OutputColor] (candidates) -- (judge);
+
+% Final synthesis
+\node[box3d=OutputColor, below=2cm of defense] (synthesis) {
+    \textbf{Synthesis}\\
+    \scriptsize Adversarial\\
+    \scriptsize Reasoning
+};
+
+\draw[arrow3d=OutputColor] (prosecutor) -- (synthesis);
+\draw[arrow3d=OutputColor] (defense) -- (synthesis);
+\draw[arrow3d=OutputColor] (judge) -- (synthesis);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FINAL OUTPUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\node[box3d=OutputColor, below=1.2cm of synthesis, minimum width=4cm, minimum height=1.5cm] (final) {
+    \textbf{FINAL RESULTS}\\
+    \scriptsize 88\% R@10 | 86\% P@10\\
+    \scriptsize Hierarchical + Consistent + Balanced
+};
+\draw[arrow3d=OutputColor, line width=2pt] (synthesis) -- (final);
+
+% Connect HGCN and Citation Graph to candidates
+\draw[arrow3d=HyperbolicColor] (hgcn_out) -| (candidates);
+\draw[arrow3d=AgentColor] (citation_graph) -| (candidates);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ANNOTATIONS & LABELS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Component 1 Label
+\node[
+    draw=HyperbolicColor!80!black,
+    fill=HyperbolicColor!10,
+    rounded corners,
+    thick,
+    minimum width=3.5cm,
+    align=center,
+    font=\footnotesize\bfseries
+] at (-5.5, -5) {
+    Component 1:\\
+    Hyperbolic Networks\\
+    \scriptsize 64 dims | +8\% gain
+};
+
+% Component 2 Label
+\node[
+    draw=AgentColor!80!black,
+    fill=AgentColor!10,
+    rounded corners,
+    thick,
+    minimum width=3.5cm,
+    align=center,
+    font=\footnotesize\bfseries
+] at (5.5, -5) {
+    Component 2:\\
+    Multi-Agent Swarm\\
+    \scriptsize Nash Eq | 94\% less conflicts
+};
+
+% Component 3 Label
+\node[
+    draw=RetrievalColor!80!black,
+    fill=RetrievalColor!10,
+    rounded corners,
+    thick,
+    minimum width=3.5cm,
+    align=center,
+    font=\footnotesize\bfseries
+] at (-5.5, -12) {
+    Component 3:\\
+    Hybrid Retrieval\\
+    \scriptsize 5 algorithms | Dynamic
+};
+
+% Adversarial Label
+\node[
+    draw=OutputColor!80!black,
+    fill=OutputColor!10,
+    rounded corners,
+    thick,
+    minimum width=3.5cm,
+    align=center,
+    font=\footnotesize\bfseries
+] at (5.5, -12) {
+    Adversarial Debate:\\
+    P-D-J Simulation\\
+    \scriptsize Balanced Reasoning
+};
+
+% System Title
+\node[
+    font=\Large\bfseries,
+    align=center
+] at (0, 1.5) {
+    \textcolor{InputColor}{LegalNexus System Architecture}
+};
+
+\end{tikzpicture}
+\end{document}

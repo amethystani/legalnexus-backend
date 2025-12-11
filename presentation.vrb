@@ -1,0 +1,126 @@
+\frametitle{Hyperbolic Embedding of Legal Citation Network}
+\centering
+\vspace{-0.3cm}
+\begin{tikzpicture}[
+    x={(0.866cm,-0.5cm)}, y={(0.866cm,0.5cm)}, z={(0cm,1cm)},
+    scale=2.3,
+    % Node styles - professional academic colors
+    sc/.style={circle, fill=black!75, draw=black!90, minimum size=9pt, inner sep=0pt},
+    hc/.style={circle, fill=black!35, draw=black!50, minimum size=6pt, inner sep=0pt},
+    target/.style={circle, fill=none, draw=red!70, minimum size=11pt, inner sep=0pt},
+    label/.style={font=\footnotesize\sffamily, text=black}
+]
+
+% Poincaré ball boundary
+\draw[black!60] (0,0,0) circle (1);
+
+% Hyperbolic distance contours
+\draw[black!30, dashed, opacity=0.15] (0,0,0) circle (0.25);
+\draw[black!30, dashed, opacity=0.12] (0,0,0) circle (0.45);
+\draw[black!30, dashed, opacity=0.10] (0,0,0) circle (0.65);
+\draw[black!30, dashed, opacity=0.08] (0,0,0) circle (0.85);
+
+% Coordinate axes (subtle)
+\draw[->, black!25] (-1.15,0,0) -- (1.15,0,0);
+\draw[->, black!25] (0,-1.15,0) -- (0,1.15,0);
+\draw[->, black!25] (0,0,0) -- (0,0,1.1);
+
+% Supreme Court precedents (high authority, near center)
+\coordinate (SC1) at (0.12,0.08,0.06);
+\coordinate (SC2) at (0.18,-0.05,0.04);
+\coordinate (SC3) at (-0.08,0.14,0.08);
+\coordinate (SC4) at (-0.16,-0.02,-0.05);
+\coordinate (SC5) at (-0.06,-0.12,0.07);
+\coordinate (SC6) at (0.05,-0.15,-0.04);
+
+% Lower court cases (peripheral, less authoritative)
+\coordinate (HC1) at (0.56,0.22,0.14);
+\coordinate (HC2) at (0.42,0.52,-0.10);
+\coordinate (HC3) at (-0.05,0.62,0.16);
+\coordinate (HC4) at (-0.46,0.48,-0.12);
+\coordinate (HC5) at (-0.58,0.18,0.11);
+\coordinate (HC6) at (-0.60,-0.20,-0.13);
+\coordinate (HC7) at (-0.38,-0.48,0.13);
+\coordinate (HC8) at (0.08,-0.64,-0.10);
+\coordinate (HC9) at (0.50,-0.38,0.15);
+\coordinate (HC10) at (0.58,-0.18,-0.12);
+
+% Query case (intermediate position)
+\coordinate (TARGET) at (0.24,0.35,0.20);
+
+% Citation edges - Query to Supreme Court (strong relevance)
+\draw[red!55, opacity=0.7, bend left=18] (TARGET) to (SC1);
+\draw[red!55, opacity=0.6, bend left=15] (TARGET) to (SC2);
+\draw[red!55, opacity=0.5, bend right=12] (TARGET) to (SC3);
+
+% Citation edges - Query to Lower Courts (weaker relevance)
+\draw[black!35, opacity=0.4, bend right=12] (TARGET) to (HC1);
+\draw[black!35, opacity=0.4, bend left=10] (TARGET) to (HC3);
+\draw[black!35, opacity=0.4, bend right=14] (TARGET) to (HC5);
+\draw[black!35, opacity=0.4, bend left=12] (TARGET) to (HC8);
+
+% Inter-precedent citations (background structure)
+\draw[black!20, opacity=0.3, bend right=16] (SC1) to (HC1);
+\draw[black!20, opacity=0.3, bend left=14] (SC2) to (HC2);
+\draw[black!20, opacity=0.3, bend right=12] (SC3) to (HC3);
+\draw[black!20, opacity=0.3, bend left=16] (SC4) to (HC5);
+\draw[black!20, opacity=0.3, bend right=10] (SC5) to (HC7);
+\draw[black!20, opacity=0.3, bend left=12] (SC6) to (HC8);
+
+% Draw nodes (order matters for layering)
+% Lower courts first (background)
+\node[hc] at (HC1) {};
+\node[hc] at (HC2) {};
+\node[hc] at (HC3) {};
+\node[hc] at (HC4) {};
+\node[hc] at (HC5) {};
+\node[hc] at (HC6) {};
+\node[hc] at (HC7) {};
+\node[hc] at (HC8) {};
+\node[hc] at (HC9) {};
+\node[hc] at (HC10) {};
+
+% Supreme Court cases
+\node[sc] at (SC1) {};
+\node[sc] at (SC2) {};
+\node[sc] at (SC3) {};
+\node[sc] at (SC4) {};
+\node[sc] at (SC5) {};
+\node[sc] at (SC6) {};
+
+% Target case (highlighted on top)
+\node[target] at (TARGET) {};
+\node[circle, fill=red!70, minimum size=4pt, inner sep=0pt] at (TARGET) {};
+
+% Clear labels with leaders
+\draw[black!40] (SC1) -- +(0.25,0.15,0.05) node[label, anchor=west] {Supreme Court};
+\draw[black!40] (TARGET) -- +(-0.20,0.20,0.10) node[label, anchor=east] {Query Case};
+\draw[black!40] (HC3) -- +(-0.15,0.25,0.05) node[label, anchor=south east] {Lower Courts};
+
+% Distance annotation
+\node[font=\scriptsize, text=black!50, anchor=north] at (0.25, -0.92, 0) {Hyperbolic radius: $r = \tanh^{-1}(\|x\|)$};
+
+% Legend box
+\node[align=left, font=\small\sffamily, anchor=north west, inner sep=6pt, fill=white, draw=black!30] at (-1.05, 0.95, 0.4) {
+\textbf{Poincaré Ball Model} $\mathcal{B}^n$\\[3pt]
+{\footnotesize
+$\bullet$ Supreme Court ($r < 0.2$)\\[1pt]
+$\circ$ Lower Courts ($r > 0.5$)\\[1pt]
+$\diamond$ Query Case\\[3pt]
+\textcolor{red!60}{\rule{12pt}{1pt}} Strong citation\\
+\textcolor{black!35}{\rule{12pt}{0.6pt}} Weak citation
+}
+};
+
+% Mathematical annotation
+\node[align=center, font=\footnotesize, text=black!70, anchor=south] at (0, -1.15, 0) {
+Geodesic distance: $d_{\mathcal{H}}(x,y) = \cosh^{-1}\left(1 + 2\frac{\|x-y\|^2}{(1-\|x\|^2)(1-\|y\|^2)}\right)$
+};
+
+\end{tikzpicture}
+\vspace{-0.2cm}
+\begin{itemize}
+    \item \textbf{Hyperbolic geometry} naturally captures hierarchical citation structure
+    \item \textbf{Central placement} reflects legal authority (Supreme Court near origin)
+    \item \textbf{Geodesic paths} represent semantic similarity in citation space
+\end{itemize}

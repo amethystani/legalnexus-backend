@@ -1,0 +1,733 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{multirow}
+
+\title{AI in Legal Domain: Hyperbolic Networks \& Multi-Agent Systems}
+\subtitle{Similar Cases Recommendation using Novel Geometric \& Game-Theoretic Approaches}
+\author{Animesh Mishra \and Keshav Bararia \and Kush Sahni}
+\institute{Shiv Nadar University \\ Department of Computer Science and Engineering \\ Supervisor: Dr. Sonia Khetarpaul}
+\date{December 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Problem: Why Legal AI is Hard}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Legal Domain Challenges:}
+\begin{itemize}
+\item \textbf{Hierarchical Structure}
+  \begin{itemize}
+  \item Supreme Court → High Courts → District
+  \item Binding precedent system
+  \item Tree-like authority
+  \end{itemize}
+\item \textbf{Complex Citations}
+  \begin{itemize}
+  \item Follow, distinguish, overrule
+  \item Logical conflicts
+  \end{itemize}
+\item \textbf{Adversarial Nature}
+  \begin{itemize}
+  \item Both sides' arguments
+  \item Balanced reasoning
+  \end{itemize}
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Why Traditional Methods Fail:}
+\vspace{0.2cm}
+
+{\footnotesize
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Method} & \textbf{Dims} & \textbf{Hierarchy?} \\
+\hline
+TF-IDF & High & ❌ \\
+BERT & 768 & ❌ \\
+CaseGNN & 768 & ❌ \\
+\textbf{Ours} & \textbf{64} & \textbf{✅} \\
+\hline
+\end{tabular}
+}
+
+\vspace{0.2cm}
+\alert{Issue:} Euclidean needs O(n²) dims!
+\end{columns}
+\end{frame}
+
+\begin{frame}{What Others Are Doing (Related Work)}
+{\footnotesize
+\begin{tabular}{|l|p{2.8cm}|p{2.8cm}|c|}
+\hline
+\textbf{System} & \textbf{Method} & \textbf{Limitation} & \textbf{R@10} \\
+\hline
+CaseGNN (AAAI'24) & Text graphs + GNN & Euclidean only & 82\% \\
+\hline
+SAILER (SIGIR'23) & Structure pretraining & Complex, no hierarchy & 73\% \\
+\hline
+KELLER (SIGIR'24) & LLM extraction & Expensive, no graph & \textasciitilde80\% \\
+\hline
+LegalBERT (2020) & Domain BERT & 512 token limit & 74\% \\
+\hline
+\textbf{LegalNexus (Ours)} & \textbf{Hybrid System} & \textbf{--} & \textbf{88\%} \\
+\hline
+\end{tabular}
+}
+
+\vspace{0.3cm}
+\textbf{Gap:} No system combines hyperbolic geometry + multi-agent + adversarial retrieval!
+\end{frame}
+
+\begin{frame}{Our Solution: Three Novel Modules}
+\begin{block}{Module 1: Hyperbolic Legal Networks (HGCN)}
+Embed cases in Poincaré ball → Encodes hierarchy in radius → 64 dims vs 768
+\end{block}
+
+\begin{block}{Module 2: Multi-Agent Swarm w/ Nash Equilibrium}
+3 specialist agents (Linker, Interpreter, Conflict) → Debate-refine loop → 94\% conflict reduction
+\end{block}
+
+\begin{block}{Module 3: Adversarial Hybrid Retrieval}
+5 algorithms + dynamic weighting + Prosecutor-Defense-Judge simulation → Balanced reasoning
+\end{block}
+
+\begin{center}
+\textbf{\large First system combining all three approaches!}
+\end{center}
+\end{frame}
+
+\begin{frame}{Module 1: Why Hyperbolic Space?}
+\begin{columns}
+\column{0.6\textwidth}
+\textbf{Poincaré Ball Model:}
+\[ \mathbb{D}^d_c = \{x \in \mathbb{R}^d : \|x\| < 1/\sqrt{c}\} \]
+\[ d(x,y) = \frac{1}{\sqrt{c}} \text{arccosh}\left(1 + 2c\frac{\|x-y\|^2}{(1-c\|x\|^2)(1-c\|y\|^2)}\right) \]
+
+\textbf{Why This Matters:}
+\begin{itemize}
+\item Exponential volume growth with radius
+\item Matches court hierarchy branching!
+\item O(log n) dims vs O(n²) Euclidean
+\end{itemize}
+
+\column{0.4\textwidth}
+\textbf{Learned Hierarchy:}
+\begin{table}
+\centering
+\resizebox{0.9\columnwidth}{!}{%
+\tiny
+\begin{tabular}{lc}
+\hline
+\textbf{Court} & \textbf{Radius} \\
+\hline
+Supreme & 0.10 \\
+High (Major) & 0.13 \\
+High & 0.17 \\
+Lower & 0.28 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\alert{Unsupervised!} No labels provided, model learns naturally.
+\end{columns}
+\end{frame}
+
+\begin{frame}{HGCN Architecture}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+\node[draw, rectangle, fill=blue!20] (input) {Input: 768-dim Euclidean};
+\node[draw, rectangle, fill=green!20, below of=input] (layer1) {Layer 1: 768→128 Hyperbolic};
+\node[draw, rectangle, fill=yellow!20, below of=layer1] (relu) {ReLU (Tangent Space)};
+\node[draw, rectangle, fill=green!20, below of=relu] (layer2) {Layer 2: 128→64 Hyperbolic};
+\node[draw, rectangle, fill=orange!20, below of=layer2] (decoder) {Fermi-Dirac Decoder};
+
+\draw[->, thick] (input) -- (layer1);
+\draw[->, thick] (layer1) -- (relu);
+\draw[->, thick] (relu) -- (layer2);
+\draw[->, thick] (layer2) -- (decoder);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Training:} 49,633 cases, RTX 3090, 10 hours, Riemannian Adam (lr=2×10⁻⁵)
+\end{frame}
+
+\begin{frame}{HGCN Results}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Hierarchy Preservation:}
+\begin{itemize}
+\item Query: SC case (r=0.1026)
+\item Retrieved: mean r=0.1014 ✅
+\item Random: mean r=0.1598 ❌
+\item \textbf{Same hierarchical level!}
+\end{itemize}
+
+\textbf{vs Euclidean Baselines:}
+\begin{table}
+\centering
+\resizebox{0.9\columnwidth}{!}{%
+\tiny
+\begin{tabular}{lccc}
+\hline
+\textbf{Method} & \textbf{R@10} & \textbf{Dims} & \textbf{Memory} \\
+\hline
+Jina 768 & 81\% & 768 & 100\% \\
+\textbf{HGCN} & \textbf{88\%} & \textbf{64} & \textbf{8.3\%} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\column{0.5\textwidth}
+\textbf{Key Advantages:}
+\begin{itemize}
+\item \textbf{+7\% recall} improvement
+\item \textbf{12× compression} (64 vs 768 dims)
+\item \textbf{92\% memory reduction}
+\item \textbf{Hierarchy encoding} free!
+\end{itemize}
+
+\begin{alertblock}{Innovation}
+Hyperbolic geometry aligns with legal domain structure!
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Module 2: Multi-Agent Swarm}
+\textbf{Problem:} Citation extraction has conflicts (cycles, contradictions)
+
+\textbf{Solution: 3 Specialized Agents}
+
+\begin{columns}
+\column{0.33\textwidth}
+\begin{block}{Linker}
+\textbf{Role:} Proposer \\
+Find citations \\
+7 regex + LLM
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Interpreter}
+\textbf{Role:} Analyst \\
+Classify type: \\
+FOLLOW, DISTINGUISH, OVERRULE
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Conflict}
+\textbf{Role:} Critic \\
+Detect: Cycles, contradictions, inversions
+\end{block}
+\end{columns}
+
+\vspace{0.5cm}
+\textbf{Debate-Refine Loop:} Iterative refinement → Converges to Nash Equilibrium
+\end{frame}
+
+\begin{frame}{Nash Equilibrium Formulation}
+\textbf{Game-Theoretic Framework:}
+
+\textbf{Players:} \{Linker, Interpreter, Conflict\}
+
+\textbf{Payoff Functions:}
+\begin{align*}
+U_{\text{Linker}}(G) &= \text{Recall}(G) - \lambda \cdot \text{FalsePos}(G) \\
+U_{\text{Interpreter}}(G) &= \text{Accuracy}(G) \\
+U_{\text{Conflict}}(G) &= -\text{NumConflicts}(G)
+\end{align*}
+
+\textbf{Equilibrium Condition:}
+\[ U_i(s^*_i, s^*_{-i}) \geq U_i(s'_i, s^*_{-i}) \quad \forall i, \forall s'_i \]
+
+\textbf{Translation:} No agent improves alone → Consensus reached!
+
+\textbf{Convergence:} Average 4.8 iterations on 100-case test set
+\end{frame}
+
+\begin{frame}{Multi-Agent Results}
+\begin{table}
+\centering
+\resizebox{0.7\textwidth}{!}{%
+\begin{tabular}{lccc}
+\hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{Conflicts} \\
+\hline
+Single-Pass & 78\% & 82\% & 127 \\
+Debate (3 rounds) & 89\% & 86\% & 19 \\
+\textbf{Nash (5 rounds)} & \textbf{92\%} & \textbf{88\%} & \textbf{8} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Conflict Resolution:}
+\begin{itemize}
+\item Cycles: 127 → 119 resolved (\textbf{94\% reduction})
+\item Contradictions: 89 → 84 resolved (\textbf{94\% reduction})
+\item Final graph: Logically consistent
+\end{itemize}
+
+\begin{alertblock}{Impact}
++14\% precision over single-pass extraction!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Module 3: Adversarial Hybrid Retrieval}
+\textbf{5-Algorithm Fusion:}
+\begin{table}
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\small
+\begin{tabular}{llp{2.5cm}c}
+\hline
+\textbf{Algorithm} & \textbf{Method} & \textbf{Strength} & \textbf{Weight} \\
+\hline
+Semantic & Jina 768-dim & Deep understanding & α=0.35 \\
+Graph & Neo4j Cypher & Structural links & β=0.25 \\
+Text & TF-IDF & Keyword precision & γ=0.20 \\
+Citation & PageRank & Authority & δ=0.15 \\
+GNN & HGCN predict & ML inference & ε=0.05 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Dynamic Weighting:} Adapt based on query intent (LLM classification)
+\begin{itemize}
+\item Precedent search → Boost δ by +0.15
+\item Fact-finding → Boost γ by +0.15
+\item Constitutional → Boost α + β
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Prosecutor-Defense-Judge Simulation}
+\textbf{Adversarial Debate System:}
+
+\begin{enumerate}
+\item \textbf{Query Expansion (LLM):} "drunk driving" → "Section 185 Motor Vehicles Act..."
+\item \textbf{Hybrid Retrieval:} Top-5 cases using 5 algorithms
+\item \textbf{Debate:}
+  \begin{itemize}
+  \item \textbf{Prosecutor:} Argues STRICT liability with case citations
+  \item \textbf{Defense:} Identifies MITIGATING factors, distinguishes precedents
+  \item \textbf{Judge:} Synthesizes BOTH → Balanced ruling
+  \end{itemize}
+\end{enumerate}
+
+\begin{alertblock}{Why This Matters}
+Legal research is inherently adversarial! Need both perspectives.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Hybrid Retrieval Results}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Single vs Hybrid:}
+\begin{table}
+\centering
+\resizebox{\columnwidth}{!}{%
+\small
+\begin{tabular}{lcc}
+\hline
+\textbf{Method} & \textbf{R@10} & \textbf{F1} \\
+\hline
+Semantic Only & 81\% & 80\% \\
+Graph Only & 73\% & 74\% \\
+Text Only & 68\% & 69\% \\
+\textbf{Hybrid} & \textbf{88\%} & \textbf{87\%} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\column{0.48\textwidth}
+\textbf{Ablation Study:}
+\begin{table}
+\centering
+\resizebox{\columnwidth}{!}{%
+\small
+\begin{tabular}{lcc}
+\hline
+\textbf{Config} & \textbf{R@10} & \textbf{Δ} \\
+\hline
+Full System & 88\% & -- \\
+W/o HGCN & 81\% & -8\% \\
+W/o Query Exp & 83\% & -6\% \\
+W/o Multi-Agent & 84\% & -5\% \\
+W/o Debate & 85\% & -3\% \\
+\hline
+\end{tabular}%
+}
+\end{table}
+\end{columns}
+
+\vspace{0.3cm}
+\textbf{Insight:} HGCN (+8\%) provides largest contribution!
+\end{frame}
+
+\begin{frame}{Overall Performance}
+\begin{table}
+\centering
+\resizebox{0.9\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\hline
+\textbf{System} & \textbf{R@10} & \textbf{P@10} & \textbf{F1} & \textbf{Features} \\
+\hline
+BM25 & 62\% & 58\% & 60\% & Baseline \\
+LegalBERT & 74\% & 71\% & 72\% & Domain BERT \\
+CaseGNN (SOTA) & 82\% & 79\% & 80\% & Sentence graphs \\
+\textbf{LegalNexus} & \textbf{88\%} & \textbf{86\%} & \textbf{87\%} & \textbf{Hybrid System} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Dataset:} 49,633 Indian Supreme Court cases (1950-2024)
+
+\begin{block}{Improvements Over SOTA (CaseGNN)}
++6\% Recall, +7\% Precision, +8.75\% F1 Score
+\end{block}
+\end{frame}
+
+\begin{frame}{Why Our Method is Novel}
+\begin{enumerate}
+\item \textbf{First Hyperbolic GCN for Legal AI}
+  \begin{itemize}
+  \item Prior: Euclidean only
+  \item \textbf{Ours:} Poincaré embeddings → Unsupervised hierarchy
+  \end{itemize}
+
+\item \textbf{Nash Equilibrium Multi-Agent}
+  \begin{itemize}
+  \item Prior: Single-pass or simple multi-agent
+  \item \textbf{Ours:} Game-theoretic formalization → 94\% conflict reduction
+  \end{itemize}
+
+\item \textbf{Adversarial Debate Simulation}
+  \begin{itemize}
+  \item Prior: Single-perspective retrieval
+  \item \textbf{Ours:} P-D-J simulation → Balanced reasoning
+  \end{itemize}
+
+\item \textbf{5-Algorithm Hybrid + Dynamic Weighting}
+  \begin{itemize}
+  \item Prior: 1-2 algorithms, fixed weights
+  \item \textbf{Ours:} 5 algorithms, intent-based adaptation
+  \end{itemize}
+\end{enumerate}
+
+\begin{alertblock}{Unique Combination}
+No existing system combines all four innovations!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Use Case 1: Legal Research}
+\textbf{Scenario:} Lawyer needs cases on "property dispute inheritance"
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Traditional:}
+\begin{itemize}
+\item Manual keyword search
+\item Read 100+ cases
+\item \alert{Time: 8-10 hours}
+\item Miss precedents ❌
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{LegalNexus:}
+\begin{itemize}
+\item Enter query
+\item System expands + retrieves
+\item P-D-J analysis
+\item \textcolor{green}{Time: 2 minutes}
+\item Comprehensive ✅
+\end{itemize}
+\end{columns}
+
+\vspace{0.5cm}
+\begin{block}{Impact}
+240× faster, +comprehensive, \$500+ savings per case
+\end{block}
+\end{frame}
+
+\begin{frame}{Use Case 2: Judicial Decision Support}
+\textbf{Scenario:} Judge reviewing criminal negligence appeal
+
+\textbf{LegalNexus Solution:}
+\begin{enumerate}
+\item \textbf{HGCN Hierarchy Analysis}
+  \begin{itemize}
+  \item Highlights Supreme Court \textbf{binding} precedents (r<0.10)
+  \item Shows High Court \textbf{persuasive} cases (r=0.10-0.20)
+  \end{itemize}
+
+\item \textbf{Citation Network (Multi-Agent)}
+  \begin{itemize}
+  \item Conflict-free graph (94\% conflicts resolved)
+  \item Follow/distinguish/overrule relationships clear
+  \end{itemize}
+
+\item \textbf{Adversarial Analysis}
+  \begin{itemize}
+  \item Both prosecution \& defense arguments
+  \item Balanced perspective for judgment
+  \end{itemize}
+\end{enumerate}
+
+\textbf{Result:} Informed, consistent, hierarchically-aware judgment
+\end{frame}
+
+\begin{frame}{Use Case 3: Access to Justice}
+\textbf{Democratizing Legal Knowledge}
+
+\begin{block}{Problem}
+Small firms, legal aid → Limited resources, expensive databases (\$500-2000/month)
+\end{block}
+
+\begin{block}{LegalNexus Solution}
+\begin{itemize}
+\item \textbf{Query Expansion:} "landlord evicted me" → Legal terms automatically
+\item \textbf{Open Source:} Self-hosted, 95\% cost reduction
+\item \textbf{Fast \& Comprehensive:} Minutes vs hours
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Social Impact}
+Levels playing field for small firms, improves access to justice for underserved
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Dataset \& Technology}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Dataset:}
+\begin{itemize}
+\item \textbf{Cases:} 49,633 SC judgments
+\item \textbf{Timespan:} 1950-2024
+\item \textbf{Size:} 52.24 GB raw
+\item \textbf{Edges:} ~180k citations
+\item \textbf{Distribution:}
+  \begin{itemize}
+  \item Criminal: 36\%
+  \item Civil: 24\%
+  \item Constitutional: 20\%
+  \end{itemize}
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Tech Stack:}
+\begin{itemize}
+\item \textbf{DL:} PyTorch 2.0, CUDA
+\item \textbf{Graph DB:} Neo4j 5.0
+\item \textbf{Embeddings:} Jina v3, Gemini
+\item \textbf{LLMs:} Gemini 2.5, Gemma 2
+\item \textbf{Hardware:}
+  \begin{itemize}
+  \item RTX 3090 (24GB)
+  \item 128GB RAM
+  \item Intel i9
+  \end{itemize}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Performance Metrics}
+\begin{table}
+\centering
+\resizebox{0.85\textwidth}{!}{%
+\small
+\begin{tabular}{lcccc}
+\hline
+\textbf{Metric} & \textbf{Ours} & \textbf{Best Baseline} & \textbf{Δ} \\
+\hline
+Recall@5 & 85\% & 78\% & +9\% \\
+Recall@10 & 88\% & 82\% & +7\% \\
+Precision@5 & 87\% & 81\% & +7\% \\
+Precision@10 & 86\% & 79\% & +9\% \\
+MAP & 91\% & 84\% & +8\% \\
+NDCG@10 & 93\% & 88\% & +6\% \\
+\hline
+\multicolumn{4}{l}{\textbf{HGCN Specific:}} \\
+Hierarchy & Yes & No & ✅ \\
+Dimensions & 64 & 768 & 12× less \\
+Memory & 8.3\% & 100\% & 92\% saved \\
+\hline
+\multicolumn{4}{l}{\textbf{Multi-Agent:}} \\
+Conflicts & 8 & 127 & 94\% reduced \\
+Precision & 92\% & 78\% & +14\% \\
+\hline
+\end{tabular}%
+}
+\end{table}
+\end{frame}
+
+\begin{frame}{Comparison: Why We Win}
+\begin{table}
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\tiny
+\begin{tabular}{lccccc}
+\hline
+\textbf{Feature} & \textbf{CaseGNN} & \textbf{SAILER} & \textbf{KELLER} & \textbf{Ours} \\
+\hline
+Geometry & Euclidean & Euclidean & Euclidean & \textcolor{green}{\textbf{Hyperbolic}} \\
+Hierarchy & ❌ & ❌ & ❌ & \textcolor{green}{✅} \\
+Dimensions & 768 & 768 & 768 & \textcolor{green}{\textbf{64}} \\
+Multi-Agent & ❌ & ❌ & ❌ & \textcolor{green}{\textbf{Nash Eq}} \\
+Conflict Resolution & Manual & Manual & Manual & \textcolor{green}{\textbf{94\% Auto}} \\
+Algorithms & 1 (GNN) & 1 (Semantic) & 1 (LLM) & \textcolor{green}{\textbf{5 Hybrid}} \\
+Adversarial & ❌ & ❌ & ❌ & \textcolor{green}{\textbf{P-D-J}} \\
+Query Expansion & ❌ & ❌ & Partial & \textcolor{green}{\textbf{Full LLM}} \\
+Recall@10 & 82\% & 73\% & ~80\% & \textcolor{green}{\textbf{88\%}} \\
+Cost/Query & \$0.50 & \$0.30 & \$2.00 & \textcolor{green}{\textbf{\$0.05}} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{center}
+\Large \textbf{LegalNexus wins 9/10 metrics!}
+\end{center}
+\end{frame}
+
+\begin{frame}{Key Takeaways}
+\begin{block}{1. Hyperbolic Geometry Changes Everything}
+Legal hierarchies are trees → Hyperbolic space is natural \\
+12× dimension reduction, unsupervised learning \\
+\textbf{Impact:} +8\% improvement alone
+\end{block}
+
+\begin{block}{2. Multi-Agent Nash Equilibrium is Robust}
+3 specialized agents debate to consensus \\
+Game theory guarantees convergence \\
+\textbf{Impact:} 94\% conflict reduction
+\end{block}
+
+\begin{block}{3. Adversarial Reasoning Matters}
+5-algorithm fusion beats single methods \\
+P-D-J simulation provides balanced views \\
+\textbf{Impact:} Comprehensive legal analysis
+\end{block}
+
+\begin{alertblock}{The Combination is Novel}
+No prior work combines all three for legal AI!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Future Work}
+\textbf{Short-Term (3-6 months):}
+\begin{itemize}
+\item Multilingual support (Hindi, regional languages)
+\item Real-time daily case updates
+\item Explainability module (attention visualization)
+\end{itemize}
+
+\textbf{Medium-Term (6-12 months):}
+\begin{itemize}
+\item Cross-jurisdictional transfer (US, UK, EU)
+\item Multi-modal input (audio transcripts, visual evidence)
+\item Enhanced adversarial reasoning
+\end{itemize}
+
+\textbf{Long-Term (1-2 years):}
+\begin{itemize}
+\item Predictive legal analytics (case outcome prediction)
+\item Blockchain integration (immutable precedent tracking)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Broader Impact}
+\textbf{Benefits Across Stakeholders:}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Lawyers:}
+\begin{itemize}
+\item 240× faster research
+\item \$500→\$0.05 per case
+\item Comprehensive analysis
+\end{itemize}
+
+\textbf{Judges:}
+\begin{itemize}
+\item Hierarchy consistency
+\item Conflict-free graphs
+\item Informed decisions
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Students:}
+\begin{itemize}
+\item Interactive learning
+\item Visual understanding
+\item Free resource
+\end{itemize}
+
+\textbf{Society:}
+\begin{itemize}
+\item Access to justice
+\item 95\% cost reduction
+\item Democratized knowledge
+\end{itemize}
+\end{columns}
+
+\vspace{0.5cm}
+\begin{exampleblock}{Estimated Impact}
+1M+ queries/year, \$50M+ cost savings
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Conclusion}
+\textbf{Three Main Contributions:}
+\begin{enumerate}
+\item \textbf{First hyperbolic GCN for legal AI} with empirical hierarchy validation
+\item \textbf{Nash Equilibrium multi-agent} framework for knowledge graphs
+\item \textbf{Adversarial hybrid retrieval} with 5-algorithm fusion
+\end{enumerate}
+
+\textbf{Results:}
+\begin{itemize}
+\item 88\% Recall@10 (SOTA: 82\%) → \textbf{+7\% improvement}
+\item 64 dims vs 768 (baselines) → \textbf{12× compression}
+\item 94\% conflict reduction → \textbf{Logically consistent}
+\end{itemize}
+
+\begin{alertblock}{Impact Beyond Legal AI}
+Framework applicable to any hierarchical + adversarial domain: \\
+Medical (disease taxonomy), Academic (citations), Corporate (org charts)
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Thank You!}
+\begin{center}
+{\Large \textbf{Questions?}}
+
+\vspace{1cm}
+\textbf{Contact:} \\
+Animesh Mishra: am847@snu.edu.in \\
+Keshav Bararia: kb874@snu.edu.in \\
+Kush Sahni: ks672@snu.edu.in
+
+\vspace{0.5cm}
+\textbf{Supervisor:} \\
+Dr. Sonia Khetarpaul: sonia.khetarpaul@snu.edu.in
+
+\vspace{0.5cm}
+\textbf{Code \& Demo:} \\
+github.com/legalnexus
+\end{center}
+\end{frame}
+
+\end{document}

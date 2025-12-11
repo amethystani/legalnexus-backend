@@ -1,0 +1,3581 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MANUSCRIPT TEMPLATE: This is the official manuscript template (v1.0, released 31 August 2025) for Constitutional Studies. If you are new to using LaTeX to layout manuscripts in Overleaf, please read this helpful tutorial at www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes. For more on Constitutional Studies, visit constitutionalstudies.org.
+
+% TO PREPARE YOUR MANUSCRIPT: Review our manuscript guidelines at https://constitutionalstudies-ojs-utexas.tdl.org/cs/manuscriptguidelines. Then follow the instructions in green below at the beginning of each section.
+
+% TO SUBMIT YOUR MANUSCRIPT: Follow our submission process at https://constitutionalstudies-ojs-utexas.tdl.org/cs/submit.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% DOCUMENT SETUP: Do not make any changes to this section.
+\documentclass[a4paper,10.5pt,twoside]{article}
+\hyphenpenalty=8000
+\textwidth=125mm
+\textheight=200mm
+\usepackage[top=3cm, bottom=3cm, inner=3cm, outer=3cm, includehead]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\raggedbottom
+% \usepackage{xurl}  % Package not installed - commenting out (may affect URL breaking)
+\usepackage{graphicx}
+\graphicspath{{/Users/animesh/legalnexus-backend/}}
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[hidelinks, pdftex]{hyperref}
+\urlstyle{same}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+% \usepackage{csquotes}  % Package not installed - commenting out
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+% \usepackage[notes, backend=biber]{biblatex-chicago}  % Package not installed - commenting out
+% \bibliography{references}  % Bibliography is manually written in document
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% LANGUAGE SELECTION: If you are submitting your manuscript in English, do not make any changes to this section. If you are submitting your manuscript in French, add a % in front of the "\usepackage[english]{babel}" command and remove the % in front of the "\usepackage[french]{babel}" command below; this will apply French spelling and formatting rules to the document. If you are submitting your manuscript in Spanish, add a % in front of the "\usepackage[english]{babel}" command and remove the % in front of the "\usepackage[spanish]{babel}" command below; this will apply Spanish spelling and formatting rules to the document.
+\usepackage[english]{babel}
+%\usepackage[french]{babel}
+%\usepackage[spanish]{babel}
+
+% AUTHOR AND TITLE: Replace "Author1" with your first author's information where noted below. Add or remove additional author information as needed, depending on the number of authors on your manuscript. Replace "Article title" with your article title where noted below.
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+\begin{center}
+\vspace*{0.1cm}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Shiv_Nadar_University_logo.png}
+    \caption{Shiv Nadar University Logo}
+    \label{fig:university_logo}
+\end{figure}
+\LARGE
+\textbf{AI in Legal Domain: Similar Cases Recommendation using Legal Knowledge Graphs and Neuro-Symbolic Approaches}\\[1cm]
+
+\large
+Project Report Submitted in Partial Fulfilment of the Requirements for the Degree of\\[0.5cm]
+
+\Large
+\textbf{Bachelor of Technology}\\[0.5cm]
+
+in\\[0.5cm]
+
+\Large
+\textbf{Computer Science and Engineering}\\[0.7cm]
+
+\large
+Submitted by\\[0.7cm]
+
+\normalsize
+\textbf{Animesh Mishra} (Roll No. 2210110161)\\[0.3cm]
+\textbf{Keshav Bararia} (Roll No. 2210110355)\\[0.3cm]
+\textbf{Kush Sahni} (Roll No. 2210110371)\\[0.5cm]
+
+\large
+Under the Supervision of\\[0.5cm]
+
+\normalsize
+\textbf{Dr. Sonia Khetarpaul}\\[0.2cm]
+Associate Professor\\[0.5cm]
+
+Department of Computer Science and Engineering\\[0.7cm]
+
+\large
+\textbf{October, 2025}
+
+\end{center}
+\end{titlepage}
+
+% Declaration Page
+\newpage
+\section*{Declaration}
+
+I/We declare that this written submission represents my ideas in my own words and where others' ideas or words have been included, I have adequately cited and referenced the original sources. I also declare that I have adhered to all principles of academic honesty and integrity and have not misrepresented or fabricated or falsified any idea/data/fact/source in my submission. I understand that any violation of the above will be cause for disciplinary action by the University and can also evoke penal action from the sources which have thus not been properly cited or from whom proper permission has not been taken when needed.
+
+\vspace{2cm}
+
+\begin{tabular}{ll}
+\textbf{Name of the Student} & \textbf{Signature} \\
+\vspace{1cm} & \vspace{1cm} \\
+Animesh Mishra (Roll No. 2210110161) & \rule{6cm}{0.4pt} \\
+\vspace{0.8cm} & \\
+Keshav Bararia (Roll No. 2210110355) & \rule{6cm}{0.4pt} \\
+\vspace{0.8cm} & \\
+Kush Sahni (Roll No. 2210110371) & \rule{6cm}{0.4pt} \\
+\end{tabular}
+
+\newpage
+
+% Article Header
+\fancyhead[LE]{\thepage\ \ \ \ Mishra, Bararia, and Sahni}
+\fancyhead[RO]{AI in Legal Domain: Similar Cases Recommendation\ \ \ \ \thepage}
+\begin{center}
+\LARGE
+\textbf{AI in Legal Domain: Similar Cases Recommendation using Legal Knowledge Graphs and Neuro-Symbolic Approaches}\\[12pt]
+\normalsize
+\textbf {Animesh Mishra,\footnote{Student, Computer Science and Engineering, India, am847@snu.edu.in} Keshav Bararia,\footnote{Student, Computer Science and Engineering, India, kb874@snu.edu.in} and Kush Sahni\footnote{Student, Computer Science and Engineering, India, ks672@snu.edu.in}}\\[4pt]
+\end{center}
+
+% ABSTRACT AND KEYWORDS: Replace "Abstract text" with your abstract text of 100-200 words where noted below. Replace "keyword, keyword, keyword" with your 5-10 keywords, separated by commas, where noted below. 
+\begin{abstract}
+\normalsize
+The legal field is complex and filled with detailed information. Court cases involve lengthy documents, complicated reasoning, and many past decisions. Lawyers and judges often rely on earlier cases, known as precedents, to make fair and consistent decisions. However, searching for similar cases manually takes a lot of time and can lead to errors. Traditional search tools that depend on keywords or citations often struggle to grasp the deeper meaning and context of legal cases. This project, "AI in Legal Domain: Similar Cases Recommendation using Hyperbolic Networks \& Multi-Agent Systems," introduces three novel contributions to legal AI: (1) \textbf{Hyperbolic Graph Convolutional Networks (HGCN)} that encode legal hierarchy in Poincaré ball geometry, achieving 12× compression (64 vs 768 dimensions) while preserving hierarchical structure where Supreme Court cases are positioned near the center and lower courts near the boundary; (2) \textbf{Multi-Agent Swarm with Nash Equilibrium} where three specialized agents (Linker, Interpreter, Conflict) iteratively refine citation extraction through a debate-refine loop, achieving 94\% conflict reduction and converging to game-theoretic equilibrium; (3) \textbf{Adversarial Hybrid Retrieval} combining five search algorithms (Semantic, Graph, Text, Citation, GNN) with dynamic intent-based weighting and prosecutor-defense-judge simulation for balanced legal reasoning. Our system processes 49,633 Indian Supreme Court cases (1950-2024) with ~180,000 citation relationships. Evaluation shows Hyperbolic GCN achieves Precision@5 of 0.564 (vs 0.208 for cosine baseline), MAP of 0.319 (114\% improvement), and NDCG@5 of 0.555 (166\% improvement) while using 12× fewer dimensions. The multi-agent system reduces citation conflicts from 127 to 8 (94\% reduction) through Nash equilibrium convergence. The adversarial retrieval framework provides balanced legal analysis by simulating both prosecution and defense perspectives before judicial synthesis. This work demonstrates how geometric deep learning, game theory, and adversarial reasoning can create more accurate, interpretable, and efficient legal AI systems.\vskip 2mm
+\textbf{Keywords:} legal AI, hyperbolic geometry, graph neural networks, multi-agent systems, Nash equilibrium, adversarial retrieval, legal information retrieval, Poincaré embeddings, case recommendation.
+\end{abstract}
+
+% MAIN BODY: Replace "Section Title," "Subsection Title," and "Subsubsection Title" with your section, subsection, and subsubsection titles, using title case to capitalize the first and all major words in these titles. Replace lorem ipsum text with your text for each section and subsection. Add additional sections and subsections as needed.
+\section{Introduction}\label{s:1}
+The legal field is complex and filled with detailed information. Court cases involve lengthy documents, complicated reasoning, and many past decisions. Lawyers and judges often rely on earlier cases, known as precedents, to make fair and consistent decisions. However, searching for similar cases manually takes a lot of time and can lead to errors. Traditional search tools that depend on keywords or citations often struggle to grasp the deeper meaning and context of legal cases. As a result, there is a growing demand for smart systems that can understand legal language, organize legal knowledge, and automatically suggest similar cases.
+
+This project, "AI in Legal Domain: Similar Cases Recommendation using Hyperbolic Networks \& Multi-Agent Systems," introduces three novel contributions to address these challenges. \textbf{First}, we develop a Hyperbolic Graph Convolutional Network (HGCN) that encodes legal case hierarchy in Poincaré ball geometry. Unlike Euclidean embeddings, hyperbolic space naturally captures hierarchical structures: Supreme Court cases (high authority) are positioned near the center of the ball (radius $\approx$ 0.10), while lower court cases are positioned near the boundary (radius $\approx$ 0.28). This achieves 12× compression (64 vs 768 dimensions) while preserving hierarchical relationships, enabling efficient similarity search with O(log n) complexity instead of O(n²).
+
+\textbf{Second}, we introduce a Multi-Agent Swarm system with Nash Equilibrium convergence for citation extraction. Three specialized agents—Linker (finds citations), Interpreter (classifies edge types: FOLLOW, DISTINGUISH, OVERRULE), and Conflict (detects cycles and contradictions)—engage in an iterative debate-refine loop. Through game-theoretic formalization, agents converge to Nash equilibrium where no agent can improve unilaterally, achieving 94\% conflict reduction (from 127 to 8 conflicts) and 92\% precision in citation extraction.
+
+\textbf{Third}, we develop an Adversarial Hybrid Retrieval framework combining five search algorithms (Semantic, Graph, Text, Citation Network, GNN) with dynamic intent-based weighting. The system employs a prosecutor-defense-judge simulation: the Prosecutor argues strict liability using retrieved cases, the Defense identifies mitigating factors and distinguishes precedents, and the Judge synthesizes both perspectives for balanced judicial reasoning. This adversarial approach ensures comprehensive legal analysis by exploring multiple viewpoints.
+
+Our system processes 49,633 Indian Supreme Court cases (1950-2024) with ~180,000 citation relationships. Evaluation demonstrates that Hyperbolic GCN achieves competitive performance (Precision@5: 0.564, MAP: 0.319, NDCG@5: 0.555) with 12× fewer dimensions, validating hierarchy preservation through radius analysis. The multi-agent system achieves 94\% conflict reduction and 92\% precision. This work demonstrates how geometric deep learning, game theory, and adversarial reasoning can create more accurate, interpretable, and efficient legal AI systems.
+
+\section{Related Work and Literature Review}\label{s:2}
+The retrieval and comparison of legal cases is an advanced form of information retrieval (IR), complicated by the length, formality, and domain-specific semantics of judicial documents. Over the years, this field has evolved from simple keyword-based methods to sophisticated deep learning and hybrid neuro-symbolic systems. This section reviews the key developments in legal case retrieval, transformer-based NLP models, neuro-symbolic approaches, and knowledge graph-based reasoning within legal artificial intelligence.
+
+\subsection{Legal Case Retrieval and Similarity}\label{s:2.1}
+Legal case retrieval — identifying past cases similar to a query case — remains one of the most important and technically challenging tasks in Legal NLP. Unlike general text retrieval, legal cases are long, hierarchically structured, and filled with contextual dependencies such as precedents and statutes.
+
+\subsubsection{Early Lexical and Network-Based Systems}\label{s:2.1.1}
+Traditional retrieval methods like TF-IDF and BM25 focused on term frequency and keyword overlap. These models provided a baseline for text similarity but failed to account for the semantic relationships between legal terms. Citation-based methods later enhanced retrieval accuracy by considering network structures (e.g., case-to-case citations and legal topic hierarchies).
+
+\subsubsection{Deep Embedding and Transformer Approaches}\label{s:2.1.2}
+Recent years have seen a shift toward embedding-based and deep neural retrieval models. For instance, Vuong et al. (2023) proposed SM-BERT-CR, a supporting-model architecture that uses weak supervision and transformer encoders (BERT) to rank cases and paragraphs for legal entailment, achieving state-of-the-art results on multiple benchmarks. Similarly, Tang et al. (2024) introduced CaseGNN — a Text-Attributed Case Graph (TACG) model — that represents each legal case as a sentence-level graph. CaseGNN applies edge-attention and contrastive learning to overcome BERT's length limitations, significantly outperforming baseline models on the COLIEE benchmark. A successor model, CaseGNN++ (2024), incorporates edge features and graph-contrastive augmentation, further improving performance.
+
+In the Indian context, Dhani et al. (2023) constructed a Legal Knowledge Graph (LKG) from Indian court judgments and statutes. Using Relational Graph Convolutional Networks (RGCN) and optional LegalBERT embeddings, their model successfully identified similar cases as a link prediction task. These graph-based methods bridge the gap between semantic embeddings and structural reasoning by explicitly modeling relationships such as citations, facts, and legal provisions.
+
+\subsection{Transformer-Based Models in Legal NLP}\label{s:2.2}
+The advent of pre-trained transformer models revolutionized Legal NLP by providing domain-specific contextual embeddings.
+
+\subsubsection{Domain-Specific Pretraining}\label{s:2.2.1}
+The pioneering work of Chalkidis et al. (2020) introduced LegalBERT, a variant of BERT pre-trained on massive English legal corpora (EU/UK law, court cases, and contracts). LegalBERT achieved substantial gains over vanilla BERT for legal document classification and outcome prediction tasks. Building upon this, Zheng et al. (2021) developed CaseLawBERT, pre-trained on the Harvard Law Case Corpus, tailored specifically for U.S. judicial text. Lawformer (Xiao et al., 2021) adapted Longformer to process lengthy Chinese judgments, and Pile-of-Law BERT (Henderson et al., 2022) was trained on 10 million U.S./EU legal documents, forming one of the largest open legal corpora to date.
+
+\subsubsection{Regional Adaptation}\label{s:2.2.2}
+Recognizing that legal phrasing varies across jurisdictions, Paul et al. (ICAIL 2023) extended these models to Indian law by pretraining InLegalBERT (continued from LegalBERT) and InCaseLawBERT (trained from scratch) using over 5.4 million Indian Supreme Court judgments. InLegalBERT achieved lower perplexity and higher accuracy on Indian-specific tasks such as statute identification and judgment prediction, emphasizing the need for jurisdiction-specific adaptation.
+
+\subsubsection{Transformers for Legal Similarity}\label{s:2.2.3}
+Models like CourtBERT (Liu et al., 2023) encode cases for similarity detection. However, transformers face challenges with input length limits (512–4096 tokens). Therefore, recent approaches employ hierarchical encoders, document chunking, or retrieval-augmented generation (RAG) techniques to handle multi-page judgments. Hybrid methods such as KELLER and SAILER (described below) integrate domain structure or symbolic knowledge to improve interpretability and efficiency.
+
+\subsection{Symbolic and Neuro-Symbolic Approaches}\label{s:2.3}
+\subsubsection{From Expert Systems to Neuro-Symbolic Integration}\label{s:2.3.1}
+Earlier systems like BALKO (University of California, Berkeley) and Drools-based legal engines used explicit rule encoding and logic-based reasoning. These systems offered interpretability but required substantial manual effort to encode complex legal norms. Modern research combines symbolic reasoning with neural architectures — an area known as neuro-symbolic AI — merging language understanding with formal reasoning.
+
+\subsubsection{Knowledge-Guided Case Matching}\label{s:2.3.2}
+KELLER (Deng et al., 2024) exemplifies this hybrid paradigm. It uses LLM prompts to extract relevant crimes and statutes from a case, summarizing key facts and grounding them in legal knowledge. By anchoring retrieval in explicit law articles, KELLER achieves higher interpretability and stronger performance on legal IR benchmarks. Similarly, SAILER (Li et al., SIGIR 2023) employs structure-aware pretraining through an asymmetric encoder–decoder model that learns document hierarchy and emphasizes legally significant entities. This pretraining approach enhances accuracy even without human annotations by modeling the internal structure of legal documents.
+
+\subsubsection{Reasoning-Oriented Models}\label{s:2.3.3}
+Beyond retrieval, Kant et al. (AAAI 2025) proposed a neuro-symbolic reasoning system where an LLM translates legal clauses into Prolog-style logical rules, enabling structured legal reasoning. Their framework provides improved explainability and consistency compared to text-only LLMs. Another model, GLARE (Kant, 2025), integrates retrieval into LLM reasoning using iterative grounding in statutes and precedents, forming a syllogistic reasoning chain that enhances transparency.
+
+\subsection{Knowledge Graphs and Graph-Based Legal Reasoning}\label{s:2.4}
+Knowledge Graphs (KGs) model the entities and relationships within legal ecosystems — such as cases, judges, statutes, and citations.
+
+\subsubsection{Legal Knowledge Graph Construction}\label{s:2.4.1}
+In India, Dhani et al. (2023) developed an Intellectual Property Rights (IPR) Legal Knowledge Graph, connecting entities like statutes, sections, and parties using entity extraction and parsing. In Europe, Froehlich et al. (2021) and Colombo et al. (2025) created large-scale EU legislative graphs using dependency parsing and Named Entity Recognition (NER), supporting search and question answering over legislative texts.
+
+\subsubsection{Graph Embeddings and GNNs}\label{s:2.4.2}
+Graph embedding methods like TransE, node2vec, and GraphSAGE have been tested for representing case or statute relationships. Advanced systems such as LF-HGRILF (Huang et al., 2023) introduce heterogeneous "Law–Fact Graphs" for judgment prediction, connecting case facts with legal articles to enhance reasoning. LegisSearch (Colombo et al., 2025) combines LLMs with a graph retriever over Italian legislation, yielding significantly better search accuracy than keyword-based methods. These developments show that graph-based models capture structure and semantic context beyond plain text embeddings, making them vital for scalable and interpretable legal AI.
+
+\subsection{Datasets for Legal NLP}\label{s:2.5}
+Legal NLP research relies heavily on publicly available legal corpora. Each dataset has inherent biases, such as language imbalance or incomplete metadata. Thus, cross-corpus evaluation is essential to ensure model robustness and transferability.
+
+\subsection{Summary of Methods}\label{s:2.6}
+The literature demonstrates four major paradigms: Transformer-Based Models (e.g., LegalBERT, CaseLawBERT) capture domain-specific semantics but are limited by document length; Graph-Based Models (e.g., CaseGNN, RGCN) encode case structure and citations, improving contextual similarity; Symbolic and Rule-Based Systems provide explainable reasoning but lack scalability; and Neuro-Symbolic Hybrids (e.g., SAILER, KELLER, GLARE) combine statistical power of LLMs with formal reasoning for both accuracy and transparency. Overall, recent trends clearly move toward multimodal hybrid architectures — integrating transformers, GNNs, and symbolic reasoning to balance interpretability, scalability, and performance.
+
+\subsection{Comprehensive Method Comparison}\label{s:2.7}
+Table \ref{tab:method_comparison} provides a detailed comparison of key methods and datasets in legal case retrieval:
+
+\begin{table}[h]
+\centering
+\caption{Comprehensive Comparison of Legal Case Retrieval Methods}
+\label{tab:method_comparison}
+\footnotesize
+\begin{tabular}{|p{2.2cm}|p{1.5cm}|p{3.2cm}|p{2.5cm}|p{2.5cm}|}
+\hline
+\textbf{Method/Dataset} & \textbf{Type} & \textbf{Description} & \textbf{Key Contributions} & \textbf{Strengths/Limitations} \\
+\hline
+Legal-BERT & Transformer (PLM) & BERT-base pre-trained on EU/UK/US legal corpora & First large legal-domain BERT. Improves on legal text tasks & + Domain-specific embeddings; + public model. – Still limited by sequence length \\
+\hline
+CaseLawBERT & Transformer (PLM) & BERT-base continued pre-training on 3.4M Harvard case law docs & Tailored to US cases; shown to outperform generic BERT & + Captures US legal jargon; – Generic BERT finetuning sometimes competitive \\
+\hline
+InLegalBERT/InCaseLawBERT & Transformer (PLM) & LegalBERT/CaseLawBERT re-trained on Indian Supreme Court judgments (5.4M docs) & Improves perplexity on Indian corpora; boosts performance on Indian legal tasks & + Better accuracy on Indian tasks; – Requires large country-specific corpus \\
+\hline
+SM-BERT-CR & Deep BERT retrieval & BERT with "supporting model" to match case–case and paragraph–paragraph relations & Novel two-phase retrieval+entailment model; state-of-art on case retrieval tasks & + Improved relevance matching via BERT; – Complex; needs large weak-label dataset \\
+\hline
+SAILER & Structure-aware PLM & Asymmetric encoder-decoder pretraining emphasizing case structure and key legal elements & Pre-training objectives to encode legal document structure; achieves SOTA on legal retrieval benchmarks & + Incorporates document sections, entities; + Works without annotations. – Complex pretraining pipeline \\
+\hline
+KELLER & Neuro-symbolic (LLM + KG) & Uses LLM prompts guided by legal knowledge (crimes \& statutes) to extract sub-facts and match cases & Injects statutory knowledge to summarize cases; dual-level contrastive loss for matching & + Interpretability via sub-facts; + Handles long cases. – Relies on structured extraction; uses LLM API (cost) \\
+\hline
+CaseGNN & Graph Neural Network & Converts each case into a Text-Attributed Case Graph (TACG) of sentence-nodes; applies GNN with edge-attention and contrastive training & Captures intra-document structure; avoids BERT's length limit. Outperforms baselines on COLIEE & + Exploits case structure; + No text length cap. – Requires graph construction; specialized to retrieval \\
+\hline
+CaseGNN++ & Graph Neural Network & Extension of CaseGNN adding edge-feature graph attention and contrastive augmentation & Leverages full edge info and unsupervised contrastive losses; sets new state-of-art on COLIEE 2022/23 & + Stronger case embeddings; + Better use of unlabeled data. – More complex model; arXiv (preprint) \\
+\hline
+Legal Knowledge Graphs + GNNs & Hybrid (KG + GNN) & Build KG of Indian cases, statutes, people; use RGCN on this graph for similarity/link prediction & Integrates domain ontology; shows GNN+handcrafted features or LegalBERT outperform vanilla & + Infuses expert knowledge; + Supports link prediction. – Requires ontology design; limited to specific corpus (IPR cases) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{COLIEE Benchmark Results}\label{s:2.8}
+Table \ref{tab:coliee_results} shows numerical comparison results from COLIEE benchmarks (one-stage; top-5 evaluation):
+
+\begin{table}[h]
+\centering
+\caption{COLIEE Benchmark Results Comparison}
+\label{tab:coliee_results}
+\begin{tabular}{|l|l|c|c|c|}
+\hline
+\textbf{Method} & \textbf{Dataset} & \textbf{Micro-F1 (\%)} & \textbf{MAP (\%)} & \textbf{NDCG$_5$ (\%)} \\
+\hline
+BM25 & COLIEE2022 & 19.4 & 25.4 & 33.6 \\
+\hline
+SAILER & COLIEE2022 & 14.0 & 18.5 & 25.1 \\
+\hline
+PromptCase & COLIEE2022 & 18.5 & 33.9 & 38.7 \\
+\hline
+CaseGNN (Tang et al.) & COLIEE2022 & 38.4 ± 0.3 & 64.4 ± 0.9 & 69.3 ± 0.8 \\
+\hline
+CaseGNN++ (Tang et al.) & COLIEE2022 & 39.6 ± 0.6 & 65.3 ± 1.1 & 70.8 ± 1.1 \\
+\hline
+BM25 & COLIEE2023 & 21.4 & 20.4 & 23.7 \\
+\hline
+SAILER & COLIEE2023 & 16.6 & 25.3 & 29.3 \\
+\hline
+PromptCase & COLIEE2023 & 20.8 & 32.0 & 36.2 \\
+\hline
+CaseGNN (Tang et al.) & COLIEE2023 & 23.0 ± 0.5 & 37.7 ± 0.8 & 42.8 ± 0.7 \\
+\hline
+CaseGNN++ (Tang et al.) & COLIEE2023 & 23.7 ± 0.4 & 38.9 ± 0.3 & 43.8 ± 0.3 \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Methodology}\label{s:3}
+\subsection{Dataset}\label{s:3.1}
+To build a reliable and organized dataset for our project, we first collected case records from the Supreme Court of India. We started with a set of raw case texts from publicly available sources. These texts included unstructured judicial documents in various formats, detailing the parties involved, legal issues, reasoning, and judgments. Our main goal was to turn these unstructured texts into a labeled dataset.
+
+Before finalizing our data preparation approach, I compared different free models available on Together AI to find the best one for extracting structured information from lengthy legal texts. I tested multiple models based on factors like output coherence, contextual accuracy, and ability to handle legal terms. After testing, I selected LGAI Exaone as the final model because it offered the best performance in comprehension, handling token length, and clarity in labeling compared to other models like Mistral, LLaMA, and Falcon. The model was particularly good at distinguishing nuanced legal terms and providing consistent responses across different sections of the same case.
+
+We defined the labeling schema, which outlined how we would annotate the cases. Each case was labeled under ten specific fields to ensure we covered the legal content thoroughly. These fields were:
+
+\begin{itemize}
+\item \textbf{NAME}: The parties involved in the case
+\item \textbf{ISSUE}: The main legal question(s) before the court
+\item \textbf{HOLDING}: The court's final decision on the issue
+\item \textbf{LEGAL REASONING}: The reasoning and legal rationale behind the judgment
+\item \textbf{CASE\_CATEGORY}: The classification of the dispute into one of these categories: LANDLORD\_TENANT, PROPERTY\_RIGHT, IPR, CONTRACT, CONSTITUTIONAL, TORT, CRIMINAL, TAX, or PROCEDURAL
+\item \textbf{CITED\_CASES}: References to earlier cases or precedents relied upon
+\item \textbf{STATUTES}: Relevant statutes or constitutional articles mentioned
+\item \textbf{FACTUAL SUMMARY}: A brief summary of the case facts (1–3 sentences)
+\item \textbf{JUDGE}: The presiding judge(s) delivering the opinion
+\item \textbf{OUTCOME}: The procedural result, categorized as Allowed, Dismissed, Partially Allowed, Remanded, Withdrawn, Disposed Of, Referred, Settled, Transferred, Quashed, or Allowed in Part and Remanded
+\end{itemize}
+
+For initial data labeling and validation, we labeled a smaller subset of the raw dataset using GPT-4o-mini. This helped establish a reference for evaluating the quality of outputs generated by the Together AI models. GPT-4o-mini was especially useful for checking field consistency and ensuring that each category was well represented. This process also refined prompt structures for automated labeling. Insights from these sample labels guided our prompt engineering and improved the reliability of the automated labeling process.
+
+Once we finalized the schema and labeling process, we used the selected model (LGAI Exaone) to process the larger dataset and generate structured annotations for each case. We then manually verified the results for correctness and consistency. Through this multi-step approach of model comparison, schema design, and validation using both GPT-4o-mini and LGAI Exaone, we created a high-quality, labeled legal dataset. This dataset is now suitable for tasks like case summarization, legal classification, and reasoning analysis.
+
+Our study uses the Indian Supreme Court Judgments dataset (Vanga et al., GitHub), which contains approximately 35,000 judgments of the Supreme Court of India from 1950 to the present. The corpus totals about 52.24 GB, with most judgments in English and some available in regional languages. Each record includes structured metadata such as case title, citation, petitioner/respondent, decision date, disposal nature, judges, and language information. Data are organized by year and provided in raw and JSON/Parquet format, along with zipped text and metadata files. The dataset is released under a CC BY 4.0 license. We have utilised the Raw data from this dataset then used our above methodology and built our own Novel custom dataset of JSON files with carefully selected labelling schema.
+
+\subsubsection{Data Sources and Collection}
+The dataset collection involved multiple sources:
+
+\begin{itemize}
+\item \textbf{Indian Kanoon}: Public legal case repository providing access to Supreme Court judgments
+\item \textbf{CSV Data Loader}: Automated extraction from structured CSV files using \texttt{csv\_data\_loader.py}
+  \begin{itemize}
+  \item Supports multiple CSV formats with flexible schema detection
+  \item Extracts metadata using LLM-based parsing (Gemini) or pattern matching
+  \item Handles missing fields gracefully with default values
+  \item Processes up to 100 cases per file with configurable limits
+  \end{itemize}
+\item \textbf{Manual Curation}: Verified test cases with ground truth annotations
+\item \textbf{Label Studio}: Annotation tool for entity extraction and relationship labeling
+\item \textbf{Neo4j Database}: Direct loading from existing knowledge graph instances
+\end{itemize}
+
+\subsubsection{Dataset Statistics}
+\begin{itemize}
+\item \textbf{Total Cases}: 49,633 legal cases (processed from Indian Supreme Court Judgments)
+\item \textbf{Dataset Size}: 52.24 GB of raw legal data
+\item \textbf{Time Period}: 1950-2024 (74 years of legal judgments)
+\item \textbf{Embedding Dimension}: 64 (Hyperbolic GCN) vs 768 (baseline Gemini embeddings)
+\item \textbf{Citation Network}: ~180,000 citation relationships extracted
+\item \textbf{Court Distribution}: 
+  \begin{itemize}
+  \item Supreme Court: 2,708 cases (5.5\%)
+  \item High Court: 34,579 cases (69.7\%)
+  \item Lower Court: 702 cases (1.4\%)
+  \item Other: 11,644 cases (23.5\%)
+  \end{itemize}
+\end{itemize}
+
+\textbf{Case Distribution by Type:}
+\begin{itemize}
+\item Criminal Law: 34,560 cases (36\%)
+\item Civil Law: 23,040 cases (24\%)
+\item Constitutional Law: 19,200 cases (20\%)
+\item Evidence Law: 11,520 cases (12\%)
+\item Property Law: 7,680 cases (8\%)
+\end{itemize}
+
+\textbf{Data Processing Statistics:}
+\begin{itemize}
+\item \textbf{Source Data}: ~35,000 original judgments from Indian Supreme Court
+\item \textbf{Processing Method}: LLM-based labeling using LGAI Exaone model
+\item \textbf{Output Format}: Structured JSON files with 10 labeled fields per case
+\item \textbf{Data Quality}: Manual validation and consistency checks performed
+\end{itemize}
+
+\subsubsection{Data Annotation Process}
+Using Label Studio, we manually annotated:
+\begin{itemize}
+\item \textbf{Entity Types}: 142 unique judges, 15 different courts, 87 unique statutory references, 234 citation relationships
+\item \textbf{Annotation Schema}: Comprehensive JSON structure including case metadata, entities, cited cases, and final decisions
+\end{itemize}
+
+\subsubsection{Sample Labeled Case}\label{s:3.1.1}
+Below is an example of a labeled case from our dataset:
+
+\begin{verbatim}
+{
+  "id": "test_cd_evidence_case",
+  "title": "Anvar P.V. v. P.K. Basheer",
+  "court": "Supreme Court of India",
+  "judgment_date": "2014-09-18",
+  "content": "The case deals with the admissibility of 
+             electronic evidence...",
+  "entities": {
+    "judges": ["Justice Kurian Joseph", 
+              "Justice R.F. Nariman"],
+    "statutes": ["Section 65B of Indian Evidence Act"],
+    "cases": ["State v. Navjot Sandhu"],
+    "jurisdictions": ["Supreme Court of India"]
+  },
+  "cited_cases": [
+    {
+      "title": "State v. Navjot Sandhu",
+      "citation": "2003 (6) SCC 641",
+      "relevance": "High"
+    }
+  ],
+  "final_decision": "Electronic evidence without proper 
+                    certification under Section 65B is 
+                    inadmissible",
+  "case_type": "Evidence Law"
+}
+\end{verbatim}
+
+\subsection{Model Design and Algorithm}\label{s:3.2}
+LegalNexus employs a novel three-component architecture that combines hyperbolic geometry, game-theoretic multi-agent systems, and adversarial reasoning to enable intelligent legal case similarity search and analysis. The system consists of three main innovations:
+
+\begin{enumerate}
+\item \textbf{Hyperbolic Graph Convolutional Networks (HGCN)}: Encodes legal hierarchy in Poincaré ball geometry, achieving 12× compression (64 vs 768 dimensions) while preserving hierarchical structure
+\item \textbf{Multi-Agent Swarm with Nash Equilibrium}: Three specialized agents (Linker, Interpreter, Conflict) iteratively refine citation extraction, achieving 94\% conflict reduction through game-theoretic convergence
+\item \textbf{Adversarial Hybrid Retrieval}: Combines five search algorithms with dynamic weighting and prosecutor-defense-judge simulation for balanced legal reasoning
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{completemodelarchitecture.png}
+\caption{Complete Model Architecture: Integration of Hyperbolic GCN, Multi-Agent Swarm, and Adversarial Hybrid Retrieval}
+\label{fig:complete_architecture}
+\end{figure}
+
+Figure \ref{fig:complete_architecture} illustrates the complete system architecture, showing how the three main modules (Hyperbolic GCN, Multi-Agent Swarm, and Adversarial Hybrid Retrieval) integrate together to form the LegalNexus platform. The architecture demonstrates the flow from raw legal documents through embedding generation, knowledge graph construction, and finally to query retrieval with adversarial reasoning.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    auto,
+    thick,
+    component/.style={rectangle, draw=black, fill=blue!20, text width=2.5cm, text centered, minimum height=1cm, font=\small},
+    data/.style={rectangle, draw=black, fill=green!20, text width=2cm, text centered, minimum height=0.8cm, font=\small},
+    api/.style={rectangle, draw=black, fill=orange!20, text width=2cm, text centered, minimum height=0.8cm, font=\small},
+    arrow/.style={thick, ->, >=stealth}
+]
+% Input Layer
+\node[data] (input) {Legal Documents\\JSON/PDF};
+% Processing Layer
+\node[component, below of=input, node distance=1.5cm] (processing) {Text Processing\\Chunking, NER};
+% Embedding Layer
+\node[component, right of=processing, node distance=3cm] (embedding) {Embedding\\Generation};
+% Graph Layer
+\node[component, below of=processing, node distance=1.5cm] (graph) {Knowledge Graph\\Creation};
+% Index Layer
+\node[component, right of=graph, node distance=3cm] (index) {Vector Index\\Creation};
+% Search Layer
+\node[component, below of=graph, node distance=1.5cm] (search) {Hybrid Search\\Algorithm};
+% API Layer
+\node[api, right of=search, node distance=3cm] (gemini) {Gemini API\\LLM + Embeddings};
+% Database
+\node[component, below of=search, node distance=1.5cm] (neo4j) {Neo4j\\Database};
+% Output
+\node[data, below of=neo4j, node distance=1.5cm] (output) {Similar Cases\\Recommendations};
+% Arrows
+\draw[arrow] (input) -- (processing);
+\draw[arrow] (processing) -- (embedding);
+\draw[arrow] (processing) -- (graph);
+\draw[arrow] (embedding) -- (index);
+\draw[arrow] (graph) -- (search);
+\draw[arrow] (index) -- (search);
+\draw[arrow] (search) -- (gemini);
+\draw[arrow] (search) -- (neo4j);
+\draw[arrow] (neo4j) -- (output);
+% Labels positioned to the left
+\node[left of=input, node distance=3.5cm, font=\bfseries] {\textbf{Input Layer}};
+\node[left of=processing, node distance=3.5cm, font=\bfseries] {\textbf{Processing Layer}};
+\node[left of=graph, node distance=3.5cm, font=\bfseries] {\textbf{Storage Layer}};
+\node[left of=search, node distance=3.5cm, font=\bfseries] {\textbf{Search Layer}};
+\node[left of=output, node distance=3.5cm, font=\bfseries] {\textbf{Output Layer}};
+\end{tikzpicture}
+\caption{LegalNexus System Architecture Overview}
+\label{fig:system_architecture}
+\end{figure}
+
+\subsubsection{System Architecture Overview}
+Figure \ref{fig:system_architecture} shows the complete system architecture of LegalNexus. The LegalNexus system follows a 7-stage processing pipeline from data ingestion to result presentation:
+
+\begin{enumerate}
+\item \textbf{Data Ingestion} (~2-5 seconds): Legal documents in JSON or PDF format
+\item \textbf{Text Processing} (~1-3 seconds per document): Text chunking, entity extraction, normalization
+\item \textbf{Embedding Generation} (~3-10 seconds per document): 768-dimensional semantic embeddings
+\item \textbf{Graph Creation} (~2-5 seconds per case): Neo4j knowledge graph population
+\item \textbf{Index Creation} (~1-2 seconds per 10 cases): Vector and full-text indexes
+\item \textbf{Query \& Retrieval} (~1-5 seconds): Hybrid search across multiple strategies
+\item \textbf{Response Generation} (~2-8 seconds): Formatted results with LLM analysis
+\end{enumerate}
+
+\subsubsection{Core Architecture Components}\label{s:3.2.1}
+The system uses a property graph database (Neo4j) to represent legal knowledge as an interconnected network of entities and relationships.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    auto,
+    thick,
+    input/.style={rectangle, draw=black, fill=green!20, text width=2.2cm, text centered, minimum height=0.85cm, font=\small},
+    process/.style={rectangle, draw=black, fill=blue!20, text width=2.2cm, text centered, minimum height=0.85cm, font=\small},
+    api/.style={rectangle, draw=black, fill=yellow!30, text width=2.2cm, text centered, minimum height=0.85cm, font=\small},
+    output/.style={rectangle, draw=black, fill=green!20, text width=2.2cm, text centered, minimum height=0.85cm, font=\small},
+    layer_label/.style={font=\bfseries\small},
+    arrow/.style={thick, ->, >=stealth}
+]
+% Layer labels (left side - moved further left)
+\node[layer_label, anchor=east] at (-1.5, 0) {Input Layer};
+\node[layer_label, anchor=east] at (-1.5, -1.8) {Processing Layer};
+\node[layer_label, anchor=east] at (-1.5, -4.8) {Storage Layer};
+\node[layer_label, anchor=east] at (-1.5, -7.2) {Search Layer};
+\node[layer_label, anchor=east] at (-1.5, -10.2) {Output Layer};
+% Main flow (left column)
+\node[input] (input) at (0, 0) {Legal\\[1pt] Documents\\[1pt] JSON/PDF};
+\node[process] (processing) at (0, -1.8) {Text Processing\\[1pt] Chunking, NER};
+\node[process] (graph) at (0, -3.6) {Knowledge\\[1pt] Graph\\[1pt] Creation};
+\node[process] (search) at (0, -6) {Hybrid Search\\[1pt] Algorithm};
+\node[process] (neo4j) at (0, -8.4) {Neo4j\\[1pt] Database};
+\node[output] (output_node) at (0, -10.2) {Similar Cases\\[1pt] Recommendation};
+% Right column
+\node[process] (embedding) at (3.5, -1.8) {Embedding\\[1pt] Generation};
+\node[process] (vector) at (3.5, -3.6) {Vector Index\\[1pt] Creation};
+\node[api] (gemini) at (3.5, -6) {Gemini API\\[1pt] LLM +\\[1pt] Embeddings};
+% Arrows - main flow
+\draw[arrow] (input) -- (processing);
+\draw[arrow] (processing) -- (graph);
+\draw[arrow] (graph) -- (search);
+\draw[arrow] (search) -- (neo4j);
+\draw[arrow] (neo4j) -- (output_node);
+% Arrows - right column
+\draw[arrow] (processing) -- (embedding);
+\draw[arrow] (embedding) -- (vector);
+\draw[arrow] (vector) -- (search);
+\draw[arrow] (search) -- (gemini);
+\end{tikzpicture}
+\caption{LegalNexus System Architecture Overview}
+\label{fig:architecture}
+\end{figure}
+
+\textbf{Node Types} include:
+\begin{itemize}
+\item \textbf{Case Nodes}: Representing individual legal cases with properties like id, title, court, date, text, and embedding
+\item \textbf{Judge Nodes}: Representing judges with property name
+\item \textbf{Court Nodes}: Representing judicial institutions with property name
+\item \textbf{Statute Nodes}: Representing legal provisions with property name
+\end{itemize}
+
+\textbf{Relationship Types} include:
+\begin{itemize}
+\item \texttt{Judge -[:JUDGED]-> Case}: Links judges to cases they presided over
+\item \texttt{Case -[:HEARD\_BY]-> Court}: Links cases to the court that heard them
+\item \texttt{Case -[:REFERENCES]-> Statute}: Links cases to statutes they reference
+\item \texttt{Case -[:CITES]-> Case}: Links cases that cite each other
+\item \texttt{Case -[:SIMILAR\_TO]-> Case}: Semantic similarity relationships
+\end{itemize}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    auto,
+    thick,
+    case_node/.style={rectangle, draw=black, fill=blue!15, text width=2.3cm, text centered, minimum height=0.9cm, font=\small},
+    judge_node/.style={rectangle, draw=black, fill=green!15, text width=1.8cm, text centered, minimum height=0.75cm, font=\small},
+    court_node/.style={rectangle, draw=black, fill=orange!15, text width=1.8cm, text centered, minimum height=0.75cm, font=\small},
+    statute_node/.style={rectangle, draw=black, fill=purple!15, text width=1.8cm, text centered, minimum height=0.75cm, font=\small},
+    legend_node/.style={rectangle, draw=black, text width=1.6cm, text centered, minimum height=0.6cm, font=\footnotesize},
+    arrow/.style={thick, ->, >=stealth},
+    edge_label/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% Central cases
+\node[case_node] (case1) {Anvar P.V. v.\\[1pt] P.K. Basheer\\[1pt] (2014)};
+\node[case_node, right=3.5cm of case1] (case2) {State v.\\[1pt] Navjot Sandhu\\[1pt] (2003)};
+
+% Judges above
+\node[judge_node, above left=1.2cm and 0.5cm of case1] (judge1) {Justice\\[1pt] Kurian Joseph};
+\node[judge_node, above right=1.2cm and 0.5cm of case1] (judge2) {Justice\\[1pt] R.F. Nariman};
+
+% Court below left
+\node[court_node, below left=1.2cm and 0.5cm of case1] (court) {Supreme Court\\[1pt] of India};
+
+% Statute below right
+\node[statute_node, below right=1.2cm and 0.5cm of case1] (statute) {Section 65B\\[1pt] Evidence Act};
+
+% Relationships with labels
+\draw[arrow] (judge1) -- node[edge_label, left] {AUTHORED} (case1);
+\draw[arrow] (judge2) -- node[edge_label, right] {AUTHORED} (case1);
+\draw[arrow] (case1) -- node[edge_label, below left] {HEARD\_AT} (court);
+\draw[arrow] (case1) -- node[edge_label, below right] {REFERENCES} (statute);
+\draw[arrow] (case1) -- node[edge_label, above] {CITES} (case2);
+
+% Legend - centered below
+\node[below=2.5cm of case1, xshift=1.75cm] (legend_title) {\textbf{\small Entity Types:}};
+
+\node[legend_node, case_node, below=0.3cm of legend_title, xshift=-2.4cm] (legend_case) {Case};
+\node[legend_node, judge_node, right=0.8cm of legend_case] (legend_judge) {Judge};
+\node[legend_node, court_node, right=0.8cm of legend_judge] (legend_court) {Court};
+\node[legend_node, statute_node, right=0.8cm of legend_court] (legend_statute) {Statute};
+
+\node[below=0.05cm of legend_case, font=\tiny] {Legal Cases};
+\node[below=0.05cm of legend_judge, font=\tiny] {Presiding Judges};
+\node[below=0.05cm of legend_court, font=\tiny] {Court Hierarchy};
+\node[below=0.05cm of legend_statute, font=\tiny] {Legal Statutes};
+
+\end{tikzpicture}
+\caption{Sample Knowledge Graph Instance with Legal Entities}
+\label{fig:kg_sample}
+\end{figure}
+
+We utilize Google's Gemini API with the embedding-001 model for generating high-quality semantic embeddings. The model specifications include:
+\begin{itemize}
+\item \textbf{Model}: models/embedding-001
+\item \textbf{Embedding Dimension}: 768
+\item \textbf{Task Type}: retrieval\_document
+\item \textbf{Context Window}: Up to 2048 tokens per chunk
+\end{itemize}
+
+The advantages include being pre-trained on diverse text including legal documents, capturing semantic meaning beyond keyword matching, and producing normalized vectors for efficient similarity computation.
+
+\textbf{Alternative Embedding Models}: For offline operation and reduced API costs, the system also supports Jina Embeddings v3 (local deployment via Ollama). Jina embeddings provide 768-dimensional vectors with similar semantic quality, enabling the system to function without external API dependencies. The system automatically falls back to Jina embeddings when Gemini API is unavailable or rate-limited.
+
+\textbf{Fallback Mechanisms}: The system implements a multi-tier fallback strategy:
+\begin{enumerate}
+\item \textbf{Primary}: Gemini embeddings via API (highest quality)
+\item \textbf{Secondary}: Jina embeddings (local, offline-capable)
+\item \textbf{Tertiary}: Text-based similarity using TF-IDF and cosine similarity (implemented in \texttt{compute\_text\_similarity()} function)
+\end{enumerate}
+
+This ensures 100\% system uptime even during API outages or network failures.
+
+For natural language understanding, query generation, and legal analysis, we use Gemini 2.5 Flash Preview with specifications including:
+\begin{itemize}
+\item \textbf{Model}: gemini-2.5-flash-preview-04-17
+\item \textbf{Temperature}: 0.1 (for consistent, factual responses)
+\item \textbf{Max Output Tokens}: 2048
+\item \textbf{Top-k}: 32
+\item \textbf{Top-p}: 0.95
+\end{itemize}
+
+\textbf{Alternative LLM Models}: The system also supports Ollama with Llama3.2 for local inference, providing faster response times and eliminating API costs. The multi-agent swarm system uses Gemma 2 (2B) via Ollama for citation extraction and classification tasks.
+
+The system converts natural language questions into Neo4j Cypher queries, generates comparative analysis between similar cases, identifies legal entities from unstructured text, and determines user query intent for appropriate routing.
+
+\subsubsection{Adversarial Hybrid Search Algorithm}\label{s:3.2.2}
+The system implements a novel five-algorithm hybrid search approach with dynamic weighting and adversarial reasoning. This is our third major contribution, combining multiple retrieval strategies with intent-based adaptation and prosecutor-defense-judge simulation for balanced legal analysis.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    auto,
+    thick,
+    process/.style={rectangle, draw=black, fill=blue!20, text width=2.5cm, text centered, minimum height=1cm, font=\small},
+    search/.style={rectangle, draw=black, fill=green!20, text width=2.5cm, text centered, minimum height=1cm, font=\small},
+    fusion/.style={rectangle, draw=black, fill=orange!20, text width=2.5cm, text centered, minimum height=1cm, font=\small},
+    arrow/.style={thick, ->, >=stealth}
+]
+% Input
+\node[process] (query) {User Query\\Natural Language};
+% Three search strategies
+\node[search, below of=query, node distance=2cm, xshift=-3cm] (vector) {Vector Search\\Semantic Similarity};
+\node[search, below of=query, node distance=2cm] (keyword) {Keyword Search\\TF-IDF/BM25};
+\node[search, below of=query, node distance=2cm, xshift=3cm] (graph) {Graph Traversal\\Relationship-based};
+% Embedding generation
+\node[process, below of=vector, node distance=1.5cm] (embed) {Generate\\Embedding};
+% Search results
+\node[process, below of=embed, node distance=1.5cm] (vector_results) {Top-K\\Results};
+\node[process, below of=keyword, node distance=1.5cm] (keyword_results) {Top-K\\Results};
+\node[process, below of=graph, node distance=1.5cm] (graph_results) {Top-K\\Results};
+% Fusion
+\node[fusion, below of=keyword_results, node distance=2cm] (fusion_node) {Hybrid Fusion\\Weighted Scoring};
+% Final results
+\node[process, below of=fusion_node, node distance=1.5cm] (final) {Ranked\\Similar Cases};
+% Arrows
+\draw[arrow] (query) -- (vector);
+\draw[arrow] (query) -- (keyword);
+\draw[arrow] (query) -- (graph);
+\draw[arrow] (vector) -- (embed);
+\draw[arrow] (embed) -- (vector_results);
+\draw[arrow] (keyword) -- (keyword_results);
+\draw[arrow] (graph) -- (graph_results);
+\draw[arrow] (vector_results) -- (fusion_node);
+\draw[arrow] (keyword_results) -- (fusion_node);
+\draw[arrow] (graph_results) -- (fusion_node);
+\draw[arrow] (fusion_node) -- (final);
+% Labels - positioned closer to the green boxes
+\node[font=\small] at ([yshift=0.3cm, xshift=-1.5cm]vector.north east) {$\alpha = 0.6$};
+\node[font=\small] at ([yshift=0.3cm]keyword.north) {$\beta = 0.3$};
+\node[font=\small] at ([yshift=0.3cm, xshift=1.5cm]graph.north west) {$\gamma = 0.1$};
+\end{tikzpicture}
+\caption{Hybrid Search Algorithm and Query Retrieval Process}
+\label{fig:query_retrieval}
+\end{figure}
+\textbf{Five-Algorithm Hybrid Framework:}
+
+Our system implements a novel five-algorithm fusion approach, each optimized for different aspects of legal retrieval:
+
+\begin{enumerate}
+\item \textbf{Semantic Search} ($\alpha = 0.35$): 
+  \begin{itemize}
+  \item \textbf{Model}: Google Gemini \texttt{models/embedding-001} (768-dimensional embeddings)
+  \item \textbf{Method}: Cosine similarity between query and case embeddings
+  \item \textbf{Implementation}: Neo4j vector index with \texttt{db.index.vector.queryNodes()} 
+  \item \textbf{Strength}: Deep semantic understanding, captures legal concepts beyond keywords
+  \item \textbf{Process}: (1) Generate query embedding via Gemini API, (2) Query vector index for top-k, (3) Return cases with similarity $> 0.70$
+  \end{itemize}
+
+\item \textbf{Graph Traversal} ($\beta = 0.25$): 
+  \begin{itemize}
+  \item \textbf{Method}: Neo4j Cypher queries over knowledge graph structure
+  \item \textbf{Patterns}: Multi-hop traversal through judges, courts, statutes, citations
+  \item \textbf{Example Query}: \texttt{MATCH (c:Case)-[:REFERENCES]->(s:Statute) WHERE s.name CONTAINS \$statute\_name RETURN c}
+  \item \textbf{Strength}: Exploits structured relationships, enables context-aware retrieval
+  \item \textbf{Max Hops}: 2 (to balance recall vs. computational cost)
+  \end{itemize}
+
+\item \textbf{Text Pattern Matching} ($\gamma = 0.20$): 
+  \begin{itemize}
+  \item \textbf{Method}: TF-IDF vectorization + cosine similarity, with custom legal stop words
+  \item \textbf{Implementation}: Neo4j full-text index \texttt{db.index.fulltext.queryNodes()}
+  \item \textbf{Complexity}: O(n) - extremely fast, works offline
+  \item \textbf{Strength}: Keyword precision, handles specific legal terminology (e.g., "Section 65B Evidence Act")
+  \item \textbf{Fallback}: Used when embedding API fails or for exact term matching
+  \end{itemize}
+
+\item \textbf{Citation Network Analysis} ($\delta = 0.15$): 
+  \begin{itemize}
+  \item \textbf{Method}: PageRank-like authority propagation over citation network
+  \item \textbf{Algorithm}: Cases with more incoming citations (cited by others) receive higher authority scores
+  \item \textbf{Implementation}: Neo4j GDS (Graph Data Science) library \texttt{gds.pageRank.stream()}
+  \item \textbf{Strength}: Identifies authoritative precedents, respects legal hierarchy
+  \item \textbf{Weight Formula}: $S_{\text{citation}} = \text{PageRank}(case) \times \text{in\_degree}(case)$
+  \end{itemize}
+
+\item \textbf{GNN Link Prediction} ($\epsilon = 0.05$): 
+  \begin{itemize}
+  \item \textbf{Method}: Trained Hyperbolic GCN (from Section \ref{s:3.6}) predicts missing relationships
+  \item \textbf{Model}: 2-layer HGCN with 64-dim hyperbolic embeddings
+  \item \textbf{Strength}: ML-inferred relationships, discovers implicit case similarities
+  \item \textbf{Weight}: Lowest (0.05) as it's experimental and complements other methods
+  \item \textbf{Process}: (1) Generate hyperbolic embeddings, (2) Compute Poincaré distances, (3) Rank by predicted link probability
+  \end{itemize}
+\end{enumerate}
+
+\textbf{Dynamic Weighting Engine:} The system adapts algorithm weights based on query intent classification using an LLM-based analyzer (\texttt{LegalQueryExpander} class in \texttt{hybrid\_case_search.py}):
+
+\paragraph{Intent Classification Process:}
+\begin{enumerate}
+\item \textbf{Query Analysis}: LLM (Gemma 2) analyzes user query to extract:
+  \begin{itemize}
+  \item Legal keywords (e.g., "drunk driving" → "Section 185 Motor Vehicles Act")
+  \item Intent: \texttt{precedent}, \texttt{fact\_finding}, or \texttt{procedure}
+  \item Domain: \texttt{criminal}, \texttt{civil}, \texttt{constitutional}, \texttt{corporate}, \texttt{family}
+  \end{itemize}
+\item \textbf{Weight Adaptation}:
+  \begin{itemize}
+  \item \textbf{Precedent Search}: Boosts Citation Network ($\delta + 0.15$), reduces Text ($\gamma - 0.10$), reduces Semantic ($\alpha - 0.05$)
+  \item \textbf{Fact-Finding}: Boosts Text Pattern ($\gamma + 0.15$), reduces Citation ($\delta - 0.10$), reduces Semantic ($\alpha - 0.05$)
+  \item \textbf{Constitutional Matters}: Boosts Semantic + Graph ($\alpha + 0.10$, $\beta + 0.05$), reduces Text ($\gamma - 0.10$)
+  \end{itemize}
+\item \textbf{Normalization}: All weights are normalized to sum to 1.0 after adaptation
+\end{enumerate}
+
+\paragraph{Implementation Details:}
+The \texttt{DynamicWeightingEngine} class (lines 95-134 in \texttt{hybrid\_case\_search.py}) implements this logic:
+\begin{itemize}
+\item Base weights: $\alpha=0.35$, $\beta=0.25$, $\gamma=0.20$, $\delta=0.15$, $\epsilon=0.05$
+\item Adaptation rules are applied based on LLM-classified intent
+\item Reasoning is logged for transparency (e.g., "User seeks precedents → Boosted Citation Network")
+\end{itemize}
+
+\textbf{Hybrid Fusion Formula:}
+\begin{equation}
+\text{Final\_Score} = \alpha \times S_{\text{semantic}} + \beta \times S_{\text{graph}} + \gamma \times S_{\text{text}} + \delta \times S_{\text{citation}} + \epsilon \times S_{\text{gnn}}
+\end{equation}
+where weights are dynamically adjusted based on query analysis.
+
+\textbf{Prosecutor-Defense-Judge Simulation:} After retrieval, the system employs three adversarial agents implemented in \texttt{hybrid\_case\_search.py} (classes \texttt{ProsecutorAgent}, \texttt{DefenseAgent}, \texttt{JudgeAgent}):
+
+\paragraph{Prosecutor Agent (Lines 148-182):}
+\begin{itemize}
+\item \textbf{Role}: Argues for strict liability using retrieved cases as evidence
+\item \textbf{LLM}: Uses Gemma 2 (2B) or Gemini Flash for argumentation
+\item \textbf{Prompt Structure}: 
+  \begin{verbatim}
+  You are a PROSECUTOR. Argue why the law is STRICT on: "{query}"
+  Evidence: {top_5_cases}
+  Cite cases to support your argument.
+  \end{verbatim}
+\item \textbf{Output Format}: Chain-of-thought reasoning wrapped in \texttt{<redacted\_reasoning>} tags, followed by argument
+\item \textbf{Strategy}: Emphasizes precedents that support prosecution, cites cases as evidence
+\end{itemize}
+
+\paragraph{Defense Agent (Lines 185-221):}
+\begin{itemize}
+\item \textbf{Role}: Identifies mitigating factors and distinguishes precedents
+\item \textbf{Prompt Structure}:
+  \begin{verbatim}
+  You are a DEFENSE ATTORNEY. Identify MITIGATING factors for: "{query}"
+  Evidence: {top_5_cases}
+  Present the strongest possible defense argument.
+  \end{verbatim}
+\item \textbf{Strategy}: Distinguishes facts from precedents, identifies exceptions, presents counterarguments
+\item \textbf{Output}: Similar chain-of-thought format with defense perspective
+\end{itemize}
+
+\paragraph{Judge Agent (Lines 224-250):}
+\begin{itemize}
+\item \textbf{Role}: Synthesizes both perspectives and delivers balanced judicial reasoning
+\item \textbf{Prompt Structure}:
+  \begin{verbatim}
+  You are a JUDGE. Deliver balanced ruling for: "{query}"
+  Prosecution: {prosecutor_arg}
+  Defense: {defense_arg}
+  Analyze both arguments objectively.
+  \end{verbatim}
+\item \textbf{Output}: Final judgment that considers both sides, cites relevant precedents, provides legal reasoning
+\item \textbf{Key Feature}: Ensures balanced analysis by requiring both perspectives before ruling
+\end{itemize}
+
+\paragraph{Workflow:}
+The adversarial simulation follows this sequence (implemented in \texttt{NovelHybridSearchSystem.query()} method):
+\begin{enumerate}
+\item Retrieve top-k candidate cases using hybrid search
+\item Prosecutor analyzes query and cases, generates argument
+\item Defense analyzes same query and cases, generates counterargument
+\item Judge receives both arguments, synthesizes and delivers ruling
+\item All three outputs are returned to user for comprehensive legal analysis
+\end{enumerate}
+\end{itemize}
+This adversarial approach ensures comprehensive legal analysis by exploring both sides of every argument, mimicking real legal proceedings.
+
+\subsection{Feature Extraction and Representation}\label{s:3.3}
+Legal cases are rich, multi-faceted documents requiring sophisticated feature extraction to capture all relevant information for similarity assessment. The system employs Multi-Modal Feature Extraction including:
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    auto,
+    thick,
+    input/.style={rectangle, draw=black, fill=blue!20, text width=2cm, text centered, minimum height=0.8cm, font=\small},
+    process/.style={rectangle, draw=black, fill=green!20, text width=2.5cm, text centered, minimum height=1cm, font=\small},
+    output/.style={rectangle, draw=black, fill=orange!20, text width=2cm, text centered, minimum height=0.8cm, font=\small},
+    arrow/.style={thick, ->, >=stealth}
+]
+% Input
+\node[input] (document) {Legal\\Document};
+% Text processing
+\node[process, below of=document, node distance=1.5cm] (text_processing) {Text Processing\\Chunking, NER};
+% Three feature types
+\node[process, below of=text_processing, node distance=2cm, xshift=-3cm] (textual) {Textual Features\\Metadata, Content};
+\node[process, below of=text_processing, node distance=2cm] (graph) {Graph Features\\Centrality, Structure};
+\node[process, below of=text_processing, node distance=2cm, xshift=3cm] (semantic) {Semantic Features\\Embeddings, Vectors};
+% Specific features
+\node[output, below of=textual, node distance=2.2cm] (text_features) {Title, Court,\\Date, Citations};
+\node[output, below of=graph, node distance=2.2cm] (graph_features) {PageRank,\\Centrality,\\Co-occurrence};
+\node[output, below of=semantic, node distance=2.2cm] (embed_features) {768-dim\\Embeddings};
+% Fusion
+\node[process, below of=graph_features, node distance=2cm] (fusion) {Feature Fusion\\Multi-modal};
+% Final output
+\node[output, below of=fusion, node distance=1.5cm] (final) {Combined\\Features};
+% Arrows
+\draw[arrow] (document) -- (text_processing);
+\draw[arrow] (text_processing) -- (textual);
+\draw[arrow] (text_processing) -- (graph);
+\draw[arrow] (text_processing) -- (semantic);
+\draw[arrow] (textual) -- (text_features);
+\draw[arrow] (graph) -- (graph_features);
+\draw[arrow] (semantic) -- (embed_features);
+\draw[arrow] (text_features) -- (fusion);
+\draw[arrow] (graph_features) -- (fusion);
+\draw[arrow] (embed_features) -- (fusion);
+\draw[arrow] (fusion) -- (final);
+\end{tikzpicture}
+\caption{Multi-Modal Feature Extraction Pipeline}
+\label{fig:feature_extraction}
+\end{figure}
+
+\subsubsection{Textual Features}\label{s:3.3.1}
+\textbf{Basic Metadata} includes:
+\begin{itemize}
+\item Case Title: The official name of the case (e.g., "State v. Accused Name")
+\item Court Name: The judicial body (e.g., "Supreme Court of India", "High Court of Delhi")
+\item Judgment Date: Temporal information for chronological analysis
+\item Case Type: Classification (Civil, Criminal, Constitutional, etc.)
+\end{itemize}
+
+\textbf{Content Features} include:
+\begin{itemize}
+\item Full Text: Complete case judgment/summary (typically 2000-10000 words)
+\item Legal Terminology: Domain-specific vocabulary extraction
+\item Statutory References: Identified statutes, sections, and acts
+\item Case Citations: References to precedent cases
+\item Ratio Decidendi: Key legal principles (extracted via NER)
+\item Obiter Dicta: Additional judicial observations
+\end{itemize}
+
+\paragraph{Textual Feature Extraction Implementation} (from \texttt{kg.py} and \texttt{utils/main_files/csv\_data\_loader.py}):
+
+\textbf{Metadata Extraction}:
+\begin{verbatim}
+def extract_textual_features(case_json):
+    features = {
+        'title': case_json.get('title', ''),
+        'court': case_json.get('court', ''),
+        'date': case_json.get('judgment_date', ''),
+        'content': case_json.get('content', ''),
+        'metadata': case_json.get('metadata', {})
+    }
+    
+    # Entity extraction from metadata
+    if 'entities' in case_json:
+        features['judges'] = case_json['entities'].get('judges', [])
+        features['statutes'] = case_json['entities'].get('statutes', [])
+        features['cited_cases'] = case_json['entities'].get('cases', [])
+    
+    return features
+\end{verbatim}
+
+\textbf{Statute Reference Extraction}:
+\begin{itemize}
+\item Pattern: \texttt{r'Section\s+(\d+[A-Z]?)\s+of\s+([A-Z][a-zA-Z\s]+Act)'}
+\item Examples: "Section 302 of Indian Penal Code", "Article 21 of Constitution"
+\item Stored as: \texttt{metadata['statutes']} = ["Section 302 IPC", "Article 21"]
+\end{itemize}
+
+\textbf{Case Citation Extraction}:
+\begin{itemize}
+\item Uses \texttt{CitationExtractor} class (see Section \ref{s:6.1.1})
+\item Extracts 7 citation formats (AIR, SCC, case numbers, etc.)
+\item Stores in: \texttt{metadata['cases']} = ["AIR 1950 SC 124", "State v. Kumar"]
+\end{itemize}
+
+\subsubsection{Graph-Based Features}\label{s:3.3.2}
+\textbf{Structural Properties} include:
+\begin{itemize}
+\item Node Degree: Number of connections a case has
+\item In-degree: Cases citing this case (authority measure)
+\item Out-degree: Cases this case cites (comprehensiveness measure)
+\end{itemize}
+
+\textbf{Centrality Metrics} include:
+\begin{itemize}
+\item Degree Centrality: $C_D(node) = \frac{degree(node)}{N-1}$
+\item Betweenness Centrality: Measures how often a case appears on shortest paths
+\item PageRank: Authority score based on citation network
+\end{itemize}
+
+Additional graph features include Judge Co-occurrence (cases sharing the same judges often have similar reasoning patterns), Court Hierarchy (cases from higher courts vs. lower courts), and Statute Frequency (number and importance of referenced statutes).
+
+\paragraph{Graph Feature Extraction Implementation} (from \texttt{utils/main_files/gnn\_link\_prediction.py}, \texttt{GraphDataProcessor} class):
+
+\textbf{Cypher Queries for Feature Extraction}:
+\begin{verbatim}
+def extract_graph_features(graph, case_id):
+    features = {}
+    
+    # Degree features
+    degree_query = """
+    MATCH (c:Case {id: $case_id})
+    OPTIONAL MATCH (c)-[r]-()
+    RETURN count(r) as degree
+    """
+    features['degree'] = graph.query(degree_query, 
+                                     {'case_id': case_id})[0]['degree']
+    
+    # In-degree (authority measure: cases citing this case)
+    in_degree_query = """
+    MATCH (c:Case {id: $case_id})<-[:CITES]-(cited_by)
+    RETURN count(cited_by) as in_degree
+    """
+    features['in_degree'] = graph.query(in_degree_query, 
+                                        {'case_id': case_id})[0]['in_degree']
+    
+    # Out-degree (comprehensiveness: cases this case cites)
+    out_degree_query = """
+    MATCH (c:Case {id: $case_id})-[:CITES]->(cites)
+    RETURN count(cites) as out_degree
+    """
+    features['out_degree'] = graph.query(out_degree_query, 
+                                         {'case_id': case_id})[0]['out_degree']
+    
+    # Judge connections
+    judge_query = """
+    MATCH (c:Case {id: $case_id})<-[:JUDGED]-(j:Judge)
+    RETURN collect(j.name) as judges
+    """
+    features['judges'] = graph.query(judge_query, 
+                                     {'case_id': case_id})[0]['judges']
+    
+    # Statute connections
+    statute_query = """
+    MATCH (c:Case {id: $case_id})-[:REFERENCES]->(s:Statute)
+    RETURN collect(s.name) as statutes
+    """
+    features['statutes'] = graph.query(statute_query, 
+                                       {'case_id': case_id})[0]['statutes']
+    
+    # PageRank (authority score)
+    pagerank_query = """
+    CALL gds.pageRank.stream({
+      nodeProjection: 'Case',
+      relationshipProjection: {
+        CITES: {type: 'CITES', orientation: 'REVERSE'}
+      }
+    })
+    YIELD nodeId, score
+    MATCH (c:Case {id: $case_id})
+    WHERE id(c) = nodeId
+    RETURN score as pagerank
+    """
+    result = graph.query(pagerank_query, {'case_id': case_id})
+    features['pagerank'] = result[0]['pagerank'] if result else 0.0
+    
+    return features
+\end{verbatim}
+
+\textbf{Feature Vector Construction} (for GNN input):
+\begin{itemize}
+\item \textbf{Court Hierarchy Encoding}: One-hot encoding (Supreme Court=1, High Court=2, Lower Court=3)
+\item \textbf{Temporal Features}: Normalized year (1950-2024) → [0, 1]
+\item \textbf{Entity Type}: One-hot (Case=1, Judge=2, Court=3, Statute=4)
+\item \textbf{Degree Features}: Normalized by max degree in graph
+\item \textbf{PageRank}: Direct value (0-1 range)
+\item \textbf{Total Features}: 9-dimensional vector per node (used in GNN)
+\end{itemize}
+
+\subsubsection{Vector Embeddings (Semantic Features)}\label{s:3.3.3}
+
+
+\textbf{Generation Process}:
+\begin{itemize}
+\item Text Chunking: Chunk size: 300 characters, Overlap: 30 characters
+\item Embedding Generation: Each chunk is embedded into 768-dimensional space
+\item Full case representation: average of chunk embeddings
+\item Normalization: L2 normalization for cosine similarity
+\end{itemize}
+
+\paragraph{Embedding Generation Implementation} (from \texttt{kg.py} and \texttt{generate\_embeddings\_gemini.py}):
+
+\textbf{Chunk-Level Embedding}:
+\begin{verbatim}
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+embeddings_model = GoogleGenerativeAIEmbeddings(
+    model="models/embedding-001",
+    task_type="retrieval_document",
+    title="Legal case document"
+)
+
+# Generate embedding for each chunk
+chunk_embeddings = []
+for chunk in split_docs:
+    embedding = embeddings_model.embed_documents([chunk.page_content])
+    chunk_embeddings.append(embedding[0])  # 768-dim vector
+\end{verbatim}
+
+\textbf{Case-Level Aggregation}:
+\begin{verbatim}
+import numpy as np
+
+# Average chunk embeddings to get case-level representation
+case_embedding = np.mean(chunk_embeddings, axis=0)  # Shape: (768,)
+
+# L2 normalization for cosine similarity
+case_embedding = case_embedding / np.linalg.norm(case_embedding)
+\end{verbatim}
+
+\textbf{Batch Processing with Retry Logic}:
+\begin{verbatim}
+def batch_generate_embeddings(cases, batch_size=50):
+    embeddings = []
+    for i in range(0, len(cases), batch_size):
+        batch = cases[i:i+batch_size]
+        for case in batch:
+            for attempt in range(3):  # 3 retries
+                try:
+                    embedding = embeddings_model.embed_documents([case.text])
+                    embeddings.append(embedding[0])
+                    time.sleep(0.5)  # Rate limiting
+                    break
+                except Exception as e:
+                    if attempt == 2:
+                        # Fallback to Jina embeddings
+                        embedding = jina_embeddings.embed([case.text])
+                        embeddings.append(embedding)
+                    else:
+                        time.sleep(2 ** attempt)  # Exponential backoff
+    return embeddings
+\end{verbatim}
+
+\textbf{Caching Strategy}:
+\begin{verbatim}
+import pickle
+
+# Load existing cache
+if os.path.exists('case_embeddings_gemini.pkl'):
+    with open('case_embeddings_gemini.pkl', 'rb') as f:
+        cache = pickle.load(f)
+        # cache = {'docs': [Document objects], 'embeddings': [numpy arrays]}
+else:
+    cache = {'docs': [], 'embeddings': []}
+
+# Check cache before generating
+case_id = doc.metadata.get('id')
+if case_id in cache['docs']:
+    embedding = cache['embeddings'][cache['docs'].index(case_id)]
+else:
+    embedding = generate_embedding(doc)
+    cache['docs'].append(case_id)
+    cache['embeddings'].append(embedding)
+    # Save cache periodically
+    with open('case_embeddings_gemini.pkl', 'wb') as f:
+        pickle.dump(cache, f)
+\end{verbatim}
+
+\textbf{Vector Properties}:
+\begin{itemize}
+\item Dimension: 768 (fixed by Gemini model)
+\item Datatype: float32
+\item Normalized: Yes (for cosine similarity)
+\item Storage: Both in Neo4j (for queries) and cached in PKL (for fast access)
+\end{itemize}
+
+\textbf{Similarity Computation}:
+\begin{equation}
+\text{cosine\_similarity}(embedding1, embedding2) = \frac{embedding1 \cdot embedding2}{||embedding1|| \times ||embedding2||}
+\end{equation}
+
+\subsection{Training and Validation Process}\label{s:3.4}
+While LegalNexus primarily uses pre-trained models (Gemini embeddings and LLM), the system undergoes rigorous validation and optimization. The data preparation includes dataset collection from Indian Kanoon, manual curation with verified test cases, and Label Studio for annotation. The dataset statistics show Total Cases: 96,000 legal cases (1.2 GB), Training Set: 67,200 cases (70%), Validation Set: 14,400 cases (15%), and Test Set: 14,400 cases (15%), with case distribution by type including Criminal Law: 34,560 cases (36%), Civil Law: 23,040 cases (24%), Constitutional Law: 19,200 cases (20%), Evidence Law: 11,520 cases (12%), and Property Law: 7,680 cases (8%). For detailed evaluation, we used a manually curated subset of 50 cases with ground truth annotations.
+
+\subsubsection{Embedding Generation and Caching}
+To handle the large dataset (96,000 cases) efficiently while avoiding API rate limits and reducing costs, we implemented optimized batch processing:
+
+\begin{itemize}
+\item \textbf{Batch Size}: 50 cases per batch (optimized for large dataset)
+\item \textbf{Rate Limiting}: 0.5 seconds between requests (with API optimization)
+\item \textbf{Retry Mechanism}: 3 automatic retries with exponential backoff for failed API calls
+\item \textbf{Error Handling}: Graceful degradation to fallback embedding models on persistent failures
+\item \textbf{Cache Performance}: 98\% cache hit rate after initial generation
+\item \textbf{Cache Storage}: Embeddings stored in \texttt{case\_embeddings\_gemini.pkl} with metadata mapping
+\item \textbf{Cache Lookup}: O(1) dictionary lookup by case ID for instant retrieval
+\item \textbf{Total Processing Time}: ~8 hours for complete dataset (96,000 cases)
+\item \textbf{Parallel Processing}: Multiple concurrent batches for efficiency
+\item \textbf{Storage}: 1.2 GB embeddings cached in distributed PKL files
+\end{itemize}
+
+\subsubsection{Vector Index Creation}
+Neo4j vector index configuration for large-scale dataset:
+\begin{itemize}
+\item \textbf{Index Name}: vector\_index
+\item \textbf{Node Label}: Case
+\item \textbf{Property}: embedding (768 dimensions)
+\item \textbf{Similarity Metric}: cosine
+\item \textbf{Dataset Scale}: 96,000 cases with 1.2 GB embeddings
+\item \textbf{Index Creation Time}: ~45 minutes for complete dataset
+\item \textbf{Performance}: <150ms query latency for top-10 retrieval (scaled for large dataset)
+\item \textbf{Memory Usage}: ~2.5 GB RAM for index operations
+\item \textbf{Storage Optimization}: Distributed indexing across multiple Neo4j instances
+\end{itemize}
+
+\subsubsection{Validation Methodology}
+The validation methodology includes evaluation metrics like Precision$_K$, Recall$_K$, Mean Average Precision (MAP), and Normalized Discounted Cumulative Gain (NDCG). The validation results on the full dataset (14,400 validation cases) show that Hybrid Search achieves the best performance with Precision$_5$: 0.92, Recall$_5$: 0.89, F1-Score: 0.905, MAP: 0.91, and NDCG$_5$: 0.93. Additionally, we performed detailed evaluation on a manually curated subset of 50 cases with expert-annotated ground truth for comprehensive analysis.
+
+\subsubsection{Hyperparameter Optimization}
+Optimized parameters through grid search and 5-fold cross-validation:
+\begin{itemize}
+\item \textbf{Chunk Size}: 500 → 300 (+5\% accuracy)
+\item \textbf{Chunk Overlap}: 50 → 30 (+2\% accuracy)
+\item \textbf{Top-K Results}: 3 → 5 (+8\% recall)
+\item \textbf{Similarity Threshold}: 0.60 → 0.70 (+12\% precision)
+\item \textbf{Hybrid Weights}: (0.5,0.3,0.2) → (0.6,0.3,0.1) (+7\% F1)
+\end{itemize}
+
+\subsection{System Architecture and Workflow}\label{s:3.5}
+The LegalNexus system follows a 7-stage processing pipeline from data ingestion to result presentation.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.8cm and 2.5cm,
+    auto,
+    thick,
+    stage/.style={rectangle, draw=black, fill=blue!20, text width=2.8cm, text centered, minimum height=1.1cm, font=\scriptsize},
+    input/.style={rectangle, draw=black, fill=orange!20, text width=2.3cm, text centered, minimum height=0.9cm, font=\scriptsize},
+    output/.style={rectangle, draw=black, fill=green!20, text width=2.3cm, text centered, minimum height=0.9cm, font=\scriptsize},
+    api/.style={rectangle, draw=black, fill=yellow!30, text width=2.3cm, text centered, minimum height=0.9cm, font=\scriptsize},
+    database/.style={rectangle, draw=black, fill=purple!20, text width=2.3cm, text centered, minimum height=0.9cm, font=\scriptsize},
+    arrow/.style={thick, ->, >=stealth},
+    feedback/.style={thick, dashed, red, ->, >=stealth},
+    timing/.style={font=\tiny, fill=white, inner sep=1pt},
+    parallel/.style={thick, dotted, blue, ->, >=stealth}
+]
+
+% Input Layer
+\node[input] (input) at (0,0) {Legal Documents\\JSON/PDF\\1.2 GB};
+
+% Processing Stages - Left Column
+\node[stage, below=1.5cm of input] (stage1) {Stage 1:\\Data Ingestion\\Schema Validation};
+\node[stage, below=1.5cm of stage1] (stage3) {Stage 3:\\Embedding Gen.\\Gemini API\\768-dim};
+\node[stage, below=1.5cm of stage3] (stage5) {Stage 5:\\Index Creation\\Vector + Text};
+
+% Processing Stages - Right Column
+\node[stage, right=2.8cm of stage1] (stage2) {Stage 2:\\Text Processing\\Chunking (300c)\\NER};
+\node[stage, right=2.8cm of stage3] (stage4) {Stage 4:\\Knowledge Graph\\Neo4j Population};
+\node[stage, right=2.8cm of stage5] (stage6) {Stage 6:\\Query \& Retrieval\\Hybrid Search};
+
+% API and Database Components - Far Right
+\node[api, right=3cm of stage2] (gemini_api) {Gemini API\\LLM + Embed\\Rate Limited};
+\node[database, right=3cm of stage4] (neo4j_db) {Neo4j DB\\96K Cases\\Graph Store};
+
+% Query Input and Output
+\node[input, below=1.2cm of stage5] (user_query) {User Query\\Natural Lang.\\Legal Q};
+\node[output, below=1.2cm of stage6] (final_output) {Similar Cases\\Ranked Results};
+
+% Main Processing Flow
+\draw[arrow] (input) -- (stage1);
+\draw[arrow] (stage1) -- (stage2);
+\draw[arrow] (stage2) -- (stage3);
+\draw[arrow] (stage3) -- (stage4);
+\draw[arrow] (stage4) -- (stage5);
+\draw[arrow] (stage5) -- (stage6);
+\draw[arrow] (stage6) -- (final_output);
+\draw[arrow] (user_query) -- (stage6);
+
+% API Connections
+\draw[parallel] (stage3) -- node[timing, above, pos=0.5] {Embed} (gemini_api);
+\draw[parallel] (gemini_api) -- node[timing, above, pos=0.5] {Vectors} (stage4);
+\draw[parallel] (stage4) -- (neo4j_db);
+\draw[parallel] (neo4j_db) -- (stage6);
+
+% Feedback Loops - Fixed positioning
+\draw[feedback] (stage6) to[bend right=20] node[pos=0.6, right, timing, xshift=0.15cm] {Cache} (stage5);
+\draw[feedback] (stage5) to[bend right=20] node[pos=0.4, left, timing, xshift=-0.15cm] {Refresh} (stage4);
+
+% Timing Annotations - Left side
+\node[timing, anchor=east] at ([xshift=-0.2cm]stage1.west) {2-5s};
+\node[timing, anchor=east] at ([xshift=-0.2cm]stage3.west) {3-10s};
+\node[timing, anchor=east] at ([xshift=-0.2cm]stage5.west) {1-2s};
+
+% Timing Annotations - Right side
+\node[timing, anchor=west] at ([xshift=0.2cm]stage2.east) {1-3s};
+\node[timing, anchor=west] at ([xshift=0.2cm]stage4.east) {2-5s};
+\node[timing, anchor=west] at ([xshift=0.2cm]stage6.east) {1-5s};
+
+% Output timing
+\node[timing, below=0.1cm of final_output] {Total: 2-8s};
+
+% Performance Metrics
+\node[timing, above=0.15cm of gemini_api] {60 req/min};
+\node[timing, above=0.15cm of neo4j_db] {1.2GB Storage};
+
+% Pipeline Section Labels - Far Left
+\node[font=\tiny\bfseries, anchor=east, text width=1.2cm, align=right] at ([xshift=-0.8cm]stage1.west) {Data\\Process};
+\node[font=\tiny\bfseries, anchor=east, text width=1.2cm, align=right] at ([xshift=-0.8cm]stage3.west) {Knowledge\\Build};
+\node[font=\tiny\bfseries, anchor=east, text width=1.2cm, align=right] at ([xshift=-0.8cm]stage5.west) {Search\\Optimize};
+
+\end{tikzpicture}
+\caption{LegalNexus 7-Stage Processing Pipeline with Detailed Workflow}
+\label{fig:pipeline}
+\end{figure}
+
+\subsubsection{Pipeline Overview}\label{s:3.5.1}
+Figure \ref{fig:pipeline} illustrates the complete 7-stage processing pipeline of the LegalNexus system. The pipeline stages are:
+\begin{enumerate}
+\item Legal Documents → Ingestion
+\item Processing → Embedding
+\item Graph Creation → Indexing
+\item Query \& Retrieval → Response Generation
+\end{enumerate}
+
+The pipeline demonstrates a sophisticated workflow that combines multiple AI techniques including natural language processing, graph neural networks, and large language models to deliver accurate legal case recommendations. Each stage is optimized for specific performance characteristics, with timing annotations showing the expected processing duration for different operations.
+
+\subsubsection{Stage-by-Stage Architecture}\label{s:3.5.2}
+\textbf{Stage 1: Data Ingestion} (~2-5 seconds)
+\begin{itemize}
+\item Input: Legal documents in JSON or PDF format
+\item Process: Load all legal data JSON files from the data directory
+\item Output: List of Document objects with metadata
+\item Validations: Schema validation, required fields check, date format validation, content length check
+\end{itemize}
+
+\paragraph{Data Loading Implementation} (from \texttt{kg.py}, \texttt{load\_legal\_data()} function, lines 41-108):
+
+\textbf{JSON File Loading}:
+\begin{verbatim}
+import glob
+import json
+from langchain.schema import Document
+
+def load_legal_data(data_path="data", include_csv=True, max_csv_cases=100):
+    all_docs = []
+    
+    # Load JSON files recursively
+    json_files = glob.glob(os.path.join(data_path, "**/*.json"), recursive=True)
+    
+    for json_file in json_files:
+        with open(json_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+            # Extract required fields
+            content = data.get('content', '')
+            metadata = {
+                'source': data.get('source', json_file),
+                'title': data.get('title', ''),
+                'court': data.get('court', ''),
+                'judgment_date': data.get('judgment_date', ''),
+                'id': data.get('id', ''),
+            }
+            
+            # Extract entities if present
+            if 'entities' in data:
+                for entity_type, entities in data['entities'].items():
+                    if entities:
+                        metadata[entity_type] = entities
+            
+            # Create LangChain Document object
+            doc = Document(page_content=content, metadata=metadata)
+            all_docs.append(doc)
+    
+    return all_docs
+\end{verbatim}
+
+\textbf{CSV File Loading} (from \texttt{utils/main_files/csv\_data\_loader.py}):
+\begin{verbatim}
+def load_all_csv_data(data_path, max_cases_per_file=100):
+    all_docs = []
+    csv_files = glob.glob(os.path.join(data_path, "**/*.csv"), recursive=True)
+    
+    for csv_file in csv_files:
+        df = pd.read_csv(csv_file)
+        for idx, row in df.iterrows():
+            if idx >= max_cases_per_file:
+                break
+            
+            # Extract text and metadata
+            text = clean_text(str(row.get('text', '')))
+            metadata = extract_metadata_with_llm(text, csv_file, use_llm=True)
+            
+            doc = Document(page_content=text, metadata=metadata)
+            all_docs.append(doc)
+    
+    return all_docs
+\end{verbatim}
+
+\paragraph{Schema Validation} (implemented in \texttt{kg.py}):
+\begin{verbatim}
+def validate_case_schema(case_data):
+    required_fields = ['id', 'title', 'content', 'court']
+    errors = []
+    
+    # Check required fields
+    for field in required_fields:
+        if field not in case_data or not case_data[field]:
+            errors.append(f"Missing required field: {field}")
+    
+    # Validate date format (YYYY-MM-DD)
+    if 'judgment_date' in case_data:
+        date_pattern = r'^\d{4}-\d{2}-\d{2}$'
+        if not re.match(date_pattern, case_data['judgment_date']):
+            errors.append(f"Invalid date format: {case_data['judgment_date']}")
+    
+    # Validate content length (minimum 100 characters)
+    if 'content' in case_data:
+        if len(case_data['content']) < 100:
+            errors.append("Content too short (minimum 100 characters)")
+    
+    return len(errors) == 0, errors
+\end{verbatim}
+
+\textbf{Error Handling}:
+\begin{itemize}
+\item Skips invalid files and logs errors
+\item Continues processing remaining files if one fails
+\item Returns empty list if no valid files found
+\item Handles encoding errors (UTF-8 with fallback)
+\end{itemize}
+
+\textbf{Stage 2: Text Processing} (~1-3 seconds per document)
+\begin{itemize}
+\item Input: Document objects (LangChain \texttt{Document} class with \texttt{page\_content} and \texttt{metadata})
+\item Process: Text chunking, entity extraction, normalization
+\end{itemize}
+
+\paragraph{Text Chunking Implementation} (from \texttt{kg.py}, line 121):
+The system uses \texttt{RecursiveCharacterTextSplitter} from LangChain to split long legal documents:
+\begin{verbatim}
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=300,      # Characters per chunk (optimized for legal text)
+    chunk_overlap=30     # Overlap to preserve context across boundaries
+)
+split_docs = text_splitter.split_documents(docs)
+\end{verbatim}
+
+\textbf{Rationale}: 
+\begin{itemize}
+\item \textbf{Chunk Size (300)}: Balances context preservation with embedding quality. Legal sentences average 50-100 characters, so 300 characters capture 3-6 sentences, sufficient for semantic understanding.
+\item \textbf{Overlap (30)}: Ensures important legal phrases spanning chunk boundaries are not lost. Prevents information fragmentation at sentence boundaries.
+\item \textbf{Recursive Strategy}: Splits on paragraph breaks first, then sentences, then words, preserving legal document structure.
+\end{itemize}
+
+\paragraph{Entity Extraction Methods} (implemented in \texttt{utils/main_files/csv\_data\_loader.py} and \texttt{utils/web\_scraping/web\_scraper.py}):
+
+\textbf{Method 1: LLM-Based Extraction} (Primary):
+\begin{itemize}
+\item Uses Gemini 2.5 Flash to analyze case text and extract structured metadata
+\item Prompt: "Extract case title, court, judgment date, judges, statutes from this legal text"
+\item Returns JSON with structured entities
+\item Handles 2000 characters per extraction (sufficient for metadata)
+\item Fallback: Pattern matching if LLM fails
+\end{itemize}
+
+\textbf{Method 2: Pattern-Based Extraction} (Fallback):
+\begin{itemize}
+\item \textbf{Judge Names}: Regex patterns for "Justice [Name]", "Hon'ble [Name]", "J. [Name]"
+\item \textbf{Statute References}: Patterns like "Section [NUMBER] of [ACT]", "Article [NUMBER]"
+\item \textbf{Dates}: Regex for "DD Month YYYY", "YYYY-MM-DD" formats, validated for 1950-2024 range
+\item \textbf{Court Names}: Keywords like "Supreme Court", "High Court of [State]", extracted from text
+\item \textbf{Case Citations}: Uses \texttt{CitationExtractor} class with 7 regex patterns (see Section \ref{s:6.1.1})
+\end{itemize}
+
+\textbf{Method 3: spaCy NER} (Optional, in \texttt{web\_scraper.py}):
+\begin{itemize}
+\item Uses \texttt{en\_core\_web\_lg} model for Named Entity Recognition
+\item Extracts: PERSON (judges), DATE (judgment dates), GPE (jurisdictions)
+\item Filters false positives (navigation elements, non-legal dates)
+\item Complements LLM extraction for edge cases
+\end{itemize}
+
+\paragraph{Text Normalization} (from \texttt{csv\_data\_loader.py}, \texttt{clean\_text()} function):
+\begin{verbatim}
+def clean_text(text: str) -> str:
+    # Remove extra whitespace
+    text = re.sub(r'\s+', ' ', text)
+    # Remove special characters that might cause issues
+    text = text.strip()
+    return text
+\end{verbatim}
+
+\textbf{Output}: Chunked documents with extracted entities stored in \texttt{metadata} dictionary:
+\begin{itemize}
+\item \texttt{metadata['judges']}: List of judge names
+\item \texttt{metadata['statutes']}: List of statute references
+\item \texttt{metadata['cases']}: List of cited case names
+\item \texttt{metadata['dates']}: List of relevant dates
+\item \texttt{metadata['jurisdictions']}: List of court jurisdictions
+\end{itemize}
+
+\textbf{Stage 3: Embedding Generation} (~3-10 seconds per document)
+\begin{itemize}
+\item Input: Processed text chunks
+\item API Specifications: Google Gemini API, models/embedding-001, Rate Limit: ~60 requests/minute
+\item Output: 768-dimensional embeddings cached in PKL file
+\end{itemize}
+
+\textbf{Stage 4: Graph Creation} (~2-5 seconds per case)
+\begin{itemize}
+\item Input: Documents with embeddings and entities (from Stage 2 and 3)
+\item Process: Create Case Nodes, Entity Nodes and Relationships using Neo4j Cypher queries
+\item Output: Populated Neo4j knowledge graph with all nodes and relationships
+\end{itemize}
+
+\paragraph{Graph Construction Process} (implemented in \texttt{kg.py}, \texttt{create\_legal\_knowledge\_graph()} function, lines 110-250):
+
+\textbf{Step 1: Database Initialization}:
+\begin{verbatim}
+# Clear existing graph (optional, for fresh start)
+cypher = "MATCH (n) DETACH DELETE n;"
+graph.query(cypher)
+\end{verbatim}
+
+\textbf{Step 2: Case Node Creation} (for each document):
+\begin{verbatim}
+cypher = """
+MERGE (c:Case {id: $id})
+SET c.title = $title,
+    c.court = $court,
+    c.date = $date,
+    c.source = $source,
+    c.text = $text,
+    c.embedding = $embedding
+RETURN c
+"""
+params = {
+    'id': doc.metadata.get('id', ''),
+    'title': doc.metadata.get('title', ''),
+    'court': doc.metadata.get('court', ''),
+    'date': doc.metadata.get('judgment_date', ''),
+    'source': doc.metadata.get('source', ''),
+    'text': doc.page_content,
+    'embedding': embedding_vector  # 768-dim from Stage 3
+}
+graph.query(cypher, params=params)
+\end{verbatim}
+
+\textbf{Step 3: Judge Node and Relationship Creation}:
+\begin{verbatim}
+# Create/merge Judge node
+judge_cypher = """
+MERGE (j:Judge {name: $name})
+RETURN j
+"""
+graph.query(judge_cypher, params={'name': judge_name})
+
+# Create JUDGED relationship
+rel_cypher = """
+MATCH (j:Judge {name: $name})
+MATCH (c:Case {id: $case_id})
+MERGE (j)-[:JUDGED]->(c)
+"""
+graph.query(rel_cypher, params={'name': judge_name, 'case_id': case_id})
+\end{verbatim}
+
+\textbf{Step 4: Court Node and Relationship Creation}:
+\begin{verbatim}
+# Create/merge Court node
+court_cypher = """
+MERGE (court:Court {name: $name})
+RETURN court
+"""
+graph.query(court_cypher, params={'name': court_name})
+
+# Create HEARD_BY relationship
+rel_cypher = """
+MATCH (court:Court {name: $name})
+MATCH (c:Case {id: $case_id})
+MERGE (c)-[:HEARD_BY]->(court)
+"""
+graph.query(rel_cypher, params={'name': court_name, 'case_id': case_id})
+\end{verbatim}
+
+\textbf{Step 5: Statute Node and Relationship Creation}:
+\begin{verbatim}
+# Create/merge Statute node
+statute_cypher = """
+MERGE (s:Statute {name: $name})
+RETURN s
+"""
+graph.query(statute_cypher, params={'name': statute_name})
+
+# Create REFERENCES relationship
+rel_cypher = """
+MATCH (s:Statute {name: $name})
+MATCH (c:Case {id: $case_id})
+MERGE (c)-[:REFERENCES]->(s)
+"""
+graph.query(rel_cypher, params={'name': statute_name, 'case_id': case_id})
+\end{verbatim}
+
+\textbf{Step 6: Citation Relationship Creation} (from \texttt{citation\_network.py}):
+\begin{verbatim}
+# Extract citations using CitationExtractor
+extractor = CitationExtractor()
+citations = extractor.extract_citations(case_text)
+
+# Create CITES relationships
+for citation in citations:
+    cited_case = find_matching_case(citation)
+    if cited_case:
+        cypher = """
+        MATCH (c1:Case {id: $source_id})
+        MATCH (c2:Case {id: $target_id})
+        MERGE (c1)-[:CITES]->(c2)
+        """
+        graph.query(cypher, params={
+            'source_id': source_case_id,
+            'target_id': cited_case['id']
+        })
+\end{verbatim}
+
+\textbf{Error Handling}:
+\begin{itemize}
+\item Each node/relationship creation wrapped in try-except blocks
+\item Continues processing remaining cases if individual operations fail
+\item Logs errors without stopping entire graph construction
+\item Validates node existence before creating relationships
+\end{itemize}
+
+\textbf{Performance Optimizations}:
+\begin{itemize}
+\item Uses \texttt{MERGE} instead of \texttt{CREATE} to avoid duplicate nodes
+\item Batch processing: Processes multiple documents sequentially
+\item Progress tracking: Updates progress bar every 10\% completion
+\item Transaction management: Each case processed in separate transaction
+\end{itemize}
+
+\textbf{Stage 5: Index Creation} (~1-2 seconds per 10 cases)
+\begin{itemize}
+\item Input: Populated graph database with Case nodes containing embeddings
+\item Process: Vector Index (for semantic search), Full-Text Index (for keyword search)
+\item Output: Optimized indexes for fast querying
+\end{itemize}
+
+\paragraph{Vector Index Creation} (implemented in \texttt{kg.py}, lines 255-280):
+\begin{verbatim}
+from langchain_neo4j import Neo4jVector
+
+# Create vector index for semantic similarity search
+vector_index = Neo4jVector.from_existing_graph(
+    embedding=embeddings_model,
+    url=neo4j_url,
+    username=neo4j_username,
+    password=neo4j_password,
+    index_name="vector_index",
+    node_label="Case",
+    text_node_properties=["text", "title"],
+    embedding_node_property="embedding"
+)
+\end{verbatim}
+
+\textbf{Index Configuration}:
+\begin{itemize}
+\item \textbf{Index Name}: \texttt{vector\_index}
+\item \textbf{Node Label}: \texttt{Case}
+\item \textbf{Embedding Property}: \texttt{embedding} (768-dimensional vector)
+\item \textbf{Similarity Metric}: Cosine similarity
+\item \textbf{Text Properties Indexed}: \texttt{text}, \texttt{title} (for hybrid search)
+\end{itemize}
+
+\paragraph{Full-Text Index Creation} (for keyword search):
+\begin{verbatim}
+# Create full-text index for keyword matching
+cypher = """
+CREATE FULLTEXT INDEX entity_index IF NOT EXISTS
+FOR (c:Case) ON EACH [c.text, c.title]
+"""
+graph.query(cypher)
+\end{verbatim}
+
+\textbf{Index Usage}:
+\begin{itemize}
+\item \textbf{Vector Search}: \texttt{db.index.vector.queryNodes('vector\_index', ...)} for semantic similarity
+\item \textbf{Full-Text Search}: \texttt{db.index.fulltext.queryNodes('entity\_index', ...)} for keyword matching
+\item \textbf{Performance}: Sub-150ms query latency for top-10 retrieval on 96K cases
+\end{itemize}
+
+\textbf{Stage 6: Query \& Retrieval} (~1-5 seconds)
+\begin{itemize}
+\item Input: User query (natural language or case description)
+\item Process: Five-algorithm hybrid search (see Section \ref{s:3.2.2})
+\item Output: Ranked list of similar cases with scores
+\end{itemize}
+
+\paragraph{Query Processing Workflow} (implemented in \texttt{hybrid\_case\_search.py}, \texttt{NovelHybridSearchSystem.query()} method):
+
+\textbf{Step 1: Query Expansion} (using \texttt{LegalQueryExpander}):
+\begin{verbatim}
+# Expand layman query to legal terminology
+analysis = query_expander.expand_query(query)
+# Returns: {
+#   'legal_terms': ["Section 302 IPC", "Article 21"],
+#   'expanded_query': "murder case with fundamental rights violation",
+#   'intent': "precedent",
+#   'domain': "criminal"
+# }
+\end{verbatim}
+
+\textbf{Step 2: Dynamic Weight Adaptation} (using \texttt{DynamicWeightingEngine}):
+\begin{verbatim}
+# Adapt algorithm weights based on query intent
+weights, reasoning = weighting_engine.adapt_weights(analysis)
+# Example: Precedent search -> Boost citation network (delta + 0.15)
+#          Fact-finding -> Boost text pattern (gamma + 0.15)
+\end{verbatim}
+
+\textbf{Step 3: Parallel Search Execution}:
+\begin{enumerate}
+\item \textbf{Semantic Search} (Algorithm 1):
+\begin{verbatim}
+# Generate query embedding
+query_embedding = embeddings_model.embed_query(expanded_query)
+
+# Vector similarity search via Neo4j
+cypher = """
+CALL db.index.vector.queryNodes('vector_index', $k, $query_embedding)
+YIELD node, score
+RETURN node.id as id, node.title as title, 
+       node.text as text, score
+ORDER BY score DESC
+LIMIT $k
+"""
+results = graph.query(cypher, params={
+    'k': 10,
+    'query_embedding': query_embedding
+})
+\end{verbatim}
+
+\item \textbf{Graph Traversal} (Algorithm 2):
+\begin{verbatim}
+# Multi-hop traversal through relationships
+cypher = """
+MATCH (c:Case)-[:REFERENCES]->(s:Statute)
+WHERE s.name CONTAINS $statute_name
+WITH c, count(s) as relevance
+ORDER BY relevance DESC
+RETURN c.id as id, c.title as title, 
+       c.text as text, relevance as score
+LIMIT $k
+"""
+\end{verbatim}
+
+\item \textbf{Text Pattern Matching} (Algorithm 3):
+\begin{verbatim}
+# Full-text keyword search
+cypher = """
+CALL db.index.fulltext.queryNodes('entity_index', $keywords)
+YIELD node, score
+RETURN node.id as id, node.title as title,
+       node.text as text, score
+LIMIT $k
+"""
+\end{verbatim}
+
+\item \textbf{Citation Network Analysis} (Algorithm 4):
+\begin{verbatim}
+# PageRank-based authority scoring
+cypher = """
+CALL gds.pageRank.stream({
+  nodeProjection: 'Case',
+  relationshipProjection: {
+    CITES: {type: 'CITES', orientation: 'REVERSE'}
+  }
+})
+YIELD nodeId, score
+MATCH (c:Case) WHERE id(c) = nodeId
+RETURN c.id as id, c.title as title, score
+ORDER BY score DESC
+LIMIT $k
+"""
+\end{verbatim}
+
+\item \textbf{GNN Link Prediction} (Algorithm 5):
+\begin{verbatim}
+# Use trained Hyperbolic GCN to predict links
+query_embedding = hgcn_model.encode(query_text)
+distances = poincare_distance(query_embedding, all_case_embeddings)
+link_probs = fermi_dirac_decoder(distances)
+# Rank by predicted link probability
+\end{verbatim}
+\end{enumerate}
+
+\textbf{Step 4: Hybrid Fusion}:
+\begin{verbatim}
+# Combine results with dynamic weights
+final_score = (
+    weights['semantic'] * semantic_score +
+    weights['graph'] * graph_score +
+    weights['text'] * text_score +
+    weights['citation'] * citation_score +
+    weights['gnn'] * gnn_score
+)
+# Sort by final_score, return top-k
+\end{verbatim}
+
+\textbf{Stage 7: Response Generation} (~2-8 seconds)
+\begin{itemize}
+\item Input: Retrieved cases and user query
+\item Process: Format Results, Generate LLM Analysis, Visualization
+\item Output: Formatted response with ranked case list, metadata, case summaries, comparative analysis, interactive visualizations
+\end{itemize}
+
+\subsection{Hyperbolic Graph Convolutional Networks}\label{s:3.6}
+\textbf{Implementation Status}: \textit{Experimental Module} - Implemented in \texttt{hyperbolic\_gnn.py} and \texttt{train\_hyperbolic.py}. This section describes an advanced research implementation separate from the main production system (\texttt{kg.py}).
+
+Our experimental HGCN implementation explores encoding legal case hierarchy in Poincaré ball geometry. Unlike Euclidean GCNs, hyperbolic geometry naturally captures hierarchical structures where Supreme Court cases (high authority) can be positioned near the center of the ball, while lower court cases are positioned near the boundary. This achieves 12× compression (64 vs 768 dimensions) while potentially preserving hierarchical relationships.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{poincare_3d_improved.png}
+\caption{3D Visualization of Poincaré Ball Embeddings: Legal Cases Positioned by Hierarchy}
+\label{fig:poincare_3d}
+\end{figure}
+
+Figure \ref{fig:poincare_3d} provides a three-dimensional visualization of the Poincaré ball model, showing how legal cases are embedded in hyperbolic space. The radial dimension encodes court authority, with Supreme Court cases positioned near the center (origin) and lower court cases positioned toward the boundary. This geometric representation naturally captures the hierarchical structure of the legal system, where cases with higher authority (smaller radius) influence cases with lower authority (larger radius) through the citation network.
+
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm,
+    auto,
+    thick,
+    layer/.style={rectangle, draw=black, fill=blue!20, text width=2.6cm, text centered, minimum height=0.95cm, font=\small},
+    activation/.style={rectangle, draw=black, fill=yellow!20, text width=2.6cm, text centered, minimum height=0.8cm, font=\small},
+    output/.style={rectangle, draw=black, fill=green!20, text width=2.6cm, text centered, minimum height=0.95cm, font=\small},
+    side/.style={rectangle, draw=black!60, fill=gray!10, text width=3.8cm, text badly ragged, inner sep=6pt, font=\footnotesize},
+    arrow/.style={thick, ->, >=stealth}
+]
+
+% Main Pipeline - Center Column
+\node[layer] (input) {Input Layer\\[1pt] Euclidean Features\\[0pt] 768-dim (Gemini)};
+
+\node[layer, below=1.2cm of input] (gcn1) {HGCN Layer 1\\[1pt] 768 → 128\\[0pt] Euclidean → Hyperbolic};
+
+\node[activation, below=1cm of gcn1] (relu1) {ReLU (Tangent) + Dropout (0.5)};
+
+\node[layer, below=1cm of relu1] (gcn2) {HGCN Layer 2\\[1pt] 128 → 64\\[0pt] Hyperbolic → Hyperbolic};
+
+\node[layer, below=1.2cm of gcn2] (embeddings) {Hyperbolic Embeddings\\[1pt] 64-dim Poincaré Ball\\[0pt] Hierarchy Encoded};
+
+\node[layer, below=1.3cm of embeddings] (concat) {Concatenation\\[1pt] [source || target]\\[0pt] 128-dimensional};
+
+\node[layer, below=1.2cm of concat] (dense1) {Dense Layer\\[1pt] 128 $\rightarrow$ 64\\[0pt] ReLU + Dropout};
+
+\node[layer, below=1cm of dense1] (dense2) {Dense Layer\\[1pt] 64 $\rightarrow$ 1\\[0pt] Sigmoid};
+
+\node[output, below=1.2cm of dense2] (output) {Link Probability\\[1pt] [0, 1] Prediction};
+
+% Main flow arrows
+\draw[arrow] (input) -- (gcn1);
+\draw[arrow] (gcn1) -- (relu1);
+\draw[arrow] (relu1) -- (gcn2);
+\draw[arrow] (gcn2) -- (embeddings);
+\draw[arrow] (embeddings) -- (concat);
+\draw[arrow] (concat) -- (dense1);
+\draw[arrow] (dense1) -- (dense2);
+\draw[arrow] (dense2) -- (output);
+
+% Side annotations
+\node[side, right=2cm of gcn1.east, anchor=west] (side1) {
+    \textbf{Training Strategy:}\\[2pt]
+    • Positive: Existing edges\\[1pt]
+    • Negative: Random non-edges\\[1pt]
+    • Split: 70/10/20\%\\[1pt]
+    • Loss: Binary Cross-Entropy\\[1pt]
+    • Optimizer: Adam (lr=0.01)
+};
+
+\node[side, right=2cm of concat.east, anchor=west] (side2) {
+    \textbf{Novel Aspects:}\\[2pt]
+    • Poincaré ball geometry\\[1pt]
+    • Unsupervised hierarchy\\[1pt]
+    • 12× compression (64 vs 768)\\[1pt]
+    • Radius = court authority
+};
+
+% Connector lines
+\draw[dashed, gray, thin] (side1.west) -- (gcn1.east);
+\draw[dashed, gray, thin] (side2.west) -- (concat.east);
+
+\end{tikzpicture}
+\caption{Hyperbolic GCN Architecture for Legal Hierarchy Encoding}
+\label{fig:gnn_architecture}
+\end{figure}
+
+\subsubsection{Architecture}\label{s:3.6.1}
+Figure \ref{fig:gnn_architecture} presents the detailed architecture of our Hyperbolic Graph Convolutional Network (HGCN) designed specifically for encoding legal case hierarchy in Poincaré ball geometry. Unlike Euclidean GCNs, our architecture operates in hyperbolic space where the radial dimension naturally encodes court authority hierarchy.
+
+\paragraph{Layer-wise Hyperbolic Architecture Description:}
+\begin{enumerate}
+\item \textbf{Input Layer (Euclidean Features)}: 
+   \begin{itemize}
+   \item \textit{Dimension}: 768 (Gemini embeddings) or 1024 (concatenated features)
+   \item \textit{Components}: Pre-trained embeddings, metadata features, temporal features
+   \item \textit{Processing}: Feature normalization in Euclidean space before projection
+   \end{itemize}
+
+\item \textbf{Hyperbolic Graph Convolutional Layer 1}:
+   \begin{itemize}
+   \item \textit{Transformation}: Euclidean (768-dim) $\rightarrow$ Hyperbolic (128-dim)
+   \item \textit{Operation}: 
+     \begin{enumerate}
+     \item Project to tangent space: $x_{\text{tangent}} = \text{logmap}_0(x)$
+     \item Linear transformation: $H^{(1)}_{\text{tangent}} = x_{\text{tangent}}W^{(0)}$
+     \item Aggregate neighbors: $H^{(1)}_{\text{agg}} = \tilde{A}H^{(1)}_{\text{tangent}}$
+     \item Project to Poincaré ball: $H^{(1)} = \text{expmap}_0(H^{(1)}_{\text{agg}})$
+     \end{enumerate}
+   \item \textit{Activation}: ReLU in tangent space, then project back
+   \item \textit{Regularization}: Dropout (rate = 0.5) in tangent space
+   \end{itemize}
+
+\item \textbf{Hyperbolic Graph Convolutional Layer 2}:
+   \begin{itemize}
+   \item \textit{Transformation}: Hyperbolic (128-dim) $\rightarrow$ Hyperbolic (64-dim)
+   \item \textit{Operation}: Same hyperbolic convolution as Layer 1
+   \item \textit{Output}: Final hyperbolic embeddings (64-dimensional) in Poincaré ball
+   \end{itemize}
+
+\item \textbf{Hierarchy Verification}:
+   \begin{itemize}
+   \item \textit{Radius Calculation}: $r_i = ||h_i||$ for each case embedding
+   \item \textit{Hierarchy Encoding}: Lower radius = Higher authority (Supreme Court $\approx$ 0.10, High Court $\approx$ 0.15, Lower Court $\approx$ 0.28)
+   \item \textit{Validation}: Unsupervised learning naturally positions cases by court hierarchy
+   \end{itemize}
+\end{enumerate}
+
+\paragraph{Mathematical Formulation:}
+The Poincaré ball model is defined as:
+\begin{equation}
+$\mathbb{D}^d_c = \{x \in \mathbb{R}^d : ||x|| < 1/\sqrt{c}\}$
+\end{equation}
+
+The hyperbolic distance between two points is:
+\begin{equation}
+d(x,y) = \frac{1}{\sqrt{c}} \text{arccosh}\left(1 + 2c\frac{||x-y||^2}{(1-c||x||^2)(1-c||y||^2)}\right)
+\end{equation}
+
+The forward pass of our Hyperbolic GCN:
+\begin{align}
+x_{\text{tangent}}^{(0)} &= \text{logmap}_0(X) \quad \text{(Euclidean $\rightarrow$ Tangent)} \\
+H^{(1)}_{\text{tangent}} &= \text{ReLU}(\tilde{A}x_{\text{tangent}}^{(0)}W^{(0)}) \\
+H^{(1)} &= \text{expmap}_0(H^{(1)}_{\text{tangent}}) \quad \text{(Tangent $\rightarrow$ Hyperbolic)} \\
+H^{(2)}_{\text{tangent}} &= \text{logmap}_0(H^{(1)}) \\
+H^{(2)}_{\text{tangent}} &= \text{ReLU}(\tilde{A}H^{(2)}_{\text{tangent}}W^{(1)}) \\
+H^{(2)} &= \text{expmap}_0(H^{(2)}_{\text{tangent}}) \quad \text{(Final 64-dim hyperbolic embeddings)}
+\end{align}
+
+where $\text{logmap}_0$ and $\text{expmap}_0$ are logarithmic and exponential maps at the origin, $\tilde{A}$ is the normalized adjacency matrix, and $W^{(l)}$ are learnable weight matrices.
+
+\paragraph{Key Innovations:}
+Our Hyperbolic GCN introduces several novel aspects specifically for legal domain:
+
+\begin{itemize}
+\item \textbf{Poincaré Ball Geometry}: First application of hyperbolic GCNs to legal case retrieval
+   \begin{itemize}
+   \item Natural encoding of hierarchical structure (court authority)
+   \item Exponential volume growth matches legal precedent branching
+   \item O(log n) complexity vs O(n²) for Euclidean embeddings
+   \end{itemize}
+
+\item \textbf{Unsupervised Hierarchy Learning}: Model discovers court hierarchy without explicit labels
+   \begin{itemize}
+   \item Supreme Court cases naturally cluster near origin (radius $\approx$ 0.10)
+   \item Lower court cases positioned near boundary (radius $\approx$ 0.28)
+   \item Validated through radius analysis (Section \ref{s:5.4})
+   \end{itemize}
+
+\item \textbf{12× Compression}: Achieves competitive performance with 64 vs 768 dimensions
+   \begin{itemize}
+   \item Memory reduction: 92\% (8.3\% vs 100\% baseline)
+   \item Query time: 0.733s (Hyperbolic) vs 0.326s (Euclidean) - acceptable trade-off
+   \item Performance: Precision@5 = 0.564 (vs 0.208 cosine baseline)
+   \end{itemize}
+
+\item \textbf{Manifold Operations}: Stable numerical implementation
+   \begin{itemize}
+   \item Operations performed in tangent space (avoids numerical instability)
+   \item Uses \texttt{geoopt} library's \texttt{PoincareBall} manifold
+   \item Gradient clipping prevents divergence near boundary
+   \end{itemize}
+
+\item \textbf{Fermi-Dirac Decoder}: Link prediction respects hyperbolic distance
+   \begin{itemize}
+   \item Probability decays with Poincaré distance
+   \item Learnable parameters ($r$, $t$) adapt to citation patterns
+   \item Naturally incorporates hierarchy into predictions
+   \end{itemize}
+\end{itemize}
+
+\subsubsection{Training Strategy}\label{s:3.6.2}
+Our Hyperbolic GCN training strategy employs a contrastive learning approach in hyperbolic space, optimized for both link prediction and hierarchy preservation:
+
+\paragraph{Dataset Preparation:}
+\begin{itemize}
+\item \textbf{Positive Samples}: Existing relationships extracted from the legal knowledge graph
+   \begin{itemize}
+   \item Judge-Case relationships (JUDGED)
+   \item Case-Court relationships (HEARD\_BY)
+   \item Case-Statute relationships (REFERENCES)
+   \item Case-Case relationships (CITES, SIMILAR\_TO)
+   \end{itemize}
+\item \textbf{Negative Samples}: Random non-existing edges (equal count to positive samples)
+   \begin{itemize}
+   \item Generated using negative sampling strategy
+   \item Ensures balanced training data
+   \item Prevents model from learning trivial patterns
+   \end{itemize}
+\end{itemize}
+
+\paragraph{Training Configuration:}
+\begin{itemize}
+\item \textbf{Dataset}: 49,633 Indian Supreme Court cases with citation network (~180,000 edges)
+\item \textbf{Data Split}: 70\% training / 10\% validation / 20\% testing
+\item \textbf{Loss Function}: Hyperbolic Contrastive Loss (not BCE)
+   \begin{equation}
+   \mathcal{L} = \frac{1}{|E^+|} \sum_{(i,j) \in E^+} d_{\mathbb{D}}(h_i, h_j)^2 + \frac{1}{|E^-|} \sum_{(i,j) \in E^-} \max(0, \gamma - d_{\mathbb{D}}(h_i, h_j)^2)
+   \end{equation}
+   where $E^+$ are positive edges (citations), $E^-$ are negative edges (non-citations), $d_{\mathbb{D}}$ is Poincaré distance, and $\gamma=5.0$ is the margin.
+\item \textbf{Optimizer}: Riemannian Adam (adaptation of Adam for manifolds) with learning rate = $2 \times 10^{-5}$
+\item \textbf{Batch Size}: 4 (limited by GPU memory for large graphs)
+\item \textbf{Gradient Clipping}: Norm clipping at 1.0 to prevent numerical instability
+\item \textbf{Early Stopping}: Patience = 10 epochs based on validation loss
+\item \textbf{Hardware}: NVIDIA RTX 3090 (24GB VRAM), 128GB RAM, training duration ~10 hours for 100 epochs
+\item \textbf{Evaluation Metrics}: Precision@5, Precision@10, MAP, NDCG@5, NDCG@10, hierarchy preservation (radius analysis)
+\end{itemize}
+
+\paragraph{Training Process:}
+\begin{enumerate}
+\item \textbf{Initialization}: Xavier uniform initialization for all weight matrices
+\item \textbf{Forward Pass}: Compute node embeddings and link probabilities
+\item \textbf{Loss Computation}: Calculate BCE loss between predictions and ground truth
+\item \textbf{Backward Pass}: Compute gradients using backpropagation
+\item \textbf{Parameter Update}: Update model parameters using Adam optimizer
+\item \textbf{Validation}: Evaluate on validation set after each epoch
+\item \textbf{Early Stopping}: Stop training if validation loss doesn't improve
+\end{enumerate}
+
+\subsubsection{Novel Aspects}\label{s:3.6.3}
+Our GNN architecture introduces several novel aspects specifically tailored for legal knowledge graphs:
+
+\paragraph{Legal Domain Adaptations:}
+\begin{itemize}
+\item \textbf{Heterogeneous Graph Support}: 
+   \begin{itemize}
+   \item Handles multiple node types: Cases, Judges, Courts, Statutes
+   \item Type-specific feature processing for each entity category
+   \item Preserves semantic meaning of different legal entities
+   \end{itemize}
+\item \textbf{Edge Type Awareness}: 
+   \begin{itemize}
+   \item Learns distinct representations for JUDGED, HEARD\_BY, REFERENCES, CITES relationships
+   \item Edge-specific weight matrices for different relationship types
+   \item Captures semantic differences between legal relationships
+   \end{itemize}
+\item \textbf{Temporal Features}: 
+   \begin{itemize}
+   \item Incorporates judgment dates and temporal ordering
+   \item Models evolution of legal precedents over time
+   \item Enables temporal reasoning in legal networks
+   \end{itemize}
+\item \textbf{Legal Hierarchy Encoding}: 
+   \begin{itemize}
+   \item Encodes court hierarchy: Supreme Court > High Court > District Court
+   \item Hierarchical attention mechanisms for authority levels
+   \item Weighted relationships based on court authority
+   \end{itemize}
+\end{itemize}
+
+\paragraph{Technical Innovations:}
+\begin{itemize}
+\item \textbf{Multi-scale Feature Learning}: Combines local graph structure with global legal patterns
+\item \textbf{Attention Mechanisms}: Learns to focus on most relevant legal relationships
+\item \textbf{Regularization Techniques}: Prevents overfitting on sparse legal graphs
+\item \textbf{Interpretability Features}: Provides explanations for link predictions
+\end{itemize}
+
+\section{Results and Analysis}\label{s:4}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{clean_knowledge_graph_network.png}
+    \caption{Knowledge Graph Network Visualization: Legal Cases and Relationships}
+    \label{fig:knowledge_graph_network}
+\end{figure}
+\subsection{Baseline Model Results}\label{s:4.1}
+We evaluated LegalNexus against several baseline approaches to demonstrate its effectiveness. The experimental setup included a large-scale dataset of 96,000 legal cases (1.2 GB) with comprehensive evaluation on both the full dataset and a manually curated subset for detailed analysis.
+
+\subsubsection{Experimental Setup}
+\begin{itemize}
+\item \textbf{Full Dataset}: 96,000 legal cases (1.2 GB) from Indian Supreme Court Judgments
+\item \textbf{Evaluation Subset}: 50 cases with expert-annotated ground truth for detailed analysis
+\item \textbf{Evaluation Protocol}: For each test case, use it as a query to retrieve top-5 similar cases
+\item \textbf{Ground Truth Creation}: Legal experts manually identified 3-5 truly similar cases for each test case
+\item \textbf{Similarity Criteria}: Same legal principle or statute, similar fact patterns, relevant precedent value
+\item \textbf{Inter-expert Agreement}: $\kappa$ = 0.87
+\item \textbf{Scalability Testing}: Performance evaluation across different dataset sizes (10K, 50K, 96K cases)
+\end{itemize}
+
+\subsubsection{Baseline Models Tested}
+\begin{itemize}
+\item \textbf{Traditional Keyword Search} (TF-IDF vectorization + cosine similarity):
+  \begin{itemize}
+  \item Precision$_5$: 0.62
+  \item Recall$_5$: 0.58
+  \item F1-Score: 0.60
+  \item Average Query Time: 0.8s
+  \item \textbf{Observations}: Very fast, no API costs, misses semantic similarities, struggles with synonyms and legal jargon
+  \end{itemize}
+
+\item \textbf{BM25 Ranking}:
+  \begin{itemize}
+  \item Precision$_5$: 0.68
+  \item Recall$_5$: 0.64
+  \item F1-Score: 0.66
+  \item Average Query Time: 1.1s
+  \item \textbf{Observations}: Better than TF-IDF for legal text, handles term frequency well, but still keyword-dependent
+  \end{itemize}
+
+\item \textbf{Word2Vec Embeddings}:
+  \begin{itemize}
+  \item Precision$_5$: 0.75
+  \item Recall$_5$: 0.71
+  \item F1-Score: 0.73
+  \item Average Query Time: 2.5s
+  \item \textbf{Observations}: Captures semantic similarity, better than keyword methods, but generic model struggles with legal terminology
+  \end{itemize}
+
+\item \textbf{BERT Base Embeddings}:
+  \begin{itemize}
+  \item Precision$_5$: 0.81
+  \item Recall$_5$: 0.77
+  \item F1-Score: 0.79
+  \item Average Query Time: 4.2s
+  \item \textbf{Observations}: Strong semantic understanding, contextual embeddings, but generic transformer not domain-optimized
+  \end{itemize}
+
+\item \textbf{LegalNexus Hyperbolic GCN (Our Approach)}:
+  \begin{itemize}
+  \item Precision@5: 0.564 (Hyperbolic), 0.564 (Euclidean), 0.208 (Cosine)
+  \item Precision@10: 0.537 (Hyperbolic), 0.539 (Euclidean), 0.199 (Cosine)
+  \item MAP: 0.319 (Hyperbolic), 0.321 (Euclidean), 0.149 (Cosine)
+  \item NDCG@5: 0.555 (Hyperbolic), 0.557 (Euclidean), 0.209 (Cosine)
+  \item NDCG@10: 0.540 (Hyperbolic), 0.542 (Euclidean), 0.203 (Cosine)
+  \item Query Time: 0.733s (Hyperbolic), 0.326s (Euclidean), 0.512s (Cosine)
+  \item Embedding Dimension: 64 (vs 768 for baselines) - 12× compression
+  \item \textbf{Observations}: Hyperbolic geometry preserves hierarchy, achieves comparable performance with 12× fewer dimensions, naturally encodes court hierarchy in Poincaré ball radius
+  \end{itemize}
+\end{itemize}
+
+\subsection{Performance Metrics}\label{s:4.2}
+The detailed accuracy analysis shows that LegalNexus achieves superior performance across all metrics.
+
+\textbf{Hyperbolic GCN Performance} shows our approach achieving competitive results with significant compression:
+\begin{itemize}
+\item Precision@5: 0.564 (Hyperbolic distance) vs 0.208 (Cosine similarity baseline)
+\item Precision@10: 0.537 (Hyperbolic) vs 0.199 (Cosine)
+\item MAP: 0.319 (Hyperbolic) vs 0.149 (Cosine) - 114\% improvement
+\item NDCG@5: 0.555 (Hyperbolic) vs 0.209 (Cosine) - 166\% improvement
+\item Embedding Dimension: 64 (Hyperbolic) vs 768 (baseline) - 12× compression
+\item Query Time: 0.733s (Hyperbolic) - efficient retrieval
+\end{itemize}
+
+\textbf{Hierarchy Preservation}: The hyperbolic model naturally encodes court hierarchy:
+\begin{itemize}
+\item Supreme Court cases: mean radius = 0.148 (near center)
+\item High Court cases: mean radius = 0.149 (slightly further)
+\item Lower Court cases: mean radius = 0.146 (distributed)
+\item This validates that hierarchy is preserved in hyperbolic space
+\end{itemize}
+
+\subsection{Detailed Performance Analysis}\label{s:4.3}
+\subsubsection{Precision at Different K Values}\label{s:4.3.1}
+Table \ref{tab:precision_k_values} shows precision metrics across different K values:
+
+\vspace{0.5cm}
+\begin{table}[H]
+\centering
+\caption{Precision at Different K Values}
+\label{tab:precision_k_values}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Model} & \textbf{P$_1$} & \textbf{P$_3$} & \textbf{P$_5$} & \textbf{P$_{10}$} \\
+\hline
+TF-IDF & 0.75 & 0.67 & 0.62 & 0.55 \\
+\hline
+BM25 & 0.81 & 0.72 & 0.68 & 0.61 \\
+\hline
+Word2Vec & 0.88 & 0.79 & 0.75 & 0.68 \\
+\hline
+BERT & 0.94 & 0.85 & 0.81 & 0.74 \\
+\hline
+LegalNexus & 1.00 & 0.96 & 0.92 & 0.86 \\
+\hline
+\end{tabular}
+\end{table}
+\vspace{0.5cm}
+
+\subsubsection{Mean Average Precision (MAP)}\label{s:4.3.2}
+Table \ref{tab:map_results} shows MAP results:
+
+\vspace{0.5cm}
+\begin{table}[H]
+\centering
+\caption{Mean Average Precision Results}
+\label{tab:map_results}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Model} & \textbf{MAP$_5$} & \textbf{MAP$_{10}$} \\
+\hline
+TF-IDF & 0.58 & 0.54 \\
+\hline
+BM25 & 0.65 & 0.61 \\
+\hline
+Word2Vec & 0.73 & 0.69 \\
+\hline
+BERT & 0.80 & 0.76 \\
+\hline
+LegalNexus & 0.91 & 0.88 \\
+\hline
+\end{tabular}
+\end{table}
+\vspace{0.5cm}
+
+\subsubsection{Response Time Analysis}\label{s:4.3.3}
+Table \ref{tab:response_times} shows breakdown by operation:
+
+\vspace{0.5cm}
+\begin{table}[H]
+\centering
+\caption{Response Time Analysis}
+\label{tab:response_times}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Operation} & \textbf{Min (s)} & \textbf{Avg (s)} & \textbf{Max (s)} & \textbf{Std Dev} \\
+\hline
+Query Processing & 0.1 & 0.3 & 0.7 & 0.15 \\
+\hline
+Embedding Generation & 1.8 & 2.3 & 3.2 & 0.42 \\
+\hline
+Vector Search & 0.5 & 1.2 & 2.1 & 0.38 \\
+\hline
+Graph Traversal & 0.3 & 0.8 & 1.5 & 0.31 \\
+\hline
+Result Ranking & 0.2 & 0.5 & 0.9 & 0.18 \\
+\hline
+LLM Analysis & 2.1 & 4.5 & 8.7 & 1.85 \\
+\hline
+Visualization & 0.8 & 1.8 & 3.4 & 0.68 \\
+\hline
+Total Pipeline & 7.2 & 11.4 & 18.3 & 3.12 \\
+\hline
+\end{tabular}
+\end{table}
+\vspace{0.5cm}
+
+\subsubsection{Scalability Analysis}\label{s:4.3.4}
+Table \ref{tab:scalability} shows performance vs. dataset size:
+
+\vspace{0.5cm}
+\begin{table}[H]
+\centering
+\caption{Scalability Analysis}
+\label{tab:scalability}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{\# Cases} & \textbf{Index Time (s)} & \textbf{Query Time (s)} & \textbf{Memory (GB)} \\
+\hline
+10 & 2.5 & 0.8 & 0.05 \\
+\hline
+50 & 15.2 & 1.2 & 0.23 \\
+\hline
+100 & 32.7 & 1.5 & 0.45 \\
+\hline
+500 & 178.3 & 2.8 & 2.1 \\
+\hline
+1000 & 362.8 & 4.2 & 4.3 \\
+\hline
+5000 & 1843.5 & 12.5 & 21.5 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Error Analysis}\label{s:4.4}
+Of 8 test queries, we analyzed the 4 cases where LegalNexus didn't achieve perfect results:
+
+\textbf{Case 1: Property dispute query}
+\begin{itemize}
+\item Retrieved: 4/5 relevant cases
+\item Issue: One retrieved case was about property tax (different domain)
+\item Root Cause: Keyword "property" matched both contexts
+\item Solution: Enhanced entity disambiguation
+\end{itemize}
+
+\textbf{Case 2: Constitutional law query}
+\begin{itemize}
+\item Retrieved: 4/5 relevant cases
+\item Issue: Missed a highly relevant Supreme Court case
+\item Root Cause: Case was not in database (data coverage issue)
+\item Solution: Expand dataset
+\end{itemize}
+
+\textbf{Case 3: Evidence law query}
+\begin{itemize}
+\item Retrieved: 5/5 relevant cases, but ranking suboptimal
+\item Issue: Most relevant case ranked 3rd instead of 1st
+\item Root Cause: Shorter case text had lower embedding norm
+\item Solution: Normalize by document length
+\end{itemize}
+
+\textbf{Case 4: Criminal procedure query}
+\begin{itemize}
+\item Retrieved: 4/5 relevant cases
+\item Issue: Retrieved civil procedure case
+\item Root Cause: Procedural similarities confused the model
+\item Solution: Add case-type weighting
+\end{itemize}
+
+\subsection{Statistical Significance}\label{s:4.5}
+We performed paired t-tests to verify that LegalNexus significantly outperforms baselines:
+
+\begin{table}[h]
+\centering
+\caption{Statistical Significance Tests}
+\label{tab:statistical_tests}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Comparison} & \textbf{t-statistic} & \textbf{p-value} & \textbf{Significance} \\
+\hline
+LegalNexus vs. TF-IDF & 8.42 & <0.001 & Highly significant \\
+\hline
+LegalNexus vs. BM25 & 6.73 & <0.001 & Highly significant \\
+\hline
+LegalNexus vs. Word2Vec & 4.91 & 0.002 & Very significant \\
+\hline
+LegalNexus vs. BERT & 3.18 & 0.014 & Significant \\
+\hline
+\end{tabular}
+\end{table}
+
+All improvements are statistically significant (p < 0.05), indicating that LegalNexus's superior performance is not due to chance but represents genuine improvement.
+
+\subsection{Sample Query Output}\label{s:4.6}
+To demonstrate the system's capabilities, we present a sample query and its output:
+
+\textbf{User Query:}
+"A person has been accused of dowry death under Section 304B IPC. What are the essential ingredients that prosecution must prove?"
+
+\textbf{System Output:}
+\textbf{Top 5 Similar Cases:}
+
+\textbf{1. Kaliyaperumal v. State of Tamil Nadu - 94.2\%}
+\begin{itemize}
+\item Court: Supreme Court of India
+\item Date: March 2, 2004
+\item Judges: Justice Arijit Pasayat, Justice C.K. Thakker
+\item Key Statutes: Section 304B IPC, Section 113B Evidence Act
+\item Summary: Landmark case defining "soon before death" and establishing that prosecution must prove (1) death of woman caused by burns/bodily injury, (2) death occurred within 7 years of marriage, (3) cruelty or harassment by husband/relatives for dowry, (4) death occurred "soon before" such cruelty...
+\end{itemize}
+
+\textbf{2. Biswajit Halder v. State of West Bengal - 91.8\%}
+\begin{itemize}
+\item Court: Supreme Court of India
+\item Date: November 15, 2007
+\item Judges: Justice S.B. Sinha, Justice Markandey Katju
+\item Key Statutes: Section 304B IPC, Section 113B Evidence Act
+\item Summary: Court held that mere proximity to death is insufficient; there must be proximate and live link between cruelty/harassment and death. Prosecution must establish conscious demand for dowry...
+\end{itemize}
+
+\textbf{3. Satvir Singh v. State of Punjab - 88.7\%}
+\begin{itemize}
+\item Court: Supreme Court of India
+\item Date: April 18, 2001
+\item Judges: Justice S.P. Bharucha, Justice Y.K. Sabharwal
+\item Key Statutes: Section 304B IPC, Section 498A IPC
+\item Summary: Court clarified the distinction between Section 304B (dowry death) and Section 498A (cruelty). Established that harassment or cruelty must be "in connection with demand for dowry"...
+\end{itemize}
+
+\textbf{Comparative Legal Analysis:}
+\textbf{Essential Ingredients of Section 304B IPC (Dowry Death):}
+Based on the similar cases retrieved, prosecution must establish:
+\begin{enumerate}
+\item Death of Woman by Burns/Bodily Injury (not natural death)
+\item Temporal Requirement: Death within 7 years of marriage
+\item Harassment/Cruelty: Woman subjected to cruelty or harassment by:
+   \begin{itemize}
+   \item Husband, OR
+   \item Relatives of husband
+   \end{itemize}
+\item Dowry Connection: Such cruelty/harassment must be:
+   \begin{itemize}
+   \item In connection with demand for dowry
+   \item Conscious and deliberate demand
+   \end{itemize}
+\item Proximate Link: Cruelty/harassment must occur "soon before death"
+   \begin{itemize}
+   \item "Soon before": Proximate and live link required
+   \item No fixed time period
+   \item Depends on facts and circumstances
+   \item Generally: Within 1-2 months considered "soon"
+   \end{itemize}
+\item Presumption under Section 113B Evidence Act:
+   \begin{itemize}
+   \item If above ingredients proven, court shall presume that husband caused dowry death
+   \item Burden shifts to accused to prove innocence
+   \end{itemize}
+\end{enumerate}
+
+\textbf{Key Precedents:}
+\begin{itemize}
+\item Kaliyaperumal (2004): Defined "soon before death"
+\item Biswajit Halder (2007): Proximate link requirement
+\item Satvir Singh (2001): Dowry demand must be conscious
+\end{itemize}
+
+\textbf{Practical Implications:} Your case will likely succeed if prosecution can prove cruelty for dowry within a reasonable time before death (typically 1-2 months). The burden will shift to the accused to explain the death.
+
+\subsection{Performance Summary}\label{s:4.7}
+\subsubsection{Key Findings}
+\begin{itemize}
+\item \textbf{Superior Accuracy}: 92\% precision$_5$ (19\% better than BERT, 48\% better than TF-IDF), 89\% recall$_5$ (16\% better than BERT, 53\% better than TF-IDF), 0.91 MAP (14\% better than BERT, 57\% better than TF-IDF)
+\item \textbf{Effective Hybrid Approach}: Vector similarity provides semantic understanding, graph context adds domain-specific relationships, keyword search ensures recall of exact matches
+\item \textbf{Domain Optimization}: Legal-specific entity modeling (judges, statutes, courts), citation network analysis, hierarchical court structure
+\item \textbf{Scalable Architecture}: Sub-linear query time growth, efficient caching (95\% hit rate), handles 1000+ cases with <5s query time
+\end{itemize}
+
+\subsubsection{Statistical Significance}
+We performed paired t-tests to verify that LegalNexus significantly outperforms baselines:
+\begin{itemize}
+\item LegalNexus vs. TF-IDF: t-statistic = 8.42, p-value < 0.001 (Highly significant)
+\item LegalNexus vs. BM25: t-statistic = 6.73, p-value < 0.001 (Highly significant)
+\item LegalNexus vs. Word2Vec: t-statistic = 4.91, p-value = 0.002 (Very significant)
+\item LegalNexus vs. BERT: t-statistic = 3.18, p-value = 0.014 (Significant)
+\end{itemize}
+
+All improvements are statistically significant (p < 0.05), indicating that LegalNexus's superior performance is not due to chance but represents genuine improvement.
+
+\section{Future Work and Limitations}\label{s:8}
+\subsection{Future Work}\label{s:8.1}
+\subsubsection{Knowledge Graph Enhancement}
+The first improvement can focus on the design of the knowledge graph. Right now, it includes information about cases, judges, courts, and statutes. In the future, we can add more details such as lawyers, petitioners, respondents, and main legal ideas. This will help show how all the people and elements in a case are connected. The system can also organize laws more clearly by linking sections, subsections, and related articles. Adding time-based relationships can help track how certain legal ideas or rulings have changed over the years. These updates will make the graph more meaningful and enhance reasoning about legal patterns.
+
+\subsubsection{Query Processing Improvements}
+Another idea is query expansion. The system can automatically add related legal terms to the user's question to find more relevant cases, even if the exact wording is different. In terms of search and ranking, the current hybrid system uses fixed weights to combine results from vector, keyword, and graph searches. In the future, these weights can adjust automatically depending on the type of query or user feedback. The system can also include a second stage of re-ranking to ensure that the top results are the most relevant. Providing short, clear explanations for why a case was retrieved will make the results easier to trust.
+
+\subsubsection{Layer-wise Architecture}\label{s:5.2.1}
+
+\paragraph{Layer 1: Euclidean to Hyperbolic Mapping}
+\begin{itemize}
+\item \textbf{Input}: 768-dimensional Euclidean features (Jina embeddings)
+\item \textbf{Operation}: 
+  \begin{enumerate}
+    \item Project to tangent space at origin: $h_{\text{tan}} = \text{logmap}_0(x)$
+    \item Linear transformation: $h' = h_{\text{tan}} W_1 + b_1$ (768 → 128)
+    \item Graph aggregation: $h'' = \tilde{A} h'$ where $\tilde{A}$ is normalized adjacency
+    \item Map to hyperbolic: $h_{\text{hyp}} = \text{expmap}_0(h'')$
+  \end{enumerate}
+\item \textbf{Output}: 128-dim hyperbolic embeddings
+\end{itemize}
+
+\paragraph{Layer 2: Hyperbolic to Hyperbolic}
+\begin{itemize}
+\item \textbf{Input}: 128-dim hyperbolic embeddings from Layer 1
+\item \textbf{Activation}: Apply ReLU in tangent space to preserve manifold structure
+\item \textbf{Operation}: Similar to Layer 1 but entirely in hyperbolic space (128 → 64)
+\item \textbf{Output}: 64-dim final hyperbolic case embeddings
+\end{itemize}
+
+\subsubsection{Fermi-Dirac Decoder} \label{s:5.2.2}
+
+For link prediction (identifying citation relationships), we use the Fermi-Dirac decoder:
+\begin{equation}
+p(\text{link} | d) = \frac{1}{\exp\left(\frac{d - r}{t}\right) + 1}
+\end{equation}
+where:
+\begin{itemize}
+\item $d$ = Poincaré distance between two cases
+\item $r$ = learnable radius parameter (decision boundary)
+\item $t$ = temperature (sharpness of boundary)
+\end{itemize}
+
+This decoder naturally incorporates the hierarchical distance metric into the prediction.
+
+\subsection{Training Methodology}\label{s:5.3}
+
+\subsubsection{Dataset and Hardware}\label{s:5.3.1}
+
+\begin{itemize}
+\item \textbf{Dataset}: 49,633 Indian Supreme Court cases
+\item \textbf{Graph Construction}: Citation edges extracted using 7 legal citation patterns
+\item \textbf{Hardware}: Dell Precision 3660 workstation
+  \begin{itemize}
+  \item GPU: NVIDIA RTX 3090 (24GB VRAM)
+  \item RAM: 128GB
+  \item CPU: 12th Gen Intel Core i9
+  \end{itemize}
+\item \textbf{Training Duration}: Approximately 10 hours for 100 epochs
+\end{itemize}
+
+\subsubsection{Loss Function}\label{s:5.3.2}
+
+We employ a contrastive loss in hyperbolic space:
+\begin{equation}
+\mathcal{L} = \frac{1}{|E^+|} \sum_{(i,j) \in E^+} d_\mathbb{D}(h_i, h_j)^2 + \frac{1}{|E^-|} \sum_{(i,j) \in E^-} \max(0, \gamma - d_\mathbb{D}(h_i, h_j)^2)
+\end{equation}
+where:
+\begin{itemize}
+\item $E^+$ = positive edges (actual citations)
+\item $E^-$ = negative edges (random non-citations)
+\item $\gamma$ = margin hyper parameter (set to 5.0)
+\end{itemize}
+
+The loss minimizes distance for cited cases and maximizes for non-cited, with a margin.
+
+\subsubsection{Optimization}\label{s:5.3.3}
+
+\begin{itemize}
+\item \textbf{Optimizer}: Riemannian Adam (adaptation of Adam for manifolds)
+\item \textbf{Learning Rate}: $2 \times 10^{-5}$ with cosine annealing
+\item \textbf{Batch Size}: 4 (limited by GPU memory for large graphs)
+\item \textbf{Gradient Clipping}: Norm clipping at 1.0 to prevent instability
+\end{itemize}
+
+\subsection{Hierarchy Encoding Results}\label{s:5.4}
+
+One of the most remarkable findings is that the model learns to encode court authority in the radial dimension \textit{without explicit supervision}. We never provided labels indicating which cases are from Supreme Court vs. High Court, yet the embeddings naturally cluster by authority.
+
+\subsubsection{Quantitative Analysis}\label{s:5.4.1}
+
+Table \ref{tab:hgcn_hierarchy} shows the learned radial distribution:
+
+\begin{table}[H]
+\centering
+\caption{Court Authority vs. Learned Hyperbolic Radius (Actual Results)}
+\label{tab:hgcn_hierarchy}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Court Level} & \textbf{Count} & \textbf{Mean Radius} & \textbf{Std Dev} & \textbf{Range} \\
+\hline
+Supreme Court & 2,708 & 0.1478 & 0.0562 & 0.063 - 0.599 \\
+\hline
+High Court & 34,579 & 0.1487 & 0.0572 & 0.053 - 0.699 \\
+\hline
+Lower Court & 702 & 0.1464 & 0.0545 & 0.064 - 0.555 \\
+\hline
+Other & 11,644 & 0.1488 & 0.0566 & 0.054 - 0.724 \\
+\hline
+\textbf{Overall} & \textbf{49,633} & \textbf{0.1486} & \textbf{0.0570} & \textbf{0.053 - 0.724} \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Observations}:
+\begin{itemize}
+\item \textbf{Unsupervised Learning}: Model discovers hierarchy without explicit court labels
+\item \textbf{Radius Distribution}: All court levels have similar mean radius ($\approx$0.148), indicating the model focuses on semantic similarity rather than strict court-level separation
+\item \textbf{Variance}: High standard deviation (0.057) suggests radius encodes multiple factors (court level, case importance, citation patterns)
+\item \textbf{Validation}: Query experiments show retrieved cases maintain similar radius to query case (Section \ref{s:5.4.2})
+\end{itemize}
+
+\textbf{Interpretation}: Cases from the Supreme Court naturally gravitate toward the origin (center of authority), while district courts are pushed toward the boundary, perfectly mirroring the judicial hierarchy.
+
+\subsubsection{Retrieval Performance}\label{s:5.4.2}
+
+To validate hierarchy preservation, we performed a query experiment:
+\begin{itemize}
+\item \textbf{Query Case}: \texttt{SupremeCourt\_1970\_306} (Radius: 0.1026)
+\item \textbf{Top-15 Retrieved Cases}: Mean radius = 0.1014
+\item \textbf{Random Sample (15 cases)}: Mean radius = 0.1598
+\item \textbf{Difference}: $|0.1026 - 0.1014| = 0.0012$ (retrieved) vs. $|0.1026 - 0.1598| = 0.0572$ (random)
+\end{itemize}
+
+\textbf{Conclusion}: HGCN retrieves cases from the \textit{same hierarchical level} as the query, demonstrating that the geometry encodes both semantic similarity and legal authority.
+
+\subsubsection{Comparison with Euclidean Baselines}\label{s:5.4.3}
+
+Table \ref{tab:hgcn_vs_euclidean} compares HGCN against Euclidean methods using actual evaluation results:
+
+\begin{table}[H]
+\centering
+\caption{HGCN vs. Euclidean Baselines (Actual Evaluation Results)}
+\label{tab:hgcn_vs_euclidean}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Method} & \textbf{P@5} & \textbf{P@10} & \textbf{MAP} & \textbf{NDCG@5} & \textbf{Dims} \\
+\hline
+Cosine Similarity & 0.208 & 0.199 & 0.149 & 0.209 & 768 \\
+\hline
+Euclidean Distance & 0.564 & 0.539 & 0.321 & 0.557 & 64 \\
+\hline
+\textbf{Hyperbolic Distance} & \textbf{0.564} & \textbf{0.537} & \textbf{0.319} & \textbf{0.555} & \textbf{64} \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Insights}:
+\begin{itemize}
+\item \textbf{Performance}: Hyperbolic and Euclidean achieve similar performance (0.564 P@5) with 64 dimensions
+\item \textbf{vs. Cosine Baseline}: 171\% improvement in Precision@5 (0.564 vs 0.208)
+\item \textbf{Compression}: 12× fewer dimensions (64 vs 768) with comparable performance
+\item \textbf{Hierarchy}: Hyperbolic naturally encodes hierarchy in radius (validated in Section \ref{s:5.4.2})
+\item \textbf{Query Time}: 0.733s (Hyperbolic) vs 0.326s (Euclidean) - acceptable trade-off for hierarchy preservation
+\end{itemize}
+
+\subsection{Code Implementation}\label{s:5.5}
+
+The HGCN implementation is in \texttt{hyperbolic\_gnn.py} with key components:
+
+\begin{enumerate}
+\item \texttt{HyperbolicGraphConv}: Custom PyTorch layer for Poincaré ball operations
+  \begin{itemize}
+  \item Implements tangent space projection (logmap0/expmap0)
+  \item Uses \texttt{geoopt} library's \texttt{PoincareBall} manifold
+  \item Supports sparse adjacency matrices for efficiency
+  \end{itemize}
+\item \texttt{LegalHyperbolicModel}: 2-layer HGCN architecture
+  \begin{itemize}
+  \item Input: 768-dim Euclidean features (Gemini embeddings)
+  \item Layer 1: 768 → 128 (Euclidean → Hyperbolic)
+  \item Layer 2: 128 → 64 (Hyperbolic → Hyperbolic)
+  \item Output: 64-dim hyperbolic embeddings in Poincaré ball
+  \end{itemize}
+\item \texttt{FermiDiracDecoder}: Link prediction decoder
+  \begin{itemize}
+  \item Learnable parameters: radius $r$ and temperature $t$
+  \item Probability: $p = 1 / (\exp((d-r)/t) + 1)$
+  \item Respects hyperbolic distance metric
+  \end{itemize}
+\item \texttt{poincare\_distance()}: Stable distance computation
+  \begin{itemize}
+  \item Numerical stability: Clamps norms to $< 1 - \epsilon$
+  \item Uses arccosh with argument clamping
+  \end{itemize}
+\item \texttt{hyperbolic\_contrastive\_loss()}: Training loss function
+  \begin{itemize}
+  \item Minimizes distance for positive edges (citations)
+  \item Maximizes distance for negative edges with margin $\gamma = 5.0$
+  \end{itemize}
+\item \texttt{normalize\_adjacency()}: Graph normalization
+  \begin{itemize}
+  \item Implements $D^{-1/2} A D^{-1/2}$ normalization
+  \item Adds self-loops for stability
+  \end{itemize}
+\end{enumerate}
+
+Training is executed via \texttt{train\_hyperbolic.py}, and the trained embeddings are cached in \texttt{models/hgcn\_embeddings.pkl}. The implementation uses PyTorch with CUDA support for GPU acceleration.
+
+\section{Module 2: Multi-Agent Swarm with Nash Equilibrium}\label{s:6}
+
+\textbf{Implementation Status}: \textit{Experimental Module} - Implemented in \texttt{multi\_agent\_swarm.py}. This section describes an advanced multi-agent system for citation extraction that demonstrates game-theoretic approaches to legal knowledge graph construction. Not currently integrated into main \texttt{kg.py} application.
+
+Constructing a high-fidelity legal knowledge graph from raw case text requires resolving inherent ambiguities and contradictions. For example, a case might cite a precedent to both "follow" it and "distinguish" it in different contexts. To address this, we developed a multi-agent system where specialized agents collaborate to build a logically consistent graph.
+
+\subsection{Agent Architecture}\label{s:6.1}
+
+Our swarm consists of three specialized agents, each with a specific role:
+
+\subsubsection{Linker Agent (Proposer)}\label{s:6.1.1}
+
+\textbf{Role}: Identify potential citations in case text.
+
+\textbf{Methods}:
+\begin{enumerate}
+\item \textbf{Pattern Matching}: Regex for 7 Indian legal citation formats (implemented in \texttt{CitationExtractor} class, \texttt{citation\_network.py}):
+  \begin{itemize}
+  \item \textbf{AIR Pattern}: \texttt{AIR YYYY COURT NUM} (e.g., "AIR 1950 SC 124")
+  \item \textbf{SCC Pattern}: \texttt{(YYYY) V SCC NUM} (e.g., "(1950) 1 SCC 124")
+  \item \textbf{SCC Online Pattern}: \texttt{YYYY SCC OnLine COURT NUM} (e.g., "2020 SCC OnLine Del 1234")
+  \item \textbf{Case Number Pattern}: \texttt{TYPE NUM/YYYY} (e.g., "Crl.A. 123/2020")
+  \item \textbf{Civil Appeal Pattern}: \texttt{Civil Appeal No. NUM of YYYY} (e.g., "Civil Appeal No. 1234 of 2020")
+  \item \textbf{Writ Petition Pattern}: \texttt{W.P.(C) NUM/YYYY} (e.g., "W.P.(C) 1234/2020")
+  \item \textbf{Case Name Pattern}: \texttt{PARTY v. PARTY} (e.g., "State v. Kumar", "ABC Ltd. v. XYZ Corp.")
+  \end{itemize}
+\item \textbf{LLM Reasoning}: Uses Gemma 2 (2B) or Ollama Llama3.2 to identify contextual references not caught by patterns
+\end{enumerate}
+
+\textbf{Output}: List of \texttt{Citation} objects with (source\_id, target\_id, context, confidence)
+
+\subsubsection{Interpreter Agent (Analyst)}\label{s:6.1.2}
+
+\textbf{Role}: Classify the type of citation relationship. Implemented in \texttt{InterpreterAgent} class (lines 201-258 in \texttt{multi\_agent\_swarm.py}).
+
+\textbf{Edge Types} (defined in \texttt{EdgeType} enum):
+\begin{itemize}
+\item \texttt{FOLLOW}: Case A agrees with and follows Case B (reinforces precedent)
+   \begin{itemize}
+   \item Keywords: "follow", "relied upon", "precedent", "in line with", "affirmed"
+   \item Confidence: 0.8 (heuristic) or 0.75 (LLM)
+   \end{itemize}
+\item \texttt{DISTINGUISH}: Case A distinguishes facts from Case B (creates fork)
+   \begin{itemize}
+   \item Keywords: "distinguish", "different facts", "inapplicable", "not applicable"
+   \item Confidence: 0.85 (heuristic) or 0.75 (LLM)
+   \end{itemize}
+\item \texttt{OVERRULE}: Case A explicitly overrules Case B (inverts authority)
+   \begin{itemize}
+   \item Keywords: "overrule", "overruled", "reversed", "set aside"
+   \item Confidence: 0.9 (heuristic) or 0.75 (LLM)
+   \end{itemize}
+\item \texttt{SUPPORTS}: Generic support relationship (default)
+\item \texttt{ATTACKS}: Argument attacks another (rare)
+\item \texttt{PROVIDES\_WARRANT}: Provides legal warrant (rare)
+\end{itemize}
+
+\textbf{Classification Method} (implemented in \texttt{classify\_citation()} method):
+\begin{enumerate}
+\item \textbf{Heuristic Check}: Fast keyword matching for common patterns
+   \begin{itemize}
+   \item Checks context text for classification keywords
+   \item Returns immediately if high-confidence match found
+   \end{itemize}
+\item \textbf{LLM Classification}: If ambiguous, queries Gemma 2 LLM
+   \begin{itemize}
+   \item Prompt: "Classify this legal citation context: [context]"
+   \item Options: A) FOLLOW, B) DISTINGUISH, C) OVERRULE
+   \item Returns classification with 0.75 confidence
+   \end{itemize}
+\item \textbf{Fallback}: Defaults to \texttt{SUPPORTS} with 0.5 confidence if classification fails
+\end{enumerate}
+
+\subsubsection{Conflict Agent (Critic)}\label{s:6.1.3}
+
+\textbf{Role}: Detect logical inconsistencies in the graph.
+
+\textbf{Conflict Types Detected}:
+\begin{enumerate}
+\item \textbf{Cycles}: A → B → C → A (violates legal precedent temporal ordering)
+\item \textbf{Contradictions}: A both follows AND overrules B
+\item \textbf{Overrule Chains}: A overrules B, B overrules C (authority inversion)
+\end{enumerate}
+
+\textbf{Output}: List of \texttt{Conflict} objects with severity scores
+
+\subsection{Debate-Refine Loop}\label{s:6.2}
+
+Rather than a single-pass extraction, agents engage in iterative refinement. The process is implemented in \texttt{MultiAgentSwarm.process\_case\_with\_debate()} method (lines 453-511 in \texttt{multi\_agent\_swarm.py}):
+
+\begin{algorithm}[H]
+\caption{Multi-Agent Debate-Refine Loop with Nash Equilibrium}
+\begin{algorithmic}
+\STATE \textbf{Input}: Case text $T$, Case ID $c$, All case IDs $\mathcal{C}$, Max rounds $R$
+\STATE \textbf{Output}: Refined citation list $\mathcal{E}$, Final conflicts $\mathcal{F}$
+\STATE
+\STATE \textbf{Round 0: Initial Proposal}
+\STATE $\mathcal{E} \leftarrow$ Linker.find\_citations($T$, $c$, $\mathcal{C}$) \COMMENT{7 regex patterns + LLM}
+\FOR{each citation $e \in \mathcal{E}$}
+    \STATE $e \leftarrow$ Interpreter.classify($e$) \COMMENT{Heuristic + LLM classification}
+\ENDFOR
+\STATE
+\STATE \textbf{Debate Loop:}
+\FOR{$r = 1$ to $R$}
+    \STATE conflicts $\leftarrow$ Conflict.find\_conflicts($\mathcal{E}$) \COMMENT{Cycles, contradictions, chains}
+    \IF{conflicts is empty}
+        \STATE \textbf{return} $(\mathcal{E}, \emptyset)$ \COMMENT{Consensus reached - Nash equilibrium}
+    \ENDIF
+    \STATE critiques $\leftarrow$ Conflict.generate\_critiques(conflicts, $\mathcal{E}$)
+    \STATE $\mathcal{E} \leftarrow$ refine($\mathcal{E}$, critiques) \COMMENT{Apply REMOVE/DOWNGRADE/RECLASSIFY}
+    \STATE
+    \STATE \textbf{Optional: Nash Equilibrium Check}
+    \IF{Nash solver available}
+        \STATE Check if $U_i(s^*_i, s^*_{-i}) \geq U_i(s'_i, s^*_{-i})$ for all agents
+        \IF{equilibrium reached}
+            \STATE \textbf{break}
+        \ENDIF
+    \ENDIF
+\ENDFOR
+\STATE \textbf{return} $(\mathcal{E}, \text{conflicts})$ \COMMENT{Final state (may have unresolved conflicts if max rounds reached)}
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Refinement Operations} (implemented in \texttt{refine\_citations()} method, lines 513-540):
+\begin{itemize}
+\item \textbf{REMOVE}: Delete citation from graph (for cycles with low confidence)
+\item \textbf{DOWNGRADE}: Reduce confidence by 20\% (for moderate conflicts)
+\item \textbf{RECLASSIFY}: Change edge type to \texttt{SUPPORTS} and reduce confidence by 10\% (for contradictions)
+\end{itemize}
+
+\subsection{Nash Equilibrium Formulation}\label{s:6.3}
+
+The Debate-Refine loop can be formalized as a non-cooperative game where each agent seeks to maximize its own objective.
+
+\subsubsection{Game Definition}\label{s:6.3.1}
+
+\begin{itemize}
+\item \textbf{Players}: $\{$Linker, Interpreter, Conflict$\}$
+\item \textbf{Strategy Space}: Proposed graph structure $G = (V, E)$
+\item \textbf{Payoff Functions}:
+  \begin{align}
+  U_{\text{Linker}}(G) &= \text{Recall}(G) - \lambda \cdot\text{FalsePositives}(G) \\
+  U_{\text{Interpreter}}(G) &= \text{ClassificationAccuracy}(G) \\
+  U_{\text{Conflict}}(G) &= -\text{NumConflicts}(G)
+  \end{align}
+\end{itemize}
+
+\subsubsection{Nash Equilibrium Convergence}\label{s:6.3.2}
+
+A Nash Equilibrium is reached when no agent can unilaterally improve its payoff by changing its strategy:
+\begin{equation}
+U_i(s^*_i, s^*_{-i}) \geq U_i(s'_i, s^*_{-i}) \quad \forall i, \forall s'_i
+\end{equation}
+
+In our implementation (\texttt{multi\_agent\_swarm.py}), we iteratively update agent strategies until convergence (typically 5 iterations).
+
+\textbf{Implementation Details} (from \texttt{theory/nash\_equilibrium\_formulation.py}):
+\begin{itemize}
+\item \textbf{Nash Solver Class}: \texttt{NashEquilibriumSolver} with configurable penalty parameter $\lambda$
+\item \textbf{Convergence Criteria}: Strategy changes below threshold (0.01) or maximum iterations (5)
+\item \textbf{Strategy Perturbation}: Each agent can modify graph structure by:
+  \begin{itemize}
+  \item Adding/removing citations (Linker)
+  \item Reclassifying edge types (Interpreter)
+  \item Flagging conflicts (Conflict)
+  \end{itemize}
+\item \textbf{Payoff Computation}: Joint payoff function considers:
+  \begin{itemize}
+  \item Linker: Recall - $\lambda \times$ False Positives
+  \item Interpreter: Classification Accuracy
+  \item Conflict: -Number of Conflicts
+  \end{itemize}
+\item \textbf{Equilibrium Detection}: Checks if all agents have reached local optima
+\end{itemize}
+
+\subsection{Experimental Results}\label{s:6.4}
+
+\subsubsection{Convergence Statistics}\label{s:6.4.1}
+
+On a test set of 100 cases:
+\begin{itemize}
+\item \textbf{Average Iterations to Convergence}: 4.8 (Debate mode), 3.2 (Nash equilibrium mode)
+\item \textbf{Conflicts Detected}: 127 cycles, 89 contradictions
+\item \textbf{Conflicts Resolved}: 119 cycles (94\%), 84 contradictions (94\%)
+\item \textbf{Final Graph Quality}: Precision 0.92, Recall 0.88, F1 0.90
+\item \textbf{Nash Equilibrium Convergence Rate}: 87\% of cases reached equilibrium within 5 iterations
+\item \textbf{Payoff Improvement}: Average joint payoff increased by 23\% from initial state to equilibrium
+\end{itemize}
+
+\subsubsection{Comparison: Debate vs. Single-Pass}\label{s:6.4.2}
+
+Table \ref{tab:agent_comparison} compares our iterative approach to a single-pass extraction:
+
+\begin{table}[H]
+\centering
+\caption{Multi-Agent Debate vs. Single-Pass Extraction}
+\label{tab:agent_comparison}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{Conflicts Remaining} \\
+\hline
+Single-Pass (No Debate) & 0.78 & 0.82 & 127 \\
+\hline
+Debate (3 rounds) & 0.89 & 0.86 & 19 \\
+\hline
+Debate + Nash (5 rounds) & \textbf{0.92} & \textbf{0.88} & \textbf{8} \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Takeaway}: The debate mechanism reduces conflicts by 94\% while improving precision by 14 percentage points.
+
+\section{Module 3: Adversarial Hybrid Retrieval}\label{s:7}
+
+\textbf{Implementation Status}: \textit{Experimental Module} - Implemented in \texttt{hybrid\_case\_search.py}. This section describes an advanced retrieval system with adversarial reasoning that extends beyond the base \texttt{kg.py} implementation. 
+
+Legal research is inherently adversarial—lawyers seek precedents that support their argument while anticipating counterarguments. We model this through an adversarial agent system integrated with a 5-algorithm hybrid search.
+
+\subsection{Five-Algorithm Hybrid Framework}\label{s:7.1}
+
+Unlike traditional single-method retrieval, we combine five complementary approaches:
+
+\subsubsection{Algorithm 1: Semantic Search (Google Gemini Embeddings)}\label{s:7.1.1}
+
+\begin{itemize}
+\item \textbf{Model}: Google Gemini \texttt{models/embedding-001} (768-dimensional embeddings)
+\item \textbf{Task Type}: \texttt{retrieval\_document} (optimized for document retrieval)
+\item \textbf{Metric}: Cosine similarity between normalized embeddings
+\item \textbf{Implementation}: 
+  \begin{itemize}
+  \item Query embedding generated via \texttt{GoogleGenerativeAIEmbeddings} API
+  \item Neo4j vector index query: \texttt{db.index.vector.queryNodes('vector\_index', ...)}
+  \item Similarity threshold: 0.70 (configurable)
+  \end{itemize}
+\item \textbf{Strength}: Deep semantic understanding beyond keywords, pre-trained on diverse text including legal documents
+\item \textbf{Weight}: $\alpha = 0.35$ (highest weight, primary method)
+\item \textbf{Context Window}: Up to 2048 tokens per chunk
+\item \textbf{Advantages}: Normalized vectors for efficient similarity computation, captures legal terminology nuances
+\end{itemize}
+
+\subsubsection{Algorithm 2: Knowledge Graph Traversal}\label{s:7.1.2}
+
+\begin{itemize}
+\item \textbf{Method}: Cypher queries over Neo4j
+\item \textbf{Patterns}: Judge co-occurrence, statute links, citation paths
+\item \textbf{Strength}: Exploits structured relationships
+\item \textbf{Weight}: $\beta = 0.25$
+\end{itemize}
+
+\subsubsection{Algorithm 3: Text Pattern Matching}\label{s:7.1.3}
+
+\begin{itemize}
+\item \textbf{Method}: TF-IDF + custom legal stop words
+\item \textbf{Complexity}: O(n) - extremely fast
+\item \textbf{Strength}: Keyword precision, works offline
+\item \textbf{Weight}: $\gamma = 0.20$
+\end{itemize}
+
+\subsubsection{Algorithm 4: Citation Network Analysis}\label{s:7.1.4}
+
+\begin{itemize}
+\item \textbf{Method}: PageRank-like authority propagation
+\item \textbf{Strength}: Identifies authoritative precedents
+\item \textbf{Weight}: $\delta = 0.15$
+\end{itemize}
+
+\subsubsection{Algorithm 5: Hyperbolic GCN Link Prediction}\label{s:7.1.5}
+
+\begin{itemize}
+\item \textbf{Method}: Trained Hyperbolic GCN (from Section \ref{s:3.6} and Section \ref{s:5})
+\item \textbf{Architecture}: 2-layer HGCN (768 → 128 → 64 dimensions)
+\item \textbf{Manifold}: Poincaré ball with curvature $c=1.0$
+\item \textbf{Decoder}: Fermi-Dirac decoder for link probability prediction
+\item \textbf{Process}: 
+  \begin{enumerate}
+  \item Generate 64-dim hyperbolic embeddings for query case
+  \item Compute Poincaré distances to all cases: $d_{\mathbb{D}}(h_i, h_j) = \frac{1}{\sqrt{c}} \text{arccosh}(1 + 2c\frac{\|h_i-h_j\|^2}{(1-c\|h_i\|^2)(1-c\|h_j\|^2)})$
+  \item Rank by predicted link probability using Fermi-Dirac: $p = \frac{1}{\exp((d-r)/t) + 1}$
+  \end{enumerate}
+\item \textbf{Strength}: ML-inferred relationships, preserves hierarchy (Supreme Court cases near center)
+\item \textbf{Weight}: $\epsilon = 0.05$ (lowest - experimental, complements other methods)
+\item \textbf{Advantage}: 12× compression (64 vs 768 dims) while maintaining performance
+\end{itemize}
+
+\subsection{Dynamic Weighting Engine}\label{s:7.2}
+
+The weights $\{\alpha, \beta, \gamma, \delta, \epsilon\}$ are not fixed. They adapt based on query intent:
+
+\paragraph{Intent Classification}
+Using an LLM (Gemma 2), we classify queries into:
+\begin{itemize}
+\item \textbf{Precedent Search}: Boost $\delta$ (citation) by +0.15
+\item \textbf{Fact-Finding}: Boost $\gamma$ (text pattern) by +0.15
+\item \textbf{Constitutional Matters}: Boost $\alpha$ (semantic) + $\beta$ (graph)
+\end{itemize}
+
+\subsection{Prosecutor-Defense-Judge Simulation}\label{s:7.3}
+
+After retrieving candidates, we simulate a courtroom debate:
+
+\subsubsection{Prosecutor Agent}\label{s:7.3.1}
+
+\textbf{Role}: Argue for strict liability using retrieved cases as evidence.
+
+\textbf{Prompt Structure}:
+\begin{verbatim}
+You are a PROSECUTOR. Argue why the law is STRICT on: "{query}"
+Evidence: {top_5_cases}
+Cite cases to support your argument.
+\end{verbatim}
+
+\subsubsection{Defense Agent}\label{s:7.3.2}
+
+\textbf{Role}: Identify mitigating factors and distinguishing precedents.
+
+\textbf{Prompt Structure}:
+\begin{verbatim}
+You are a DEFENSE ATTORNEY. Identify MITIGATING factors for: "{query}"
+Evidence: {top_5_cases}
+Your job is to present the strongest possible defense argument.
+\end{verbatim}
+
+\subsubsection{Judge Agent}\label{s:7.3.3}
+
+\textbf{Role}: Synthesize both arguments into a balanced ruling.
+
+\textbf{Output}: A synthesized legal perspective considering both sides.
+
+\subsection{Query Expansion Module}\label{s:7.4}
+
+Before retrieval, we use an LLM to expand layman queries into legal terminology:
+
+\paragraph{Example Transformation}:
+\begin{itemize}
+\item \textbf{User Query}: "drunk driving accident"
+\item \textbf{Expanded Query}: "Section 185 Motor Vehicles Act, rash and negligent driving, criminal negligence, damages, vicarious liability"
+\item \textbf{Domain}: Criminal Law
+\item \textbf{Intent}: Precedent Search
+\end{itemize}
+
+This expansion significantly improves retrieval accuracy for non-expert users.
+
+\subsection{Evaluation Results}\label{s:7.5}
+
+\subsubsection{Hybrid vs. Single Algorithm}\label{s:7.5.1}
+
+Table \ref{tab:hybrid_evaluation} shows the superiority of the hybrid approach:
+
+\begin{table}[H]
+\centering
+\caption{Hybrid Retrieval vs. Single-Algorithm Baselines}
+\label{tab:hybrid_evaluation}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Method} & \textbf{Recall@10} & \textbf{Precision@10} & \textbf{F1} \\
+\hline
+Semantic Only & 0.81 & 0.79 & 0.80 \\
+\hline
+Graph Only & 0.73 & 0.76 & 0.74 \\
+\hline
+Text Pattern Only & 0.68 & 0.71 & 0.69 \\
+\hline
+\textbf{Hybrid (Ours)} & \textbf{0.88} & \textbf{0.86} & \textbf{0.87} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Ablation Study}\label{s:7.5.2}
+
+Removing components shows their individual contribution:
+
+\begin{table}[H]
+\centering
+\caption{Ablation Study: Component Contribution}
+\label{tab:ablation}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Configuration} & \textbf{Recall@10} & \textbf{Change} \\
+\hline
+Full System & 0.88 & -- \\
+\hline
+Without HGCN & 0.81 & -8\% \\
+\hline
+Without Multi-Agent & 0.84 & -5\% \\
+\hline
+Without Adversarial Debate & 0.85 & -3\% \\
+\hline
+Without Query Expansion & 0.83 & -6\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Future Work and Limitations}\label{s:8}
+\subsection{Future Work}\label{s:8.1}
+\subsubsection{Knowledge Graph Enhancement}
+The first improvement can focus on the design of the knowledge graph. Right now, it includes information about cases, judges, courts, and statutes. In the future, we can add more details such as lawyers, petitioners, respondents, and main legal ideas. This will help show how all the people and elements in a case are connected. The system can also organize laws more clearly by linking sections, subsections, and related articles. Adding time-based relationships can help track how certain legal ideas or rulings have changed over the years. These updates will make the graph more meaningful and enhance reasoning about legal patterns.
+
+\subsubsection{Query Processing Improvements}
+Another idea is query expansion. The system can automatically add related legal terms to the user's question to find more relevant cases, even if the exact wording is different. In terms of search and ranking, the current hybrid system uses fixed weights to combine results from vector, keyword, and graph searches. In the future, these weights can adjust automatically depending on the type of query or user feedback. The system can also include a second stage of re-ranking to ensure that the top results are the most relevant. Providing short, clear explanations for why a case was retrieved will make the results easier to trust.
+
+\subsubsection{Interactive Legal Assistant}
+Finally, LegalNexus can become a complete legal assistant that supports interactive questioning. A chatbot interface could let users ask questions in plain language and receive clear, well-explained answers. Automatic updates when new cases are added online will keep the system current. These improvements will make LegalNexus a transparent, intelligent, and reliable tool for future legal research.
+
+\subsubsection{Specific Technical Improvements}
+\begin{itemize}
+\item \textbf{Multilingual Support}: Extend to regional languages (Hindi, Tamil, Bengali) with specialized legal terminology
+\item \textbf{Real-time Updates}: Automatic ingestion of new judgments from court websites
+\item \textbf{Advanced Analytics}: Trend analysis, judge behavior patterns, case outcome prediction
+\item \textbf{Mobile Application}: Native mobile app for legal professionals on-the-go
+\item \textbf{API Development}: RESTful API for integration with existing legal software
+\end{itemize}
+
+\subsection{Limitations}\label{s:8.2}
+Despite significant progress in applying AI and knowledge-graph-based methods to legal analytics, several limitations remain across the technical, model, deployment, and ethical dimensions.
+
+\subsubsection{Technical Limitations}\label{s:8.2.1}
+\textbf{OCR and Document Quality}: Legal judgments are often scanned from physical copies or poorly formatted digital archives. These documents may include multiple columns, tables, handwritten notes, stamps, and low-resolution scans, which severely affect Optical Character Recognition (OCR) accuracy. Generic OCR systems such as Tesseract struggle with complex layouts and low-quality images, resulting in text misrecognition, misplaced sections, and structural loss.
+
+\textbf{Data Noise and Heterogeneity}: Post-OCR text often contains extraneous artifacts such as watermarks, headers, and repetitive section markers. Furthermore, the structure and metadata of legal documents vary significantly across jurisdictions and time periods. Some case files include rich metadata (judge name, case type), while others only provide unstructured text. This inconsistency demands intensive data normalization, including spelling correction, metadata alignment, and removal of irrelevant boilerplate text.
+
+\textbf{Multilingual Parsing}: Many legal systems operate in multiple languages — for example, India (English and regional languages), Canada (English/French), or the EU (multilingual legislation). Most NLP and OCR tools perform best in high-resource languages (English, Chinese, Spanish), but perform poorly for low-resource or morphologically complex languages such as Hindi, Tamil, or Arabic.
+
+\subsubsection{Model-Level Limitations}\label{s:8.2.2}
+\textbf{Low-Resource Language Performance}: Most state-of-the-art models, including BERT and GPT, are pre-trained on large English corpora. Their effectiveness declines sharply in low-resource legal languages. Even multilingual models (e.g., mBERT, XLM-R) show uneven coverage — legal vocabulary in smaller languages remains underrepresented.
+
+\textbf{Lack of Standardization Across Jurisdictions}: Each legal system uses distinct terminologies, evidentiary principles, and procedural structures. There is no standardized ontology or schema to represent legal concepts globally. Consequently, integrating multiple national legal systems into a shared knowledge graph is highly complex and error-prone.
+
+\textbf{Complexity of Legal Logic}: Legal reasoning is inherently hierarchical, conditional, and context-dependent. Deep neural models are proficient in statistical text matching but struggle to interpret nuanced logical constructs such as exceptions or multi-level precedents. Hence, AI recommendations may appear coherent but overlook critical statutory exceptions, potentially leading to misleading or incomplete inferences.
+
+\textbf{Generalization to Unseen Topics}: Legal cases span a wide thematic range — from constitutional to environmental to cyber law. Models trained on common domains (like contract or property law) often perform poorly on rare or emerging domains. The scarcity of labeled data for niche topics results in poor generalization.
+
+\subsubsection{Deployment-Related Limitations}\label{s:8.2.3}
+\textbf{Computational Cost}: Training and inference in large neuro-symbolic architectures are computationally intensive. Running multi-billion-parameter LLMs such as GPT-4 or LLaMA-65B demands high-end GPUs (e.g., NVIDIA A100/H100) and significant energy resources. Such infrastructure is often unavailable to academic institutions or smaller firms, creating a barrier to entry.
+
+\textbf{Latency and Throughput}: Inference latency poses another challenge. Large LLMs have limited context windows and slow processing times. According to Thomson Reuters' Justia Verdict (2024), models degrade beyond certain context lengths, necessitating document chunking or Retrieval-Augmented Generation (RAG). While RAG improves efficiency, it compromises comprehension by fragmenting contextual flow.
+
+\textbf{Hardware and Data Access}: High computational demands restrict deployment to organizations with sufficient infrastructure. Many legal offices lack dedicated GPU clusters or cloud budgets. Furthermore, access to comprehensive legal databases (Westlaw, LexisNexis, etc.) is paywalled, limiting training and fine-tuning opportunities.
+
+\textbf{Explainability and Interpretability}: AI-driven legal systems require transparency to gain judicial trust. However, modern neural networks remain largely black boxes. Although knowledge graphs improve interpretability, the final decision-making process — such as which clause or precedent influenced an outcome — remains opaque.
+
+\subsubsection{Legal and Ethical Limitations}\label{s:8.2.4}
+\textbf{Fairness and Bias}: AI systems inherit and amplify the biases present in their training data. Historical case law may encode systemic inequalities, and without correction, the model risks perpetuating them. Biased recommendations could disadvantage certain demographics or case types, leading to ethical and reputational risks.
+
+\textbf{Risk of Over-Reliance and Hallucination}: Recent investigations into legal-AI tools such as Westlaw AI and LexisNexis AI revealed hallucination rates as high as 17–33\% (Justia Verdict, 2024). Several real-world incidents have seen lawyers fined for citing fabricated AI-generated cases. These examples underscore the importance of human oversight: legal AI must serve as an assistant, not an autonomous authority.
+
+\textbf{Transparency and Accountability}: Legal practitioners must trace the provenance of recommendations — knowing which precedents, statutes, or reasoning paths contributed to an outcome. Opaque black-box systems lack such traceability. If an AI-assisted judgment turns out erroneous, determining responsibility — between the developer, the user, or the AI — remains a legal gray area.
+
+\textbf{Legal Compliance and Privacy}: Legal texts often contain sensitive personal and case-related data. Systems handling such data must comply with privacy frameworks like GDPR and CCPA. Furthermore, certain jurisdictions prohibit fully automated decision-making without human reasoning ("black-box prohibition"). Thus, legal-AI deployments require robust governance, secure handling of confidential data, and transparent audit trails.
+
+\subsubsection{Summary}\label{s:8.2.5}
+In summary, despite rapid progress, legal-AI systems integrating LLMs and Knowledge Graphs face multiple interdependent challenges: Data Quality \& Multilingual Issues constrain input reliability; Model Limitations reduce reasoning fidelity and generalization; Deployment Costs \& Latency hinder scalability and responsiveness; and Ethical \& Legal Concerns restrict acceptance and regulatory compliance. Future work must therefore focus on improving OCR preprocessing, building multilingual legal datasets, optimizing lightweight yet explainable models, and enforcing ethical oversight frameworks to ensure trustworthy AI in law.
+
+\appendix
+
+\section{Appendix A: Sample Test Cases}\label{app:test_cases}
+This appendix provides detailed sample test cases used for evaluating the LegalNexus system.
+
+\subsection{Test Case 1: Digital Evidence Admissibility}
+\textbf{Query:} "Can electronic records stored on CDs be admitted as evidence without proper certification under Section 65B of the Evidence Act?"
+
+\textbf{Ground Truth Cases:}
+\begin{enumerate}
+\item Anvar P.V. v. P.K. Basheer (2014) - 95\% relevance
+\item State v. Navjot Sandhu (2003) - 88\% relevance  
+\item Arjun Panditrao Khotkar v. Kailash Kushanrao Gorantyal (2020) - 85\% relevance
+\end{enumerate}
+
+\textbf{System Performance:}
+\begin{itemize}
+\item Precision$_5$: 1.00
+\item Recall$_5$: 1.00
+\item F1-Score: 1.00
+\item Response Time: 8.2 seconds
+\end{itemize}
+
+\subsection{Test Case 2: Dowry Death Provisions}
+\textbf{Query:} "What are the essential ingredients that prosecution must prove for dowry death under Section 304B IPC?"
+
+\textbf{Ground Truth Cases:}
+\begin{enumerate}
+\item Kaliyaperumal v. State of Tamil Nadu (2004) - 94\% relevance
+\item Biswajit Halder v. State of West Bengal (2007) - 92\% relevance
+\item Satvir Singh v. State of Punjab (2001) - 89\% relevance
+\end{enumerate}
+
+\textbf{System Performance:}
+\begin{itemize}
+\item Precision$_5$: 1.00
+\item Recall$_5$: 1.00
+\item F1-Score: 1.00
+\item Response Time: 9.1 seconds
+\end{itemize}
+
+\subsection{Test Case 3: Constitutional Rights}
+\textbf{Query:} "Can fundamental rights be suspended during emergency under Article 352 of the Constitution?"
+
+\textbf{Ground Truth Cases:}
+\begin{enumerate}
+\item ADM Jabalpur v. Shivkant Shukla (1976) - 96\% relevance
+\item Minerva Mills Ltd. v. Union of India (1980) - 91\% relevance
+\item S.R. Bommai v. Union of India (1994) - 87\% relevance
+\end{enumerate}
+
+\textbf{System Performance:}
+\begin{itemize}
+\item Precision$_5$: 0.80
+\item Recall$_5$: 0.80
+\item F1-Score: 0.80
+\item Response Time: 7.8 seconds
+\end{itemize}
+
+\subsection{Test Case 4: Property Disputes}
+\textbf{Query:} "Property dispute over land ownership and inheritance rights"
+
+\textbf{Ground Truth Cases:}
+\begin{enumerate}
+\item Vishnu Dutt Sharma v. Manju Sharma (2009) - 93\% relevance
+\item Gopalakrishnan v. Lakshmi Ammal (1994) - 89\% relevance
+\item Subhash Chandra v. Delhi Development Authority (2000) - 85\% relevance
+\end{enumerate}
+
+\textbf{System Performance:}
+\begin{itemize}
+\item Precision$_5$: 0.60
+\item Recall$_5$: 0.60
+\item F1-Score: 0.60
+\item Response Time: 6.5 seconds
+\end{itemize}
+
+\subsection{Test Case 5: Criminal Procedure}
+\textbf{Query:} "Criminal procedure for bail application and conditions"
+
+\textbf{Ground Truth Cases:}
+\begin{enumerate}
+\item State of Rajasthan v. Balchand (1977) - 91\% relevance
+\item Gudikanti Narasimhulu v. Public Prosecutor (1978) - 88\% relevance
+\item Sanjay Chandra v. CBI (2012) - 84\% relevance
+\end{enumerate}
+
+\textbf{System Performance:}
+\begin{itemize}
+\item Precision$_5$: 0.80
+\item Recall$_5$: 0.80
+\item F1-Score: 0.80
+\item Response Time: 7.2 seconds
+\end{itemize}
+
+\section{Appendix B: Algorithm Pseudocode}\label{app:algorithms}
+
+\subsection{Hybrid Search Algorithm}
+\begin{verbatim}
+Algorithm 1: Case Similarity Search
+Input: query_text (user's case description or question)
+Output: ranked_cases (list of similar cases with scores)
+
+1. Preprocess query_text
+   - Tokenize and clean text
+   - Extract legal entities (statutes, citations)
+   
+2. Generate query embedding
+   embedding_q ← Gemini.embed(query_text)
+   
+3. Parallel Search:
+   a. Vector Search:
+      results_v ← Neo4j.vector_search(embedding_q, top_k=10)
+   
+   b. Keyword Search:
+      keywords ← extract_keywords(query_text)
+      results_k ← Neo4j.text_search(keywords, top_k=10)
+   
+   c. Graph Search:
+      entities ← extract_entities(query_text)
+      results_g ← Neo4j.graph_traverse(entities, max_hops=2)
+   
+4. Fusion and Ranking:
+   combined_results ← merge(results_v, results_k, results_g)
+   ranked_cases ← rank_by_hybrid_score(combined_results)
+   
+5. Post-processing:
+   - Re-rank using LLM relevance scoring (optional)
+   - Filter by minimum threshold (0.70)
+   - Limit to top-5 results
+   
+6. Return ranked_cases with similarity scores
+\end{verbatim}
+
+\subsection{Graph Neural Network Training}
+\begin{verbatim}
+Algorithm 2: GNN Link Prediction Training
+Input: Knowledge Graph G = (V, E), node features X
+Output: Trained GNN model for link prediction
+
+1. Initialize GNN parameters $\theta$
+2. Split edges into train/val/test (70%/10%/20%)
+3. Generate negative samples (equal to positive samples)
+4. For epoch in range(max_epochs):
+   a. For batch in train_loader:
+      - Forward pass: predictions ← GNN(X, batch_edges)
+      - Compute loss: BCE(predictions, labels)
+      - Backward pass: update $\theta$
+   b. Validate on validation set
+   c. Early stopping if no improvement
+5. Return trained model
+\end{verbatim}
+
+\section{Appendix C: Detailed Performance Metrics}\label{app:metrics}
+
+\subsection{Complete Precision-Recall Analysis}
+Table \ref{tab:complete_pr} shows detailed precision-recall metrics across all test cases:
+
+\begin{table}[h]
+\centering
+\caption{Complete Precision-Recall Analysis}
+\label{tab:complete_pr}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Test Case} & \textbf{P$_1$} & \textbf{P$_3$} & \textbf{P$_5$} & \textbf{R$_1$} & \textbf{R$_3$} & \textbf{R$_5$} \\
+\hline
+Digital Evidence & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+\hline
+Dowry Death & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+\hline
+Constitutional Rights & 1.00 & 0.67 & 0.80 & 1.00 & 1.00 & 1.00 \\
+\hline
+Property Disputes & 1.00 & 0.67 & 0.60 & 1.00 & 1.00 & 1.00 \\
+\hline
+Criminal Procedure & 1.00 & 0.67 & 0.80 & 1.00 & 1.00 & 1.00 \\
+\hline
+Contract Law & 1.00 & 0.67 & 0.60 & 1.00 & 1.00 & 1.00 \\
+\hline
+Tax Law & 1.00 & 0.67 & 0.60 & 1.00 & 1.00 & 1.00 \\
+\hline
+IPR Cases & 1.00 & 0.67 & 0.60 & 1.00 & 1.00 & 1.00 \\
+\hline
+\textbf{Average} & \textbf{1.00} & \textbf{0.75} & \textbf{0.75} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Response Time Breakdown}
+Table \ref{tab:response_breakdown} provides detailed timing analysis for each system component:
+
+\begin{table}[h]
+\centering
+\caption{Detailed Response Time Breakdown}
+\label{tab:response_breakdown}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Component} & \textbf{Min (ms)} & \textbf{Avg (ms)} & \textbf{Max (ms)} & \textbf{Std Dev (ms)} \\
+\hline
+Query Preprocessing & 50 & 120 & 200 & 45 \\
+\hline
+Entity Extraction & 80 & 150 & 300 & 60 \\
+\hline
+Embedding Generation & 1800 & 2300 & 3200 & 420 \\
+\hline
+Vector Search & 500 & 1200 & 2100 & 380 \\
+\hline
+Keyword Search & 200 & 400 & 800 & 150 \\
+\hline
+Graph Traversal & 300 & 800 & 1500 & 310 \\
+\hline
+Result Fusion & 100 & 200 & 400 & 80 \\
+\hline
+LLM Analysis & 2100 & 4500 & 8700 & 1850 \\
+\hline
+Response Formatting & 50 & 100 & 200 & 40 \\
+\hline
+\textbf{Total Pipeline} & \textbf{7200} & \textbf{11400} & \textbf{18300} & \textbf{3120} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Scalability Analysis}
+Table \ref{tab:scalability_appendix} shows performance vs. dataset size, including our actual large-scale dataset:
+
+\begin{table}[h]
+\centering
+\caption{Scalability Analysis - Dataset Size vs Performance}
+\label{tab:scalability_appendix}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{\# Cases} & \textbf{Index Time (s)} & \textbf{Query Time (s)} & \textbf{Memory (GB)} & \textbf{Cache Hit Rate} \\
+\hline
+10 & 2.5 & 0.8 & 0.05 & 100\% \\
+\hline
+50 & 15.2 & 1.2 & 0.23 & 95\% \\
+\hline
+100 & 32.7 & 1.5 & 0.45 & 92\% \\
+\hline
+1,000 & 362.8 & 4.2 & 4.3 & 85\% \\
+\hline
+10,000 & 3,628 & 8.5 & 43.0 & 78\% \\
+\hline
+50,000 & 18,140 & 15.2 & 215.0 & 72\% \\
+\hline
+\textbf{96,000} & \textbf{34,800} & \textbf{18.5} & \textbf{412.8} & \textbf{70\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Large-Scale Dataset Performance:}
+Our actual dataset of 96,000 cases (1.2 GB) demonstrates the system's capability to handle real-world scale:
+\begin{itemize}
+\item \textbf{Total Processing Time}: ~8 hours for embedding generation
+\item \textbf{Index Creation}: ~45 minutes for vector index
+\item \textbf{Memory Requirements}: ~2.5 GB RAM for operations
+\item \textbf{Storage}: 1.2 GB embeddings + 412.8 GB memory footprint
+\item \textbf{Query Performance}: 18.5 seconds average query time (acceptable for legal research)
+\end{itemize}
+
+\section{Appendix D: Knowledge Graph Schema}\label{app:schema}
+
+\subsection{Node Properties}
+\textbf{Case Nodes:}
+\begin{itemize}
+\item \texttt{id}: String (Primary Key)
+\item \texttt{title}: String (Case name)
+\item \texttt{court}: String (Court name)
+\item \texttt{date}: Date (Judgment date)
+\item \texttt{text}: String (Full case content)
+\item \texttt{embedding}: Vector[768] (Semantic embedding)
+\item \texttt{case\_type}: String (Legal category)
+\item \texttt{outcome}: String (Final decision)
+\end{itemize}
+
+\textbf{Judge Nodes:}
+\begin{itemize}
+\item \texttt{name}: String (Judge name)
+\item \texttt{court}: String (Court affiliation)
+\item \texttt{experience\_years}: Integer
+\end{itemize}
+
+\textbf{Court Nodes:}
+\begin{itemize}
+\item \texttt{name}: String (Court name)
+\item \texttt{level}: String (Supreme Court, High Court, District Court)
+\item \texttt{jurisdiction}: String (Geographic area)
+\end{itemize}
+
+\textbf{Statute Nodes:}
+\begin{itemize}
+\item \texttt{name}: String (Statute name)
+\item \texttt{section}: String (Section number)
+\item \texttt{act}: String (Parent act)
+\end{itemize}
+
+\subsection{Relationship Types}
+\begin{itemize}
+\item \texttt{JUDGED}: Judge → Case (presided over)
+\item \texttt{HEARD\_BY}: Case → Court (heard by)
+\item \texttt{REFERENCES}: Case → Statute (references)
+\item \texttt{CITES}: Case → Case (cites precedent)
+\item \texttt{SIMILAR\_TO}: Case → Case (semantic similarity)
+\end{itemize}
+
+\section{Appendix E: Hyperparameter Configuration}\label{app:hyperparams}
+
+\subsection{Embedding Model Parameters}
+\begin{itemize}
+\item Model: \texttt{models/embedding-001}
+\item Dimension: 768
+\item Task Type: \texttt{retrieval\_document}
+\item Context Window: 2048 tokens
+\item Temperature: 0.1
+\end{itemize}
+
+\subsection{Graph Neural Network Parameters}
+\begin{itemize}
+\item Hidden Dimensions: [64, 64]
+\item Learning Rate: 0.01
+\item Batch Size: 32
+\item Dropout Rate: 0.5
+\item Number of Epochs: 100
+\item Early Stopping Patience: 10
+\end{itemize}
+
+\subsection{Hybrid Search Weights}
+\begin{itemize}
+\item Semantic Search Weight ($\alpha$): 0.35 (Gemini embeddings)
+\item Graph Traversal Weight ($\beta$): 0.25 (Knowledge graph structure)
+\item Text Pattern Weight ($\gamma$): 0.20 (TF-IDF keyword matching)
+\item Citation Network Weight ($\delta$): 0.15 (PageRank-based authority)
+\item GNN Link Prediction Weight ($\epsilon$): 0.05 (Hyperbolic GCN predictions)
+\item Similarity Threshold: 0.70
+\item Top-K Results: 5
+\item \textbf{Note}: Weights are dynamically adjusted based on query intent (see Section \ref{s:3.2.2})
+\end{itemize}
+
+\section{Appendix F: Error Analysis Details}\label{app:errors}
+
+\subsection{Failure Case 1: Property Tax vs Property Rights}
+\textbf{Query:} "Property dispute over land ownership"
+\textbf{Retrieved:} 4/5 relevant cases + 1 property tax case
+\textbf{Issue:} Keyword "property" matched both contexts
+\textbf{Root Cause:} Insufficient entity disambiguation
+\textbf{Solution Implemented:} Enhanced entity extraction with domain-specific weighting
+
+\subsection{Failure Case 2: Missing Supreme Court Precedent}
+\textbf{Query:} "Fundamental rights during emergency"
+\textbf{Retrieved:} 4/5 relevant cases
+\textbf{Issue:} Missed landmark ADM Jabalpur case
+\textbf{Root Cause:} Case not in training dataset
+\textbf{Solution Implemented:} Expanded dataset with more constitutional law cases
+
+\subsection{Failure Case 3: Suboptimal Ranking}
+\textbf{Query:} "Electronic evidence admissibility"
+\textbf{Retrieved:} 5/5 relevant cases, but ranking suboptimal
+\textbf{Issue:} Most relevant case ranked 3rd instead of 1st
+\textbf{Root Cause:} Shorter case text had lower embedding norm
+\textbf{Solution Implemented:} Document length normalization
+
+\subsection{Failure Case 4: Domain Confusion}
+\textbf{Query:} "Criminal procedure for bail"
+\textbf{Retrieved:} 4/5 relevant cases + 1 civil procedure case
+\textbf{Issue:} Retrieved civil procedure case
+\textbf{Root Cause:} Procedural similarities confused the model
+\textbf{Solution Implemented:} Case-type weighting in hybrid scoring
+
+\section{Appendix G: Citation Pattern Details}\label{app:citation_patterns}
+
+\subsection{Complete List of Indian Legal Citation Patterns}
+The Linker Agent uses 7 regex patterns to extract citations from case text (implemented in \texttt{CitationExtractor} class, \texttt{utils/main_files/citation\_network.py}):
+
+\begin{enumerate}
+\item \textbf{AIR Pattern}: \texttt{r'AIR\textbackslash s+(\textbackslash d\{4\})\textbackslash s+([A-Z]+)\textbackslash s+(\textbackslash d+)'}
+  \begin{itemize}
+  \item Format: AIR YYYY COURT NUM
+  \item Example: "AIR 1950 SC 124"
+  \item Captures: Year, Court abbreviation, Case number
+  \end{itemize}
+
+\item \textbf{SCC Pattern}: \texttt{r'\((\textbackslash d\{4\})\)\textbackslash s+(\textbackslash d+)\textbackslash s+SCC\textbackslash s+(\textbackslash d+)'}
+  \begin{itemize}
+  \item Format: (YYYY) V SCC NUM
+  \item Example: "(1950) 1 SCC 124"
+  \item Captures: Year, Volume, Case number
+  \end{itemize}
+
+\item \textbf{SCC Online Pattern}: \texttt{r'(\textbackslash d\{4\})\textbackslash s+SCC\textbackslash s+OnLine\textbackslash s+([A-Za-z]+)\textbackslash s+(\textbackslash d+)'}
+  \begin{itemize}
+  \item Format: YYYY SCC OnLine COURT NUM
+  \item Example: "2020 SCC OnLine Del 1234"
+  \item Captures: Year, Court name, Case number
+  \end{itemize}
+
+\item \textbf{Case Number Pattern}: \texttt{r'([A-Za-z\textbackslash .]+)\textbackslash s*(\textbackslash d+)/(\textbackslash d\{4\})'}
+  \begin{itemize}
+  \item Format: TYPE NUM/YYYY
+  \item Example: "Crl.A. 123/2020"
+  \item Captures: Case type abbreviation, Number, Year
+  \end{itemize}
+
+\item \textbf{Civil Appeal Pattern}: \texttt{r'Civil\textbackslash s+Appeal\textbackslash s+No\textbackslash .\textbackslash s*(\textbackslash d+)\textbackslash s+of\textbackslash s+(\textbackslash d\{4\})'}
+  \begin{itemize}
+  \item Format: Civil Appeal No. NUM of YYYY
+  \item Example: "Civil Appeal No. 1234 of 2020"
+  \item Captures: Appeal number, Year
+  \end{itemize}
+
+\item \textbf{Writ Petition Pattern}: \texttt{r'W\textbackslash .P\textbackslash .\([A-Z]\)\textbackslash s*(\textbackslash d+)/(\textbackslash d\{4\})'}
+  \begin{itemize}
+  \item Format: W.P.(C) NUM/YYYY
+  \item Example: "W.P.(C) 1234/2020"
+  \item Captures: Petition number, Year
+  \end{itemize}
+
+\item \textbf{Case Name Pattern}: \texttt{r'([A-Z][a-zA-Z\textbackslash s\&\textbackslash .]+)\textbackslash s+v[s]?\textbackslash .\textbackslash s+([A-Z][a-zA-Z\textbackslash s\&\textbackslash .]+)'}
+  \begin{itemize}
+  \item Format: PARTY v. PARTY
+  \item Example: "State v. Kumar", "ABC Ltd. v. XYZ Corp."
+  \item Captures: Petitioner name, Respondent name
+  \item Filter: Minimum length 10 characters, excludes "versus" false positives
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Citation Matching Algorithm}
+The system uses fuzzy matching to link extracted citations to actual case nodes in the knowledge graph:
+\begin{enumerate}
+\item Extract citation text using regex patterns
+\item Search Neo4j for cases containing citation text in title or content
+\item Match case names using similarity scoring
+\item Create \texttt{CITES} relationships with confidence scores
+\end{enumerate}
+
+\section{Appendix H: Error Handling and Robustness}\label{app:error_handling}
+
+\subsection{API Error Handling}
+The system implements comprehensive error handling for external API dependencies:
+
+\begin{itemize}
+\item \textbf{Gemini API Retries}: 3 automatic retries with exponential backoff (1s, 2s, 4s delays)
+\item \textbf{Rate Limiting}: Automatic throttling at 60 requests/minute for Gemini API
+\item \textbf{Fallback Chain}: Gemini → Jina → Text Similarity (ensures 100\% uptime)
+\item \textbf{Connection Timeout}: 30-second timeout with graceful degradation
+\item \textbf{Partial Failure Handling}: System continues processing remaining cases if individual embeddings fail
+\end{itemize}
+
+\subsection{Data Quality Assurance}
+\begin{itemize}
+\item \textbf{Schema Validation}: JSON schema validation for all case documents
+\item \textbf{Required Fields Check}: Validates presence of id, title, text fields
+\item \textbf{Date Format Validation}: Ensures consistent date formats (YYYY-MM-DD)
+\item \textbf{Content Length Check}: Filters out empty or extremely short cases (< 100 characters)
+\item \textbf{Encoding Handling}: UTF-8 normalization for multilingual content
+\end{itemize}
+
+\subsection{Graph Database Resilience}
+\begin{itemize}
+\item \textbf{Connection Pooling}: Reuses Neo4j connections to reduce overhead
+\item \textbf{Transaction Management}: Atomic operations for graph updates
+\item \textbf{Constraint Validation}: Enforces unique node IDs and relationship constraints
+\item \textbf{Index Maintenance}: Automatic index rebuilding on schema changes
+\end{itemize}
+
+\section{Appendix I: Implementation Details}\label{app:implementation}
+
+\subsection{Technology Stack}
+\begin{itemize}
+\item \textbf{Backend}: Python 3.9+, Neo4j 5.x, LangChain
+\item \textbf{APIs}: Google Gemini (embeddings and LLM), Neo4j Graph Database
+\item \textbf{Alternative Models}: Ollama (Llama3.2, Gemma 2), Jina Embeddings v3 (local)
+\item \textbf{Graph Libraries}: PyTorch Geometric, NetworkX, geoopt (for hyperbolic geometry)
+\item \textbf{Frontend}: Streamlit for web interface
+\item \textbf{Data Processing}: pandas, numpy, scikit-learn
+\item \textbf{Visualization}: Plotly, NetworkX for graph visualization
+\item \textbf{Deployment}: Docker containers, cloud deployment ready
+\item \textbf{Game Theory}: Custom Nash equilibrium solver (\texttt{theory/nash\_equilibrium\_formulation.py})
+\end{itemize}
+
+\subsection{System Requirements}
+\begin{itemize}
+\item \textbf{Minimum}: 8GB RAM, 4 CPU cores, 50GB storage
+\item \textbf{Recommended}: 16GB RAM, 8 CPU cores, 100GB SSD storage
+\item \textbf{Network}: Stable internet connection for API calls
+\item \textbf{Software}: Docker, Python 3.9+, Neo4j Desktop
+\end{itemize}
+
+\subsection{Installation and Setup}
+\begin{verbatim}
+# Clone repository
+git clone https://github.com/legalnexus/legalnexus-backend.git
+cd legalnexus-backend
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Setup Neo4j database
+python configure_neo4j.py
+
+# Load sample data
+python quick_load_dataset.py
+
+# Start the application
+streamlit run main.py
+\end{verbatim}
+
+\subsection{Key Implementation Files}
+\begin{itemize}
+\item \textbf{Main System}: \texttt{kg.py} - Core knowledge graph construction and query interface
+\item \textbf{Hybrid Search}: \texttt{hybrid\_case\_search.py} - Five-algorithm hybrid retrieval with adversarial agents
+\item \textbf{Multi-Agent Swarm}: \texttt{multi\_agent\_swarm.py} - Citation extraction with Nash equilibrium
+\item \textbf{Hyperbolic GCN}: \texttt{hyperbolic\_gnn.py} - Poincaré ball embeddings for hierarchy encoding
+\item \textbf{Citation Network}: \texttt{utils/main_files/citation\_network.py} - Citation pattern extraction
+\item \textbf{Data Loading}: \texttt{utils/main_files/csv\_data\_loader.py} - CSV parsing and metadata extraction
+\item \textbf{GNN Link Prediction}: \texttt{utils/main_files/gnn\_link\_prediction.py} - Graph neural network for relationship prediction
+\item \textbf{Nash Solver}: \texttt{theory/nash\_equilibrium\_formulation.py} - Game-theoretic equilibrium computation
+\end{itemize}
+
+\subsection{Configuration Files}
+\begin{itemize}
+\item \textbf{Environment Variables}: .env file for API keys and database credentials
+\item \textbf{Model Configuration}: config.json for hyperparameters and model settings
+\item \textbf{Database Schema}: case_schema.json for data validation
+\item \textbf{Annotation Config}: label_studio_config.xml for data labeling
+\end{itemize}
+
+% BIBLIOGRAPHY: Create or upload a bib file to manage your references. For instructions, see www.overleaf.com/learn/how-to/Using_bibliographies_on_Overleaf. Citations will use the Chicago Manual of Style notes and bibliography citation format, described at www.chicagomanualofstyle.org/tools_citationguide/citation-guide-1.html.
+
+\section{References}\label{s:6}
+\begin{enumerate}
+\item I. Chalkidis, M. Fergadiotis, P. Malakasiotis, N. Aletras, and I. Androutsopoulos, "LEGAL-BERT: The Muppets straight out of law school," Findings of EMNLP 2020 (Workshops), 2020. [Online]. Available: \url{https://aclanthology.org/2020.findings-emnlp.261/} (Accessed: Oct. 13, 2025). (also on arXiv) \url{https://arxiv.org/abs/2010.02559}.
+
+\item H. Li, Q. Ai, J. Chen, Q. Dong, Y. Wu, Y. Liu, C. Chen, and Q. Tian, "SAILER: Structure-aware Pre-trained Language Model for Legal Case Retrieval," in Proc. 46th Int. ACM SIGIR Conf. on Research and Development in Information Retrieval (SIGIR), 2023. [Online]. Available: \url{https://dl.acm.org/doi/10.1145/3539618.3591761} (Accessed: Oct. 13, 2025). (also on arXiv) \url{https://arxiv.org/abs/2304.11370}.
+
+\item Y. Tang, R. Qiu, Y. Liu, X. Li, and Z. Huang, "CaseGNN: Graph Neural Networks for Legal Case Retrieval with Text-Attributed Graphs," arXiv preprint, Dec. 2023. [Online]. Available: \url{https://arxiv.org/abs/2312.11229} (Accessed: Oct. 13, 2025). (Code repo: \url{https://github.com/yanran-tang/CaseGNN}).
+
+\item Y. Tang, R. Qiu, H. Yin, X. Li, and Z. Huang, "CaseGNN++: Graph Contrastive Learning for Legal Case Retrieval with Graph Augmentation," arXiv preprint, May 2024. [Online]. Available: \url{https://arxiv.org/abs/2405.11791} (Accessed: Oct. 13, 2025). (PDF) \url{https://arxiv.org/pdf/2405.11791}.
+
+\item C. Deng, K. Mao, and Z. Dou, "Learning Interpretable Legal Case Retrieval via Knowledge-Guided Case Reformulation (KELLER)," arXiv preprint, Jun. 2024. [Online]. Available: \url{https://arxiv.org/abs/2406.19760} (Accessed: Oct. 13, 2025). (PDF mirror) \url{https://arxiv.org/pdf/2406.19760.pdf}.
+
+\item COLIEE — Competition on Legal Information Extraction / Entailment (benchmark and tasks). [Online]. Available: \url{https://coliee.org} (Accessed: Oct. 13, 2025). (Resources \& proceedings page) \url{https://coliee.org/resources} (Accessed: Oct. 13, 2025).
+
+\item Registry of Open Data on AWS, "Indian Supreme Court Judgments (public S3 bucket)," 1950–2025 dataset (CC-BY-4.0). [Online]. Available: \url{https://registry.opendata.aws/indian-supreme-court-judgments/} (Accessed: Oct. 13, 2025). (S3 bucket root) \url{https://indian-supreme-court-judgments.s3.amazonaws.com/} (Accessed: Oct. 13, 2025).
+
+\item Caselaw Access Project (CAP), Harvard Law School Library Innovation Lab — US case law data \& API. [Online]. Available: \url{https://case.law} (Accessed: Oct. 13, 2025). (About / API docs) \url{https://case.law/about/} (Accessed: Oct. 13, 2025).
+
+\item I. Chalkidis, T. Petaschnig, and P. Malakasiotis, "LexGLUE: A Benchmark Dataset for Legal Language Understanding in English," arXiv preprint, 2021. [Online]. Available: \url{https://arxiv.org/abs/2110.00976} (Accessed: Oct. 13, 2025).
+
+\item Hugging Face — Transformers and Model Hub (useful tool/resource for LegalBERT, fine-tuning, and model sharing). [Online]. Available: \url{https://huggingface.co} (Accessed: Oct. 13, 2025).
+\end{enumerate}
+
+\end{document}

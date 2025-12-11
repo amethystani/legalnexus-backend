@@ -1,0 +1,118 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{3d,calc,positioning,shadows,shapes.geometric}
+
+\begin{document}
+\tdplotsetmaincoords{70}{120}
+
+\begin{tikzpicture}[
+    tdplot_main_coords,
+    scale=3,
+    sc/.style={circle, fill=blue!70, draw=blue!90, minimum size=8pt, inner sep=1pt, text=white, font=\tiny\bfseries},
+    hc/.style={circle, fill=orange!70, draw=orange!90, minimum size=7pt, inner sep=1pt, text=white, font=\tiny},
+    target/.style={diamond, fill=green!60, draw=green!80, minimum size=12pt, inner sep=1pt, text=white, font=\tiny\bfseries},
+    label/.style={font=\scriptsize, text=black}
+]
+
+% Draw Poincaré ball boundary (wire sphere)
+\draw[gray!40, thick] (0,0,0) circle (1);
+
+% Draw coordinate axes
+\draw[->, gray!50, thin] (-1.2,0,0) -- (1.2,0,0) node[right, font=\scriptsize] {$x$};
+\draw[->, gray!50, thin] (0,-1.2,0) -- (0,1.2,0) node[above, font=\scriptsize] {$y$};
+\draw[->, gray!50, thin] (0,0,-1.2) -- (0,0,1.2) node[above, font=\scriptsize] {$z$};
+
+% Draw hyperbolic distance circles (r = 0.3, 0.5, 0.7)
+\foreach \r in {0.3, 0.5, 0.7} {
+    \draw[blue!20, dashed, thin] (0,0,0) circle (\r);
+}
+
+% Supreme Court Cases (center, r ~ 0.1-0.2)
+\coordinate (SC1) at ({0.15*cos(0)}, {0.15*sin(0)}, 0.05);
+\coordinate (SC2) at ({0.18*cos(60)}, {0.18*sin(60)}, -0.03);
+\coordinate (SC3) at ({0.12*cos(120)}, {0.12*sin(120)}, 0.08);
+\coordinate (SC4) at ({0.20*cos(180)}, {0.20*sin(180)}, -0.05);
+\coordinate (SC5) at ({0.16*cos(240)}, {0.16*sin(240)}, 0.06);
+\coordinate (SC6) at ({0.14*cos(300)}, {0.14*sin(300)}, -0.04);
+
+% High Court Statutes (outer, r ~ 0.55-0.65)
+\coordinate (HC1) at ({0.55*cos(18)}, {0.55*sin(18)}, 0.12);
+\coordinate (HC2) at ({0.60*cos(54)}, {0.60*sin(54)}, -0.08);
+\coordinate (HC3) at ({0.58*cos(90)}, {0.58*sin(90)}, 0.15);
+\coordinate (HC4) at ({0.62*cos(126)}, {0.62*sin(126)}, -0.10);
+\coordinate (HC5) at ({0.57*cos(162)}, {0.57*sin(162)}, 0.09);
+\coordinate (HC6) at ({0.61*cos(198)}, {0.61*sin(198)}, -0.12);
+\coordinate (HC7) at ({0.59*cos(234)}, {0.59*sin(234)}, 0.11);
+\coordinate (HC8) at ({0.63*cos(270)}, {0.63*sin(270)}, -0.09);
+\coordinate (HC9) at ({0.56*cos(306)}, {0.56*sin(306)}, 0.13);
+\coordinate (HC10) at ({0.60*cos(342)}, {0.60*sin(342)}, -0.11);
+
+% Target Case (intermediate, r ~ 0.42)
+\coordinate (TARGET) at ({0.42*cos(72)}, {0.42*sin(72)}, 0.18);
+
+% Draw geodesic connections (curved paths)
+% Target to Supreme Court
+\draw[green!60, thick, bend left=15] (TARGET) to (SC1);
+\draw[green!60, thick, bend left=12] (TARGET) to (SC2);
+\draw[green!60, thick, bend right=10] (TARGET) to (SC4);
+
+% Target to High Court
+\draw[orange!50, bend right=10] (TARGET) to (HC1);
+\draw[orange!50, bend left=8] (TARGET) to (HC3);
+\draw[orange!50, bend right=12] (TARGET) to (HC5);
+\draw[orange!50, bend left=10] (TARGET) to (HC8);
+
+% SC to HC connections
+\draw[blue!30, thin, bend right=15] (SC1) to (HC1);
+\draw[blue!30, thin, bend left=12] (SC2) to (HC3);
+\draw[blue!30, thin, bend right=10] (SC4) to (HC5);
+\draw[blue!30, thin, bend left=14] (SC5) to (HC8);
+
+% Draw nodes - Supreme Court
+\foreach \i in {1,2,3,4,5,6} {
+    \node[sc] at (SC\i) {};
+}
+
+% Draw nodes - High Court
+\foreach \i in {1,2,3,4,5,6,7,8,9,10} {
+    \node[hc] at (HC\i) {};
+}
+
+% Draw target node
+\node[target] at (TARGET) {};
+
+% Labels for key nodes
+\node[label, above right=1pt of SC1] {\tiny SC-2019-5432};
+\node[label, above left=1pt of SC2] {\tiny SC-2020-1823};
+\node[label, above left=1pt of TARGET] {\tiny\textbf{Target}};
+\node[label, above right=1pt of HC1] {\tiny HC-DL};
+\node[label, above=1pt of HC3] {\tiny HC-MH};
+
+% Add mathematical annotations
+\node[align=left, font=\scriptsize, text=black!70] at (1.5, 1.2, 0.5) {
+    \textbf{Poincaré Ball Model}\\
+    $\mathcal{B}^3 = \{x \in \mathbb{R}^3 : \|x\| < 1\}$\\
+    $d_{\mathbb{H}}(x,y) = \text{arcosh}(\cdots)$
+};
+
+\node[align=left, font=\scriptsize, text=black!70] at (1.5, -1.2, -0.3) {
+    \textbf{Hierarchy:}\\
+    \textcolor{blue!70}{$\bullet$ Supreme Court ($r \approx 0.15$)}\\
+    \textcolor{green!60}{$\blacklozenge$ Target Case ($r \approx 0.42$)}\\
+    \textcolor{orange!70}{$\bullet$ High Court ($r \approx 0.60$)}
+};
+
+% Boundary annotation
+\node[font=\scriptsize, text=gray] at (0, -1.25, 0) {$\partial\mathcal{B}^3$ (boundary)};
+
+% Distance markers
+\node[font=\tiny, text=blue!40] at (0.3, 0, -0.15) {$r{=}0.3$};
+\node[font=\tiny, text=blue!40] at (0.5, 0, -0.15) {$r{=}0.5$};
+\node[font=\tiny, text=blue!40] at (0.7, 0, -0.15) {$r{=}0.7$};
+
+\end{tikzpicture}
+
+\end{document}

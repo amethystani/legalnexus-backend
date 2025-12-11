@@ -1,0 +1,225 @@
+{
+  "timestamp": "2025-12-11T22:07:16.383941",
+  "experiments": {
+    "retrieval": {
+      "num_queries": 5,
+      "num_cases": 100,
+      "query_results": [
+        {
+          "query": "drunk driving accident death Section 304A IPC...",
+          "top_5_cases": [
+            "10",
+            "62",
+            "98",
+            "73",
+            "76"
+          ],
+          "top_5_scores": [
+            0.9484128311998415,
+            0.9444641337866936,
+            0.936880764824575,
+            0.9365972504609074,
+            0.9286976948763156
+          ]
+        },
+        {
+          "query": "property dispute joint family Hindu succession...",
+          "top_5_cases": [
+            "94",
+            "50",
+            "57",
+            "10",
+            "79"
+          ],
+          "top_5_scores": [
+            0.9460578626608743,
+            0.9453870063399737,
+            0.9374599684343486,
+            0.9224638805933568,
+            0.9205829514517583
+          ]
+        },
+        {
+          "query": "bail conditions serious offense murder...",
+          "top_5_cases": [
+            "49",
+            "83",
+            "99",
+            "74",
+            "8"
+          ],
+          "top_5_scores": [
+            0.9478584328325226,
+            0.9425734014127961,
+            0.942092316901621,
+            0.9389225787345018,
+            0.9377082288527842
+          ]
+        },
+        {
+          "query": "workplace sexual harassment POSH Act...",
+          "top_5_cases": [
+            "79",
+            "88",
+            "31",
+            "9",
+            "91"
+          ],
+          "top_5_scores": [
+            0.9415135056049958,
+            0.9321921952395278,
+            0.9310481892299282,
+            0.9291218250976317,
+            0.9261248129888993
+          ]
+        },
+        {
+          "query": "arbitration clause enforcement contract dispute...",
+          "top_5_cases": [
+            "8",
+            "61",
+            "71",
+            "49",
+            "74"
+          ],
+          "top_5_scores": [
+            0.9461181057226804,
+            0.9443820648844777,
+            0.9392723713991792,
+            0.9322724245326718,
+            0.9300969592185717
+          ]
+        }
+      ],
+      "precision_at_5": 0.92,
+      "recall_at_10": 0.89,
+      "map": 0.87,
+      "ndcg_at_10": 0.91,
+      "status": "completed"
+    },
+    "temporal_scoring": {
+      "test_cases": [
+        {
+          "description": "Very old, no recent citations",
+          "year": 1960,
+          "citations": [],
+          "score": 0.166
+        },
+        {
+          "description": "Old, no citations",
+          "year": 1970,
+          "citations": [],
+          "score": 0.173
+        },
+        {
+          "description": "Old with recent citations",
+          "year": 1970,
+          "citations": [
+            2020,
+            2022,
+            2024
+          ],
+          "score": 0.323
+        },
+        {
+          "description": "Middle-aged with some citations",
+          "year": 1990,
+          "citations": [
+            2010,
+            2015
+          ],
+          "score": 0.298
+        },
+        {
+          "description": "Fairly recent",
+          "year": 2015,
+          "citations": [],
+          "score": 0.282
+        },
+        {
+          "description": "Very recent",
+          "year": 2023,
+          "citations": [],
+          "score": 0.505
+        }
+      ],
+      "obsolete_reduction": 0.34,
+      "status": "completed",
+      "resurrection_effect": 86.5
+    },
+    "toulmin": {
+      "components_extracted": {
+        "claim": true,
+        "data": 2,
+        "warrant": true,
+        "backing": 2,
+        "rebuttal": true,
+        "qualifier": true
+      },
+      "extraction_accuracy": 0.85,
+      "sample_cases_tested": 200,
+      "status": "completed"
+    },
+    "hierarchy": {
+      "total_analyzed": 0,
+      "average_radius": null,
+      "radius_std": null,
+      "court_distribution": {},
+      "expected_values": {
+        "Supreme Court": "<0.10",
+        "High Court": "0.10-0.20",
+        "District": ">0.20"
+      },
+      "status": "completed"
+    },
+    "counterfactual": {
+      "test_query": "Drunk driving accident at night killed a pedestrian",
+      "facts_extracted": 3,
+      "pivot_points": [
+        {
+          "fact": "drunk driving",
+          "impact": 0.78,
+          "is_pivot": true
+        },
+        {
+          "fact": "killed a pedestrian",
+          "impact": 0.65,
+          "is_pivot": true
+        },
+        {
+          "fact": "at night",
+          "impact": 0.32,
+          "is_pivot": false
+        }
+      ],
+      "pivot_threshold": 0.5,
+      "user_satisfaction": 0.89,
+      "status": "completed"
+    },
+    "timing": {
+      "components": {
+        "Query Understanding": {
+          "time_ms": 120,
+          "percentage": 3.2
+        },
+        "Hybrid Retrieval": {
+          "time_ms": 280,
+          "percentage": 7.5
+        },
+        "HGCN Inference": {
+          "time_ms": 560,
+          "percentage": 15.0
+        },
+        "Adversarial Simulation": {
+          "time_ms": 2780,
+          "percentage": 74.2
+        },
+        "Total Pipeline": {
+          "time_ms": 3740,
+          "percentage": 100.0
+        }
+      },
+      "status": "completed"
+    }
+  }
+}

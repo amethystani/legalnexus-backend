@@ -1,0 +1,10 @@
+Hyperbolic Hierarchy Analysis
+=============================
+
+                   mean       std  count
+court_type                              
+High Court     0.148704  0.057200  34579
+Other          0.148548  0.056405  12123
+Supreme Court  0.148380  0.056801   2932
+
+T-test (SC vs HC): t=-0.2962, p=7.6708e-01

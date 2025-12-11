@@ -1,0 +1,40 @@
+========================================
+LaTeX Setup & Compilation Summary
+========================================
+
+I've prepared everything for LaTeX compilation:
+
+✓ Fixed image references in presentation.tex
+  - Changed to use: poincare_3d_visualization.png
+  - Changed to use: whatsapp_image.png
+
+✓ Created compilation scripts:
+  - compile_presentation_complete.sh (tries Docker, then local LaTeX)
+  - compile_with_docker.sh (Docker only)
+  - install_and_compile.sh (local LaTeX only)
+
+========================================
+TO COMPILE YOUR PRESENTATION:
+========================================
+
+OPTION 1: Using Docker (Recommended - No installation needed)
+------------------------------------------------------------
+1. Start Docker Desktop
+2. Run: ./compile_presentation_complete.sh
+
+OPTION 2: Install LaTeX Locally
+------------------------------------------------------------
+1. Run: brew install --cask basictex
+   (Enter your admin password when prompted)
+
+2. After installation, run:
+   eval "$(/usr/libexec/path_helper)"
+   sudo tlmgr update --self
+   sudo tlmgr install beamer tikz pgf amsmath algorithmicx algorithm2e xcolor graphicx multirow amssymb collection-fontsrecommended
+
+3. Then run: ./compile_presentation_complete.sh
+
+========================================
+The PDF will be saved as: presentation.pdf
+========================================
+

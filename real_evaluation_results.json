@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-12-12T00:20:25.749949",
+  "dataset": {
+    "total_cases": 49634,
+    "queries_evaluated": 500,
+    "clusters": 5
+  },
+  "retrieval": {
+    "precision_at_5": 0.896,
+    "precision_at_10": 0.8888,
+    "recall_at_10": 0.0008767889434846834,
+    "ndcg_at_10": 0.8926799849384774,
+    "map_at_100": 0.8164912221587375
+  },
+  "gromov": {
+    "delta": 0.029386275588538766,
+    "random_baseline": 0.40369006999948315,
+    "improvement_factor": 13.737367594719295
+  },
+  "hierarchy": {
+    "valid": true,
+    "supreme_mean_radius": 0.5402206388204072,
+    "high_mean_radius": 0.5750372379360017,
+    "district_mean_radius": 0.6188723620728506
+  },
+  "temporal": {
+    "resurrection_effect_pct": 62.435160776526885,
+    "recent_avg_score": 0.5578493366277955,
+    "old_avg_score": 0.3044715864201145
+  },
+  "toulmin": {
+    "accuracy": 1.0,
+    "cases_analyzed": 50
+  },
+  "conflict_resolution": {
+    "total_conflicts": 1214,
+    "resolved": 1193,
+    "resolution_rate": 0.9827018121911038
+  }
+}

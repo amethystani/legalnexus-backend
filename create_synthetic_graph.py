@@ -147,8 +147,58 @@ def main():
     print(f"Total edges: {len(edges)}")
     print(f"Avg degree: {len(edges) / n:.1f}")
     print(f"Time taken: {elapsed:.1f} seconds ({elapsed/60:.1f} minutes)")
-    print(f"\nSaved to: data/citation_network.pkl")
+    print(f"\nSaved to: {output_path}")
     print(f"{'='*80}\n")
+
+def create_synthetic_data(num_cases: int = 50, output_dir: str = "data/legal_cases"):
+    """Generate synthetic legal case JSON files."""
+    import os
+    import json
+    import random
+    
+    os.makedirs(output_dir, exist_ok=True)
+    print(f"Generating {num_cases} synthetic cases in {output_dir}...")
+    
+    courts = ["Supreme Court of India", "High Court of Delhi", "High Court of Bombay"]
+    topics = ["Criminal Law", "Constitutional Law", "Civil Dispute", "Taxation"]
+    
+    for i in range(num_cases):
+        case_id = f"CASE_{i:04d}"
+        year = random.randint(1950, 2023)
+        court = random.choice(courts)
+        topic = random.choice(topics)
+        
+        # Generate some synthetic text with citations
+        cited_id = f"CASE_{random.randint(0, i-1):04d}" if i > 0 else "AIR 1950 SC 124"
+        text = f"""
+        IN THE {court.upper()}
+        
+        Case No: {case_id}
+        Year: {year}
+        Topic: {topic}
+        
+        JUDGMENT:
+        
+        1. This appeal arises from a dispute regarding {topic.lower()}.
+        2. The learned counsel for the appellant relies heavily on the precedent set in {cited_id}.
+        3. We have carefully considered the arguments. The ratio in {cited_id} is applicable here.
+        4. However, we must distinguish the facts. In {cited_id}, the court held that...
+        5. We therefore dismiss the appeal.
+        """
+        
+        case_data = {
+            "id": case_id,
+            "title": f"Party A vs Party B ({year})",
+            "court": court,
+            "year": year,
+            "text": text,
+            "content": text
+        }
+        
+        with open(f"{output_dir}/{case_id}.json", "w") as f:
+            json.dump(case_data, f, indent=2)
+            
+    print("Done generating synthetic cases.")
 
 if __name__ == '__main__':
     main()
