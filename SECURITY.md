@@ -5,7 +5,7 @@
 If you discover a security vulnerability in LegalNexus, please report it responsibly:
 
 1. **Do not** open a public issue
-2. Email the maintainers directly at: animesh.sinha@snu.edu.in
+2. Email the maintainers directly at: am847@snu.edu.in
 3. Include:
    - Description of the vulnerability
    - Steps to reproduce
