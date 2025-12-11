@@ -607,13 +607,6 @@ This project is part of academic research. See individual files for licensing in
 
 ---
 
-## Authors
-
-- Animesh Sinha
-- Shiv Nadar University
-
----
-
 ## Links
 
 - GitHub Repository: https://github.com/amethystani/legalnexus-backend
