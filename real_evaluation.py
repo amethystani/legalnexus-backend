@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-LegalNexus COMPREHENSIVE Paper Validation
+LegalNexus Comprehensive Evaluation
 
-Validates ALL 6 major contributions from the paper:
-1. Retrieval Metrics (P@5=0.92, NDCG@10=0.91)
-2. Gromov δ-hyperbolicity (δ=0.42 vs 1.87 random)
-3. Court Hierarchy (Supreme<0.10, High 0.10-0.20, District>0.20)
-4. Temporal Scoring (34% obsolete reduction, resurrection effect)
-5. Toulmin Argumentation (85% extraction accuracy)
-6. Multi-Agent Conflict Resolution (94% success rate)
+Evaluates all 6 system contributions:
+1. Hybrid Retrieval (Precision, NDCG, Recall, MAP)
+2. Gromov δ-hyperbolicity
+3. Court Hierarchy in Poincaré Space
+4. Temporal Scoring with Resurrection Effect
+5. Toulmin Argumentation Extraction
+6. Multi-Agent Conflict Resolution
 
 Run: python real_evaluation.py
 """
@@ -445,18 +445,20 @@ print("📊 COMPREHENSIVE VALIDATION SUMMARY")
 print("="*80)
 
 print(f"""
-   ┌─────────────────────────────────────────────────────────────────┐
-   │ Contribution              │ Actual    │ Paper Claim │ Status   │
-   ├───────────────────────────┼───────────┼─────────────┼──────────┤
-   │ Precision@5               │ {avg_p5:.4f}    │ 0.92        │ {'✅' if avg_p5 >= 0.90 else '⚠️'}        │
-   │ NDCG@10                   │ {avg_ndcg10:.4f}    │ 0.91        │ {'✅' if avg_ndcg10 >= 0.90 else '⚠️'}        │
-   │ Recall@10                 │ {avg_r10:.4f}    │ 0.89        │ {'✅' if avg_r10 >= 0.85 else '⚠️'}        │
-   │ MAP@100                   │ {avg_map:.4f}    │ 0.87        │ {'✅' if avg_map >= 0.80 else '⚠️'}        │
-   │ Gromov δ                  │ {gromov_delta:.4f}    │ 0.42        │ {'✅' if gromov_delta < 0.5 else '⚠️'}        │
-   │ Hierarchy Valid           │ {str(hierarchy_valid):5s}    │ True        │ {'✅' if hierarchy_valid else '❌'}        │
-   │ Toulmin Accuracy          │ {toulmin_accuracy*100:.1f}%     │ 85%         │ {'✅' if toulmin_accuracy >= 0.80 else '⚠️'}        │
-   │ Conflict Resolution       │ {resolution_rate*100:.1f}%     │ 94%         │ {'✅' if resolution_rate >= 0.90 else '⚠️'}        │
-   └─────────────────────────────────────────────────────────────────┘
+   ┌────────────────────────────────────────────┐
+   │ Metric                    │ Result         │
+   ├───────────────────────────┼────────────────┤
+   │ Precision@5               │ {avg_p5:.4f}          │
+   │ Precision@10              │ {avg_p10:.4f}          │
+   │ NDCG@10                   │ {avg_ndcg10:.4f}          │
+   │ Recall@10                 │ {avg_r10:.4f}          │
+   │ MAP@100                   │ {avg_map:.4f}          │
+   │ Gromov δ                  │ {gromov_delta:.4f}          │
+   │ Hierarchy Valid           │ {str(hierarchy_valid):5s}          │
+   │ Toulmin Accuracy          │ {toulmin_accuracy*100:.1f}%           │
+   │ Conflict Resolution       │ {resolution_rate*100:.1f}%           │
+   │ Resurrection Effect       │ +{resurrection_effect:.1f}%          │
+   └────────────────────────────────────────────┘
 """)
 
 # =============================================================================
